@@ -1,0 +1,30 @@
+[user]
+	name = Zerossive
+	email = 47612836+Zerossive@users.noreply.github.com
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[init]
+	defaultBranch = main
+[alias]
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	s = status -s
+	a = add
+	c = commit
+	cm = commit -m
+	ac = !git add -A && git commit
+	acm = !git add -A && git commit -m
+	amend = commit --amend -m
+	co = checkout
+	sw = switch
+	swc = switch -c
+	br = branch
+	df = diff --color-words
+	back = reset --soft HEAD~1
+	pom = push origin main
+	aliases = config --get-regexp alias
+[core]
+	editor = nvim
