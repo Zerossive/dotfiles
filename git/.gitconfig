@@ -28,3 +28,5 @@
 	aliases = config --get-regexp alias
 [core]
 	editor = nvim
+[commit]
+	template = /home/danny/.gitmessage

@@ -1,0 +1,24 @@
+# No more than 72 chars ───────────────────────────── which is here -> #
+
+# COMMIT TYPES
+# ├─ feat:         adding or removing features
+# ├─ fix:          bug fixes
+# ├─ refactor:     code changes that neither fix a bug nor add a feature
+# ├─ content:      adds content e.g. articles, videos, etc.
+# ├─ docs:         changes to documentation
+# ├─ revert:       reverts a previous commit
+# └─ chore:        miscellaneous changes
+
+############################ EXAMPLE COMMIT ############################
+# feat(scope)!: add Feature to project
+#
+# This is an example body paragraph. The scope is an optional field to
+# make a more specific commit. Be consistent in letter casing.
+#
+# This is another body paragraph, and below is the footer.
+#
+# BREAKING CHANGE: either this line or the "!" above are required
+# Co-authored-by: Jane Doe
+# Reviewed-by: John Doe
+# Refs: #123
+########################################################################

@@ -3,7 +3,7 @@ alias ll='eza -hlF --icons --no-permissions --no-user --group-directories-first 
 alias lla='eza -halF --icons --no-permissions --no-user --group-directories-first --time-style relative'
 alias copy='wl-copy' # Fuzzy search for directories
 alias dufc='duf --hide-fs squashfs --hide-mp /boot,/boot/efi,/' # Disk usage
-alias treec='eza -T --icons --group-directories-first'
+alias lt='eza -T --icons --group-directories-first'
 
 alias lock='loginctl lock-session 2'
 alias unlock='loginctl unlock-session 2'
@@ -31,9 +31,6 @@ alias fzfc=" \
 	--preview-window hidden --preview-window=border \
 	--bind='ctrl-d:half-page-down,ctrl-u:half-page-up,alt-d:preview-half-page-down,alt-u:preview-half-page-up,alt-p:toggle-preview,ctrl-e:execute(nvim -O {} > /dev/tty)+abort,ctrl-o:execute-silent(xdg-open {})+abort' \
 	"
-
-# H2: Fuzzy search for file to edit
-alias fe="fzfc -m --bind 'start:toggle-preview' | xargs -r nvim -O" # Fuzzy search for files to edit
 
 # H2: Fuzzy search for a directory to enter
 f() {
