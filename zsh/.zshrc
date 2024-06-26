@@ -12,6 +12,9 @@ source ~/.nvm/nvm.sh
 export ZSH="$HOME/.oh-my-zsh"
 export EDITOR=nvim
 
+# Other directories in Path
+export PATH=$PATH:~/.local/bin
+
 # Theme
 ZSH_THEME="powerlevel10k/powerlevel10k" # default: robbyrussell
 source ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/catppuccin_mocha-zsh-syntax-highlighting.zsh
@@ -19,6 +22,9 @@ export FZF_DEFAULT_OPTS=" \
 --color=bg+:#313244,bg:#1e1e2e,spinner:#cba6f7,hl:#f38ba8 \
 --color=fg:#cdd6f4,header:#f38ba8,info:#74c7ec,pointer:#cba6f7 \
 --color=marker:#cba6f7,fg+:#cdd6f4,prompt:#74c7ec,hl+:#f38ba8"
+
+# Set default `bat` theme
+export BAT_THEME="base16"
 
 # Hyphen-insensitive completion
 HYPHEN_INSENSITIVE="true"
