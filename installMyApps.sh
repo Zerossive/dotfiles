@@ -69,6 +69,7 @@ TERMINAL_TOOLS="
 	speedtest-cli
 	entr
 	stow
+	trash-cli
 "
 
 # sudo dnf install -y $LIST_OF_APPS
