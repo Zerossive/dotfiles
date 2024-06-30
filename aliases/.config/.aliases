@@ -1,13 +1,14 @@
 # H1: Basic aliases
 alias ll='eza -hlF --icons --no-permissions --no-user --group-directories-first --time-style relative'
-alias lla='eza -halF --icons --no-permissions --no-user --group-directories-first --time-style relative'
+alias lla='eza -halF --icons --no-user --group-directories-first --time-style relative'
+alias lt='eza -T --icons --group-directories-first'
 alias copy='wl-copy'
 alias dufc='duf --hide-fs squashfs --hide-mp /boot,/boot/efi,/' # Disk usage
-alias lt='eza -T --icons --group-directories-first'
 alias lsblkc='lsblk -Mpo LABEL,NAME,FSTYPE,SIZE,FSAVAIL,FSUSE%,MOUNTPOINT -e7'
 alias now='date "+%-I:%M %p" | tee >(copy -n)'
 alias today='date "+%Y-%m-%d" | tee >(copy -n)'
 alias datetime='date "+%Y-%m-%d %-I:%M %p" | tee >(copy -n)'
+alias ai='aichat'
 
 alias lock='loginctl lock-session 2'
 alias unlock='loginctl unlock-session 2'
@@ -24,7 +25,23 @@ alias projects="cd ~/Elysium/Projects/"
 alias status_code="curl -s -m 5 -o /dev/null -w '%{http_code}' -L" # Get status code of a website
 alias weather='curl -s -m 3 "https://wttr.in/mesquite?Q"'
 
+alias mnt-olympus="mountpoint -q /mnt/OLYMPUS && echo 'Already mounted' || sshfs -o allow_other,follow_symlinks,reconnect,default_permissions danny@olympus:/home/danny/ /mnt/OLYMPUS"
+alias umnt-olympus="umount /mnt/OLYMPUS"
+
 alias {q,quick,nq,eq,note}="nvim -c 'e ~/Elysium/Obsidian\\ Vault/Quick\\ Note.md'"
+
+# H1: General Functions
+help() {
+    bat -l md --style plain << "EOF"
+
+# GENERAL
+General useful information about using the terminal on this machine
+
+# TERMINAL TOOLS
+`fzfc`       fuzzy search
+`lsblkc`     list block devices
+EOF
+}
 
 # H1: Fuzzy search
 # H2: Custom FZF
