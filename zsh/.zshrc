@@ -29,6 +29,9 @@ export BAT_THEME="base16"
 # Hyphen-insensitive completion
 HYPHEN_INSENSITIVE="true"
 
+# API Keys
+export GEMINI_API_KEY=$(secret-tool lookup api_key gemini)
+
 ### Updates
 
 # Uncomment one of the following lines to change the auto-update behavior

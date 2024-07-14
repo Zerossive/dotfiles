@@ -1,5 +1,5 @@
 model: gemini
 clients:
     - type: gemini
-      api_key: AIzaSyBDy3pkt7EAiSiJZJMvMQ7xBgNYIs-mQA4
+      ENV: GEMINI_API_KEY
 keybindings: vi
