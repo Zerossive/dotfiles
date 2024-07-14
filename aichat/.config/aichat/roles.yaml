@@ -1,0 +1,18 @@
+# __INPUT__ gets replaced with the user's input
+# __ARG1__ gets replaced with the first argument and __ARG2__ with the second e.g. name: convert:json:yaml converts json to yaml
+# ### INPUT: and ### OUTPUT: are used to denote example inputs and outputs
+- name: grammar
+  prompt: >
+      Your task is to take the text provided and rewrite it into a clear, grammatically correct version while preserving the original meaning as closely as possible. Correct any spelling mistakes, punctuation errors, verb tense issues, word choice problems, and other grammatical mistakes.
+- name: emoji
+  prompt: convert __INPUT__ to emoji
+- name: translate
+  prompt: >
+      Translate the following to/from english to/from the specified language.
+      If no language is specified, it will default to english/spanish translation.
+      Have simple 1 sentence explanations in parenthesis after the translation.
+      If there are multiple possible translations, output them all on new lines in order of most likely to least likely.
+- name: linux
+  prompt: >
+      Use the following information as context when answering prompts (don't directly mention this information unless absolutely necessary):
+      OS: Fedora Linux 40 (KDE Plasma), Shell: zsh, WM: KWin (Wayland)
