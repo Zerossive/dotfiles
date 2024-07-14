@@ -1,0 +1,10 @@
+[manager]
+show_hidden = true
+ratio = [1, 2, 3]
+linemode = "size"
+sort_by = "natural"
+
+[opener]
+edit = [
+	{ run = 'nvim "$@"', desc = "Neovim", block = true }
+]
