@@ -1,47 +1,91 @@
-# H1: Basic aliases
-alias ll='eza -hlF --icons --no-permissions --no-user --group-directories-first --time-style relative'
-alias lla='eza -halF --icons --no-user --group-directories-first --time-style relative'
-alias lt='eza -T --icons --group-directories-first'
-alias copy='wl-copy'
-alias dufc='duf --hide-fs squashfs --hide-mp /boot,/boot/efi,/' # Disk usage
-alias lsblkc='lsblk -Mpo LABEL,NAME,FSTYPE,SIZE,FSAVAIL,FSUSE%,MOUNTPOINT -e7'
-alias now='date "+%-I:%M %p" | tee >(copy -n)'
-alias today='date "+%Y-%m-%d" | tee >(copy -n)'
-alias datetime='date "+%Y-%m-%d %-I:%M %p" | tee >(copy -n)'
-alias ai='aichat'
+# H1: Renamed Commands
+alias copy="wl-copy"
+alias ai="aichat"
+alias t="tmux"
+alias n="nvim"
+alias c="clear"
 
-alias lock='loginctl lock-session 2'
-alias unlock='loginctl unlock-session 2'
-alias playpause='playerctl play-pause'
+# H1: Preset Flags
+alias ll="eza -hlF --icons --no-permissions --no-user --group-directories-first --time-style relative"
+alias lla="eza -halF --icons --no-user --group-directories-first --time-style relative"
+alias lt="eza -T --icons --group-directories-first"
+alias dufc="duf --hide-fs squashfs --hide-mp /boot,/boot/efi,/" # Disk usage
+alias rsyncc="rsync -havP"
 alias install="sudo dnf install"
 alias remove="sudo dnf remove"
 alias search="sudo dnf search"
-alias t="tmux"
-alias n="nvim"
-alias e="nvim -c 'OilPreview'"
-alias c="clear"
-alias afk="cmatrix -s -C blue" # Matrix AFK screen
-alias projects="cd ~/Elysium/Projects/"
+alias ne="nvim -c 'OilPreview'"
+alias afk="cmatrix -s -C blue"                                     # Matrix AFK screen
 alias status_code="curl -s -m 5 -o /dev/null -w '%{http_code}' -L" # Get status code of a website
-alias weather='curl -s -m 3 "https://wttr.in/mesquite?Q"'
+alias datec="date '+%Y-%m-%d' -d"
+alias timec="date '+%-I:%M %p' -d"
+alias datetimec="date '+%Y-%m-%d %-I:%M %p' -d"
+alias ail="aichat -r linux"
 
+# H1: Preset Commands w/ Parameters
+alias aliases="bat --style plain ~/.config/.aliases" # List aliases
+alias ea="nvim ~/.config/.aliases"                   # Edit aliases
+alias lsblkc="lsblk -Mpo LABEL,NAME,FSTYPE,SIZE,FSAVAIL,FSUSE%,MOUNTPOINT -e7"
+alias fl="flatpak list --app --columns=size,application,version,name | tr -d ' ' | sort -hr | column -t | bat --style plain" # list flatpaks installed sorted by size
+alias now="date '+%-I:%M %p' | tee >(copy -n)"
+alias today="date '+%Y-%m-%d' | tee >(copy -n)"
+alias datetime="date '+%Y-%m-%d %-I:%M %p' | tee >(copy -n)"
+alias lock="loginctl lock-session 2"
+alias unlock="loginctl unlock-session 2"
+alias playpause="playerctl play-pause"
+alias weather="curl -s -m 3 'https://wttr.in/mesquite?Q'"
 alias mnt-olympus="mountpoint -q /mnt/OLYMPUS && echo 'Already mounted' || sshfs -o allow_other,follow_symlinks,reconnect,default_permissions danny@olympus:/home/danny/ /mnt/OLYMPUS"
 alias umnt-olympus="umount /mnt/OLYMPUS"
-
+alias daily="flatpak run com.vivaldi.Vivaldi --new-window https://timeguessr.com https://monkeytype.com && nvim -c 'VimBeGood'"
+alias dailynote='n ~/Elysium/Obsidian\ Vault/Notes/Daily/$(today).md'
 alias {q,quick,nq,eq,note}="nvim -c 'e ~/Elysium/Obsidian\\ Vault/Quick\\ Note.md'"
+alias todo="n ~/Elysium/Obsidian\ Vault/To-Do.md"
 
 # H1: General Functions
+# H2: Print general help information -------------- 80 char max -------------- #
 help() {
-    bat -l md --style plain << "EOF"
-
+    bat -l md --style plain <<"EOF"
+▁▁▁▁▁▁
+▏HELP▕
+▔▔▔▔▔▔
 # GENERAL
-General useful information about using the terminal on this machine
+**OS:**         Fedora Linux 40
+**DE:**         KDE Plasma 6.1.1
+**IP:**         *ATLAS:* 192.168.1.89   *OLYMPUS:* 192.168.1.179    *ATLANTIS:* 192.168.1.___
 
 # TERMINAL TOOLS
-`fzfc`       fuzzy search
-`lsblkc`     list block devices
+`fzfc`          fuzzy search
+`lsblkc`        list block devices
+`b`             bookmarked directories
+`mnt-`...       mount various storage devices e.g. `mnt-olympus`
+`fc`            open last command in editor, quitting with `:cq` will cancel
+`cdi`           runs zoxide interactive window to fuzzy search directories
+`yy`,`e`        open yazi file explorer with automatic cd on quit
+`atool`         archiving tool (`-l` list, `-x` extract, `-a` add)
+`magick`        image conversion tool (filetypes, sizes, effects, etc.)
+`navi`          interactive cli cheatsheet (`navi fn welcome` for cheatsheet)
+
+# OTHER NOTABLE COMMANDS
+`fkill`, `weather`, `dufc`, `rsyncc`, `f`, `ff`, `fu`, `fa`, `dnfc`, `color`
+
+# ALTERNATE PRORGRAMS
+`grep` -> `rg`, `find` -> `fd`, `ls` -> `eza`, `cd` -> `z (zoxide)`
+
+# OTHER
+**awesome-cli-apps**        https://github.com/agarrharr/awesome-cli-apps
 EOF
 }
+
+# H1: Yazi shortcut to allow for the changing of directories after quitting
+function yy() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+    yazi "$@" --cwd-file="$tmp"
+    if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+        cd -- "$cwd"
+    fi
+    rm -f -- "$tmp"
+}
+alias e="yy"
 
 # H1: Fuzzy search
 # H2: Custom FZF
@@ -69,179 +113,96 @@ alias fzfc=" \
 
 # H2: Fuzzy search for a directory to enter
 f() {
-  local dir
-  dir=$(fd . -d 3 -t d -H "$@" | fzfc --bind "start:toggle-preview")
-  if [ -n "$dir" ]; then
-	cd "$dir" || exit
-  fi
+    local dir
+    dir=$(fd . -d 3 -t d -H "$@" | fzfc --bind "start:toggle-preview")
+    if [ -n "$dir" ]; then
+        cd "$dir" || exit
+    fi
 }
 
 # H2: Fuzzy search for files copy path
 ff() {
-	local selected_path
-	selected_path=$(fd . -d 3 -t f -H "$@" | fzfc --bind "start:toggle-preview")
-	if [ -n "$selected_path" ]; then
-		echo -n "$selected_path" | wl-copy
-		echo "$selected_path"
-	fi
+    local selected_path
+    selected_path=$(fd . -d 3 -t f -H "$@" | fzfc --bind "start:toggle-preview")
+    if [ -n "$selected_path" ]; then
+        echo -n "$selected_path" | wl-copy
+        echo "$selected_path"
+    fi
 }
 
 # H2: Fuzzy search for bookmarked folders
 b() {
-	local bookmarks=(
-		~/Elysium
-		~/Elysium/Projects
-		~/Elysium/Projects/*
-		~/Downloads
-		~/dotfiles
-		~/.config
-		~/Syncthing
-		~/Elysium/Documents
-		~/.local/bin
-		/mnt/1TB\ SSD
-		/mnt/1TB\ HDD
-	)
-	local selected_path
-	selected_path=$(printf "%s\n" "${bookmarks[@]}" | sed 's/\/home\/danny/~/' | fzfc)
-	# selected_path=$(printf "%s\n" "${bookmarks[@]}" | sed 's/\/home\/danny/~/' | fzfc)
-	if [ -n "$selected_path" ]; then
-		cd "$(eval echo "$selected_path")" || exit
-	fi
+    local bookmarks=(
+        ~/Elysium
+        ~/Elysium/Projects
+        ~/Elysium/Projects/*
+        ~/Downloads
+        ~/dotfiles
+        ~/.config
+        ~/Syncthing
+        ~/Elysium/Documents
+        ~/.local/bin
+        /mnt/1TB\ SSD
+        /mnt/1TB\ HDD
+        /mnt/OLYMPUS
+    )
+    local selected_path
+    selected_path=$(printf "%s\n" "${bookmarks[@]}" | sed 's/\/home\/danny/~/' | fzfc)
+    # selected_path=$(printf "%s\n" "${bookmarks[@]}" | sed 's/\/home\/danny/~/' | fzfc)
+    if [ -n "$selected_path" ]; then
+        cd "$(eval echo "$selected_path")" || exit
+    fi
 }
 
 # H2: Fuzzy search for parent directories to enter
 fu() {
-	local dir_list
-	local parent_dir
-	parent_dir=$(dirname "$(realpath "${1:-.}")")
-	while [ "$parent_dir" != "/" ]; do
-		dir_list+="\n$parent_dir"
-		parent_dir=$(dirname "$parent_dir")
-	done
-	dir_list=$(echo "$dir_list" | sed 's/\/home\/danny/~/' | grep -v -e '^/home$' -e '^$' -e '^~$' | fzfc)
-	if [ -n "$dir_list" ]; then
-		cd "$(eval echo "$dir_list")" || exit
-	fi
+    local dir_list
+    local parent_dir
+    parent_dir=$(dirname "$(realpath "${1:-.}")")
+    while [ "$parent_dir" != "/" ]; do
+        dir_list+="\n$parent_dir"
+        parent_dir=$(dirname "$parent_dir")
+    done
+    dir_list=$(echo "$dir_list" | sed 's/\/home\/danny/~/' | grep -v -e '^/home$' -e '^$' -e '^~$' | fzfc)
+    if [ -n "$dir_list" ]; then
+        cd "$(eval echo "$dir_list")" || exit
+    fi
 }
 
 # H2: Fuzzy search all directories and files
 fa() {
-	local pathname
-	pathname="$(locate "${1:-/}" | fzfc --bind "start:toggle-preview")"
+    local pathname
+    pathname="$(locate "${1:-/}" | fzfc --bind "start:toggle-preview")"
 
-	if [ -n "$pathname" ]; then
-		if [ -d "$pathname" ]; then
-			cd "$pathname" || exit
-		elif [ -f "$pathname" ]; then
-			echo -n "$pathname" | wl-copy
-			echo "$pathname"
-		fi
-	fi
+    if [ -n "$pathname" ]; then
+        if [ -d "$pathname" ]; then
+            cd "$pathname" || exit
+        elif [ -f "$pathname" ]; then
+            echo -n "$pathname" | wl-copy
+            echo "$pathname"
+        fi
+    fi
 }
 
 # H2: Fuzzy search for processes to kill
 fkill() {
-    local pid 
+    local pid
     if [ "$UID" != "0" ]; then
         pid=$(ps -f -u $UID | sed 1d | fzfc | awk '{print $2}')
     else
         pid=$(ps -ef | sed 1d | fzfc | awk '{print $2}')
-    fi  
+    fi
 
-    if [ "x$pid" != "x" ]
-    then
+    if [ "x$pid" != "x" ]; then
         echo $pid | xargs kill -${1:-9}
-    fi  
+    fi
 }
 
 # H2: Fuzzy search for a package to install
 dnfc() {
-	local result
-	result="$(dnf -qC repoquery "$@" --qf '%{name} - %{summary}' | fzfc	--bind 'alt-u:half-page-up' | sed 's/ - .*//')"
-	[ -n "$result" ] && sudo dnf install "$result"
-}
-
-# H2: Open project folder
-proj() {
-    local orig_dir="$PWD"  # Store the original directory
-    cd ~/Elysium/Projects/ || return
-    local dir="$(ls -d */ | fzfc )"
-    if [ -n "$dir" ]; then
-        cd "$dir" || return
-    else
-        cd "$orig_dir" || exit # Go back to the original directory
-    fi
-}
-
-# H2: Color Picker
-# H3: Catppuccin color palette
-catppuccin_colors=(
-    "Rosewater - #F5E0DC"
-    "Flamingo - #F2CDCD"
-    "Pink - #F5C2E7"
-    "Mauve - #CBA6F7"
-    "Red - #F38BA8"
-    "Maroon - #EBA0AC"
-    "Peach - #FAB387"
-    "Yellow - #F9E2AF"
-    "Green - #A6E3A1"
-    "Teal - #94E2D5"
-    "Sky - #89DEEB"
-    "Sapphire - #74C7EC"
-    "Blue - #89B4FA"
-    "Lavender - #B4BEFE"
-    "Text - #CDD6F4"
-    "Subtext1 - #BAC2DE"
-    "Subtext0 - #A6ADC8"
-    "Overlay2 - #9399B2"
-    "Overlay1 - #7F849C"
-    "Overlay0 - #6C7086"
-    "Surface2 - #585B70"
-    "Surface1 - #45475A"
-    "Surface0 - #313244"
-    "Base - #1E1E2E"
-    "Mantle - #181825"
-    "Crust - #11111B"
-)
-
-# H3: Function to display the color palette with fzf and copy the hex code
-color() {
-	search_term="$1"
-	selected_color=$(printf "%s\n" "${catppuccin_colors[@]}" | fzfc --prompt "Select a color: " --header "Catppuccin Color Palette" -q "$search_term" -1 -0)
-
-    echo "\nTerminal Colors:"
-    count=0
-    for i in {0..15}; do
-        print -Pn "%-10s" "%K{$i}  %k%F{$i} ${(l:3::0:)i}%f "
-        ((count++))
-        if (( count == 4 )); then
-            echo
-            count=0
-        fi
-    done | column -t
-    echo
-
-    echo -e "\nCatppuccin Color Palette:"
-    count=0
-    for color in "${catppuccin_colors[@]}"; do
-        color_name="${color%% -*}"
-        hex_code="${color##*- }"
-        print -Pn "%-20s" "%K{$hex_code}  %k $color_name"
-        ((count++))
-        if (( count == 4 )); then
-            echo
-            count=0
-        fi
-    done | column -t
-    echo
-
-    if [[ -n "$selected_color" ]]; then
-        color_name="${selected_color%% -*}"
-        hex_code="${selected_color##*- }"
-        echo -n "$hex_code" | wl-copy
-        # print -Pn "%K{$hex_code}  %k %F{$hex_code}$hex_code ($color_name)%f copied to clipboard\n"
-        print -Pn "%K{$hex_code}  %k \033[1m$hex_code ($color_name)\033[0m copied to clipboard\n"
-    fi
+    local result
+    result="$(dnf -qC repoquery "$@" --qf '%{name} - %{summary}' | fzfc --bind 'alt-u:half-page-up' | sed 's/ - .*//')"
+    [ -n "$result" ] && sudo dnf install "$result"
 }
 
 # vim:ft=sh
