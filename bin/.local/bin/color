@@ -1,0 +1,75 @@
+#!/bin/zsh
+
+# H1: Color Picker
+# H2: Catppuccin color palette
+catppuccin_colors=(
+    "Rosewater - #F5E0DC"
+    "Flamingo - #F2CDCD"
+    "Pink - #F5C2E7"
+    "Mauve - #CBA6F7"
+    "Red - #F38BA8"
+    "Maroon - #EBA0AC"
+    "Peach - #FAB387"
+    "Yellow - #F9E2AF"
+    "Green - #A6E3A1"
+    "Teal - #94E2D5"
+    "Sky - #89DEEB"
+    "Sapphire - #74C7EC"
+    "Blue - #89B4FA"
+    "Lavender - #B4BEFE"
+    "Text - #CDD6F4"
+    "Subtext1 - #BAC2DE"
+    "Subtext0 - #A6ADC8"
+    "Overlay2 - #9399B2"
+    "Overlay1 - #7F849C"
+    "Overlay0 - #6C7086"
+    "Surface2 - #585B70"
+    "Surface1 - #45475A"
+    "Surface0 - #313244"
+    "Base - #1E1E2E"
+    "Mantle - #181825"
+    "Crust - #11111B"
+)
+
+# H2: Function to display the color palette with fzf and copy the hex code
+color() {
+	search_term="$1"
+	selected_color=$(printf "%s\n" "${catppuccin_colors[@]}" | fzfc --prompt "Select a color: " --header "Catppuccin Color Palette" -q "$search_term" -1 -0)
+
+    echo "\nTerminal Colors:"
+    count=0
+    for i in {0..15}; do
+        print -Pn "%-10s" "%K{$i}  %k%F{$i} ${(l:3::0:)i}%f "
+        ((count++))
+        if (( count == 4 )); then
+            echo
+            count=0
+        fi
+    done | column -t
+    echo
+
+    echo -e "\nCatppuccin Color Palette:"
+    count=0
+    for color in "${catppuccin_colors[@]}"; do
+        color_name="${color%% -*}"
+        hex_code="${color##*- }"
+        print -Pn "%-20s" "%K{$hex_code}  %k $color_name"
+        ((count++))
+        if (( count == 4 )); then
+            echo
+            count=0
+        fi
+    done | column -t
+    echo
+
+    if [[ -n "$selected_color" ]]; then
+        color_name="${selected_color%% -*}"
+        hex_code="${selected_color##*- }"
+        echo -n "$hex_code" | wl-copy
+        # print -Pn "%K{$hex_code}  %k %F{$hex_code}$hex_code ($color_name)%f copied to clipboard\n"
+        print -Pn "%K{$hex_code}  %k \033[1m$hex_code ($color_name)\033[0m copied to clipboard\n"
+    fi
+}
+
+# H2: Call the function
+color "$@"
