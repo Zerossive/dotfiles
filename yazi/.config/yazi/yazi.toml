@@ -8,3 +8,11 @@ sort_by = "natural"
 edit = [
 	{ run = 'nvim "$@"', desc = "Neovim", block = true }
 ]
+play = [
+	# { run = 'flatpak run org.videolan.VLC "$@"', orphan = true, for = "unix" }
+	{ run = 'xdg-open "$@"', orphan = true, for = "unix" }
+]
+
+[preview]
+max_width = 1920
+max_height = 1080
