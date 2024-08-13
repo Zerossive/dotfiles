@@ -30,7 +30,9 @@ export BAT_THEME="base16"
 HYPHEN_INSENSITIVE="true"
 
 # API Keys
-export GEMINI_API_KEY=$(secret-tool lookup api_key gemini)
+if [ -f ~/.api_keys ]; then
+  . ~/.api_keys
+fi
 
 ### Updates
 
