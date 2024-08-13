@@ -30,14 +30,14 @@ alias fl="flatpak list --app --columns=size,application,version,name | tr -d ' 
 alias now="date '+%-I:%M %p' | tee >(copy -n)"
 alias today="date '+%Y-%m-%d' | tee >(copy -n)"
 alias datetime="date '+%Y-%m-%d %-I:%M %p' | tee >(copy -n)"
-alias lock="loginctl lock-session 2"
-alias unlock="loginctl unlock-session 2"
+alias lock="loginctl lock-session"
+alias unlock="loginctl unlock-session"
 alias playpause="playerctl play-pause"
 alias weather="curl -s -m 3 'https://wttr.in/mesquite?Q'"
 alias mnt-olympus="mountpoint -q /mnt/OLYMPUS && echo 'Already mounted' || sshfs -o allow_other,follow_symlinks,reconnect,default_permissions danny@olympus:/home/danny/ /mnt/OLYMPUS"
 alias umnt-olympus="umount /mnt/OLYMPUS"
-alias daily="flatpak run com.vivaldi.Vivaldi --new-window https://timeguessr.com https://monkeytype.com && nvim -c 'VimBeGood'"
-alias dailynote='n ~/Elysium/Obsidian\ Vault/Notes/Daily/$(today).md'
+alias daily="flatpak run com.vivaldi.Vivaldi --new-window https://monkeytype.com https://timeguessr.com && nvim -c 'VimBeGood'"
+alias {dailynote,dn}='nvim -c "DailyNote"'
 alias {q,quick,nq,eq,note}="nvim -c 'e ~/Elysium/Obsidian\\ Vault/Quick\\ Note.md'"
 alias todo="n ~/Elysium/Obsidian\ Vault/To-Do.md"
 
@@ -68,6 +68,9 @@ help() {
 # OTHER NOTABLE COMMANDS
 `fkill`, `weather`, `dufc`, `rsyncc`, `f`, `ff`, `fu`, `fa`, `dnfc`, `color`
 
+## FUN COMMANDS
+`cmatrix`, `cava`, `figlet`
+
 # ALTERNATE PRORGRAMS
 `grep` -> `rg`, `find` -> `fd`, `ls` -> `eza`, `cd` -> `z (zoxide)`
 
@@ -86,6 +89,7 @@ function yy() {
     rm -f -- "$tmp"
 }
 alias e="yy"
+alias se="sudo /home/linuxbrew/.linuxbrew/bin/yazi"
 
 # H1: Fuzzy search
 # H2: Custom FZF
