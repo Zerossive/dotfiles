@@ -4,13 +4,17 @@ alias ai="aichat"
 alias t="tmux"
 alias n="nvim"
 alias c="clear"
+alias lg="lazygit"
+alias tw='timew'
+alias open="xdg-open"
+alias hl='hledger'
 
 # H1: Preset Flags
 alias ll="eza -hlF --icons --no-permissions --no-user --group-directories-first --time-style relative"
 alias lla="eza -halF --icons --no-user --group-directories-first --time-style relative"
 alias lt="eza -T --icons --group-directories-first"
 alias dufc="duf --hide-fs squashfs --hide-mp /boot,/boot/efi,/" # Disk usage
-alias rsyncc="rsync -havP"
+alias rsyncc="rsync -haviP"
 alias install="sudo dnf install"
 alias remove="sudo dnf remove"
 alias search="sudo dnf search"
@@ -21,8 +25,16 @@ alias datec="date '+%Y-%m-%d' -d"
 alias timec="date '+%-I:%M %p' -d"
 alias datetimec="date '+%Y-%m-%d %-I:%M %p' -d"
 alias ail="aichat -r linux"
+alias aig="aichat -r grammar --no-stream"
+alias aigc="wl-paste | aichat -r grammar --no-stream | wl-copy"
+alias ait="aichat -e"
+alias tws='timew summary :id :annotation'
+alias qc="qalc --terse"
+alias qci="qalc -c --interactive"
+alias hlui='hledger-ui --theme=terminal --tree --all'
 
 # H1: Preset Commands w/ Parameters
+alias {refresh,re}="source ~/.zshrc"
 alias aliases="bat --style plain ~/.config/.aliases" # List aliases
 alias ea="nvim ~/.config/.aliases"                   # Edit aliases
 alias lsblkc="lsblk -Mpo LABEL,NAME,FSTYPE,SIZE,FSAVAIL,FSUSE%,MOUNTPOINT -e7"
@@ -36,10 +48,13 @@ alias playpause="playerctl play-pause"
 alias weather="curl -s -m 3 'https://wttr.in/mesquite?Q'"
 alias mnt-olympus="mountpoint -q /mnt/OLYMPUS && echo 'Already mounted' || sshfs -o allow_other,follow_symlinks,reconnect,default_permissions danny@olympus:/home/danny/ /mnt/OLYMPUS"
 alias umnt-olympus="umount /mnt/OLYMPUS"
-alias daily="flatpak run com.vivaldi.Vivaldi --new-window https://monkeytype.com https://timeguessr.com && nvim -c 'VimBeGood'"
+# alias daily="flatpak run com.vivaldi.Vivaldi --new-window https://monkeytype.com https://timeguessr.com && nvim -c 'VimBeGood'"
+alias daily="flatpak run com.vivaldi.Vivaldi --new-window https://monkeytype.com https://timeguessr.com https://vim-racer.com/game-mode/randomized/"
 alias {dailynote,dn}='nvim -c "DailyNote"'
 alias {q,quick,nq,eq,note}="nvim -c 'e ~/Elysium/Obsidian\\ Vault/Quick\\ Note.md'"
 alias todo="n ~/Elysium/Obsidian\ Vault/To-Do.md"
+alias ipc='ip -4 -brief a'
+alias ta='tmux new-session -A -s work'
 
 # H1: General Functions
 # H2: Print general help information -------------- 80 char max -------------- #
@@ -51,7 +66,9 @@ help() {
 # GENERAL
 **OS:**         Fedora Linux 40
 **DE:**         KDE Plasma 6.1.1
-**IP:**         *ATLAS:* 192.168.1.89   *OLYMPUS:* 192.168.1.179    *ATLANTIS:* 192.168.1.___
+**IP:**         *ATLAS:* 192.168.1.89
+                *OLYMPUS:* 192.168.1.231
+                *ATLANTIS:* 192.168.1.230
 
 # TERMINAL TOOLS
 `fzfc`          fuzzy search
@@ -64,12 +81,20 @@ help() {
 `atool`         archiving tool (`-l` list, `-x` extract, `-a` add)
 `magick`        image conversion tool (filetypes, sizes, effects, etc.)
 `navi`          interactive cli cheatsheet (`navi fn welcome` for cheatsheet)
+`wtf`           print various error logs
+`rsyncc`        copy using `rsync -haviP`
+        `-n`                dry-run
+        `-u`                don't replace newer files
+        `--ignore-existing` ignore existing files
+        `--delete`          delete destination files
+        `--exclude`         exclude based on given pattern
 
 # OTHER NOTABLE COMMANDS
-`fkill`, `weather`, `dufc`, `rsyncc`, `f`, `ff`, `fu`, `fa`, `dnfc`, `color`
+`fkill`, `weather`, `dufc`, `f`, `ff`, `fu`, `fa`, `dnfc`, `color`, `sshs`,
+`qalc`, `delta`, `re/refresh`, `ipc`, `timew/tw`, `pomodoro/pt`
 
 ## FUN COMMANDS
-`cmatrix`, `cava`, `figlet`
+`cmatrix`, `cava`, `figlet`, `showfigfontsc`
 
 # ALTERNATE PRORGRAMS
 `grep` -> `rg`, `find` -> `fd`, `ls` -> `eza`, `cd` -> `z (zoxide)`
@@ -77,6 +102,15 @@ help() {
 # OTHER
 **awesome-cli-apps**        https://github.com/agarrharr/awesome-cli-apps
 EOF
+}
+# ---------------------------------------------------------------------------- #
+
+# H1: Print various error logs
+function wtf() {
+    echo '\njournalctl:\n'
+    journalctl -p 3 -xb
+    echo '\ndmesg:\n'
+    sudo dmesg | grep -i 'error\|fail\|segault'
 }
 
 # H1: Yazi shortcut to allow for the changing of directories after quitting
@@ -205,8 +239,200 @@ fkill() {
 # H2: Fuzzy search for a package to install
 dnfc() {
     local result
-    result="$(dnf -qC repoquery "$@" --qf '%{name} - %{summary}' | fzfc --bind 'alt-u:half-page-up' | sed 's/ - .*//')"
+    result="$(dnf -qC repoquery "$@" --qf '%{name} - %{summary}\n' | fzfc --bind 'alt-u:half-page-up' --bind 'alt-d:half-page-down' | sed 's/ - .*//')"
     [ -n "$result" ] && sudo dnf install "$result"
 }
+
+# H2: List notable figlet fonts using input text
+showfigfontsc() {
+    # if not input, set default
+    [ -z "$*" ] && set -- "ABC Abc abc"
+    echo "format: figlet -f <font> <text>\n"
+    echo 'THIS'
+    figlet -ctW -f THIS "$@"
+    echo 'Sweet'
+    figlet -ctW -f Sweet "$@"
+    echo 'Sub-Zero'
+    figlet -ctW -f Sub-Zero "$@"
+    echo 'swampland'
+    figlet -ctW -f swampland "$@"
+    echo 'starwars'
+    figlet -ctW -f starwars "$@"
+    echo 'standard'
+    figlet -ctW -f standard "$@"
+    echo 'Speed'
+    figlet -ctW -f Speed "$@"
+    echo 'slant'
+    figlet -ctW -f slant "$@"
+    echo 'Poison'
+    figlet -ctW -f Poison "$@"
+    echo 'Isometric1'
+    figlet -ctW -f Isometric1 "$@"
+    echo 'Shimrod'
+    figlet -ctW -f Shimrod "$@"
+    echo 'Rounded'
+    figlet -ctW -f Rounded "$@"
+    echo 'Roman'
+    figlet -ctW -f Roman "$@"
+    echo 'miniwi'
+    figlet -ctW -f miniwi "$@"
+    echo 'maxiwi'
+    figlet -ctW -f maxiwi "$@"
+    echo 'Blocks'
+    figlet -ctW -f Blocks "$@"
+    echo 'kompaktblk'
+    figlet -ctW -f kompaktblk "$@"
+    echo 'halfiwi'
+    figlet -ctW -f halfiwi "$@"
+    echo 'Epic'
+    figlet -ctW -f Epic "$@"
+    echo 'Elite'
+    figlet -ctW -f Elite "$@"
+    echo 'Electronic'
+    figlet -ctW -f Electronic "$@"
+    echo 'Doom'
+    figlet -ctW -f Doom "$@"
+    echo 'Cybermedium'
+    figlet -ctW -f Cybermedium "$@"
+    echo 'Crawford2'
+    figlet -ctW -f Crawford2 "$@"
+    echo 'cosmic'
+    figlet -ctW -f cosmic "$@"
+    echo "\nformat: figlet -f <font> <text>"
+}
+
+# H2: Pomodoro Timer
+pomodoro() {
+    local duration="$1"
+    local name="$2"
+    #if no duration, set default
+    [ -z "$duration" ] && duration="20m"
+    [ -z "$name" ] && name="Task"
+    timer ${duration} -n "${name}" -f &&
+        spd-say "${name} complete" -r +30 -p -100 -i -20 &&
+        notify-send "${name} complete" &&
+        paplay /usr/share/sounds/freedesktop/stereo/complete.oga
+}
+alias {pt,pomo}="pomodoro"
+
+# H2: Resize, Convert, and Rename Images to Optimize for Web
+optimize-images() {
+    # HELP
+    if [[ " ${@} " == *" help "* ]] || [[ " ${@} " == *" h "* ]]; then
+        echo "optimize-images [image-paths]"
+        echo "alias: oi"
+        echo '\nResize, Convert, and Rename Images to Optimize for Web'
+        echo "\t- if props are passed, optimize those images"
+        echo "\t- otherwise, optimize all images in input/"
+        return
+    fi
+
+    local input
+    declare -a images
+    if [ "$#" -gt 0 ]; then
+        # WITH INPUT ARGUMENTS
+        input=$(echo "$*" | sed 's/ /\n/g')
+        while IFS= read -r line; do
+            # check if file exists
+            [ -f "$line" ] || {
+                echo "invalid path: $line\nCANCELLED"
+                return
+            }
+            images+=("$line")
+        done < <(echo "$input")
+    else
+        # WITHOUT INPUT ARGUMENTS
+        # check if input dir exists
+        [ -d "./input" ] || {
+            echo 'not found: input/\nCANCELLED'
+            return
+        }
+        input=$(find input/*)
+        # check if input dir is empty
+        [ -n "$input" ] || {
+            echo 'empty: input/\nCANCELLED'
+            return
+        }
+        # loop over each file in input dir
+        while IFS= read -r line; do
+            # check if file exists
+            [ -f "$line" ] || {
+                echo "invalid path: $line\nCANCELLED"
+                return
+            }
+            images+=("$line")
+        done < <(echo "$input")
+    fi
+
+    # Make output directory if it doesn't exist
+    [ -d "./output" ] || {
+        mkdir "output" &&
+            echo "created: output/"
+    }
+
+    # Loop over each file
+    local threshold1
+    local threshold2
+    local threshold3
+    threshold1=1920
+    threshold2=1200
+    threshold3=400
+    local width
+    local imageName
+    for image in "${images[@]}"; do
+        # User image width to determine resize breakpoints
+        width=$(exiftool -ImageWidth "$image" -s -s -s || return)
+        imageName=$(basename "${image%.*}")
+        if [ "$width" -gt "$threshold1" ]; then
+            magick "$image" "output/${imageName}_full.webp" &&
+                magick "$image" -resize ${threshold1}x "output/${imageName}_${threshold1}.webp" &&
+                magick "$image" -resize ${threshold2}x "output/${imageName}_${threshold2}.webp" &&
+                magick "$image" -resize ${threshold3}x "output/${imageName}_${threshold3}.webp" &&
+                echo "converted: $image" ||
+                echo "error converting: $image"
+        elif [ "$width" -gt "$threshold2" ]; then
+            magick "$image" "output/${imageName}_full.webp" &&
+                magick "$image" -resize ${threshold2}x "output/${imageName}_${threshold2}.webp" &&
+                magick "$image" -resize ${threshold3}x "output/${imageName}_${threshold3}.webp" &&
+                echo "converted: $image" ||
+                echo "error converting: $image"
+        elif [ "$width" -gt "$threshold3" ]; then
+            magick "$image" "output/${imageName}_full.webp" &&
+                magick "$image" -resize ${threshold3}x "output/${imageName}_${threshold3}.webp" &&
+                echo "converted: $image" ||
+                echo "error converting: $image"
+        else
+            magick "$image" "output/${imageName}_full.webp" &&
+                echo "converted: $image" ||
+                echo "error converting: $image"
+        fi
+    done
+
+    if [ -d "output" ] && [ "$(ls -A output)" ]; then
+        # confirm files in output dir
+        [ "$(ls -A output)" ] && echo "COMPLETE"
+    else
+        # delete output dir if empty
+        rmdir "output" &&
+            echo "deleted: output/\nCANCELLED"
+    fi
+}
+alias oi="optimize-images"
+
+# H2: List trashed files from the current directory
+list-trash() {
+    local current_dir
+    current_dir=$(realpath .) &&
+        rg -o "Path=$current_dir/.*" --no-filename "$HOME"/.local/share/Trash/info/* | sed 's/^Path=//' | python3 -c "import sys, urllib.parse; print(urllib.parse.unquote(sys.stdin.read()))"
+}
+find-trash() {
+    local trashed_file
+    trashed_file=$(list-trash | fzfc | sed 's|.*/||')
+    if [ -n "$trashed_file" ]; then
+        copy "/home/danny/.local/share/Trash/files/$trashed_file" &&
+            echo "copied to clipboard:\n/home/danny/.local/share/Trash/files/$trashed_file"
+    fi
+}
+alias ft="find-trash"
 
 # vim:ft=sh
