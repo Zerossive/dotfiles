@@ -1,0 +1,23 @@
+services:
+    navidrome:
+        image: deluan/navidrome:latest
+        container_name: navidrome
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - TZ=America/Chicago
+            - ND_SCANSCHEDULE=30m
+            - ND_ENABLEGRAVATAR=true
+            - ND_ENABLESHARING=true
+            - ND_SCANNER_GROUPALBUMRELEASES=true
+            - ND_DEFAULTTHEME=Catppuccin Macchiato
+            - ND_SPOTIFY_ID=${ND_SPOTIFY_ID}
+            - ND_SPOTIFY_SECRET=${ND_SPOTIFY_SECRET}
+            - ND_LASTFM_APIKEY=${ND_LASTFM_APIKEY}
+            - ND_LASTFM_SECRET=${ND_LASTFM_SECRET}
+        volumes:
+            - /home/danny/media/navidrome:/data
+            - /home/danny/media/music:/music:ro
+        ports:
+            - 4533:4533
+        restart: unless-stopped
