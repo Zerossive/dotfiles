@@ -7,6 +7,8 @@
 	helper = !/usr/bin/gh auth git-credential
 [init]
 	defaultBranch = main
+[push]
+	autoSetupRemote = true
 [alias]
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 	s = status -s
@@ -21,10 +23,17 @@
 	swc = switch -c
 	br = branch
 	df = diff --color-words
-	back = reset --soft HEAD~1
+	undo = reset --soft HEAD~1
 	pom = push origin main
 	aliases = config --get-regexp alias
 [core]
 	editor = nvim
+	pager = delta
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true ; navigate using 'n' and 'N'
+[merge]
+	conflictstyle = diff3
 [commit]
 	template = /home/danny/.gitmessage
