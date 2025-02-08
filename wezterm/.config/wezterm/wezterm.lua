@@ -49,6 +49,8 @@ config.window_padding = {
 config.default_cursor_style = "SteadyBar"
 config.force_reverse_video_cursor = true
 config.adjust_window_size_when_changing_font_size = false
+config.warn_about_missing_glyphs = false
+config.max_fps = 144
 
 -- and finally, return the configuration to wezterm
 return config
