@@ -1,0 +1,58 @@
+#!/bin/bash
+
+remind() {
+	if [[ "$1" == "list" || "$1" == "-l" ]]; then
+		local timers
+		timers=$(systemctl --user list-timers --no-pager --no-legend | awk '{print $NF}' | grep remind- || true)
+
+		if [[ -n "$timers" ]]; then
+			echo "Active Reminders:"
+			systemctl --user list-timers --no-pager --all 'remind-*'
+			for timer in $timers; do
+				echo "$timer"
+				echo "        $(systemctl --user show "$timer" --property Description --value | sed 's/^[^ ]* [^ ]*//')"
+			done
+		else
+			echo "No active reminders"
+		fi
+		return 0
+	fi
+
+	if [[ $# -eq 1 && ("$1" == "cancel" || "$1" == "-c") ]]; then
+		local timers
+		timers=$(systemctl --user list-timers --no-pager --no-legend | awk '{print $NF}' | grep remind-)
+
+		if [[ -n "$timers" ]]; then
+			local services
+			services=$(echo "$timers" | sed 's/\.service$/.timer/')
+
+			echo "$timers $services" | xargs -r systemctl --user stop
+			systemctl --user reset-failed
+
+			echo "All reminders cancelled"
+		else
+			echo "No active reminders to cancel"
+		fi
+		return 0
+	fi
+
+	local delay="$1"
+	shift
+	local message="$*"
+
+	if [[ -z "$message" ]]; then
+		echo "Usage: remind <delay> <message>"
+		echo "       remind list  (or -l) to list active reminders"
+		echo "       remind cancel (or -c) to cancel all reminders"
+		return 1
+	fi
+
+	local unit_name
+	unit_name="remind-$(date +%s%N)"
+
+	systemd-run --user --on-active="$delay" --timer-property=AccuracySec=1s --unit="$unit_name" --quiet bash -c 'notify-send --icon=clock --urgency=critical --app-name=Reminder "$1" && paplay /usr/share/sounds/freedesktop/stereo/complete.oga' _ "$message" &&
+		echo -e "Reminder set for $delay: '$message'\n\nUnit name: $unit_name" ||
+		echo "Valid arguments: remind <delay> <message>"
+}
+
+remind "$@"
