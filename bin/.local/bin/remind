@@ -1,10 +1,13 @@
 #!/bin/bash
 
 remind() {
+	# List active reminders
 	if [[ "$1" == "list" || "$1" == "-l" ]]; then
+		# Get timer data
 		local timers
 		timers=$(systemctl --user list-timers --no-pager --no-legend | awk '{print $NF}' | grep remind- || true)
 
+		# Check for reminders, then list them
 		if [[ -n "$timers" ]]; then
 			echo "Active Reminders:"
 			systemctl --user list-timers --no-pager --all 'remind-*'
@@ -18,10 +21,13 @@ remind() {
 		return 0
 	fi
 
+	# Cancel all reminders
 	if [[ $# -eq 1 && ("$1" == "cancel" || "$1" == "-c") ]]; then
+		# Get timer data
 		local timers
 		timers=$(systemctl --user list-timers --no-pager --no-legend | awk '{print $NF}' | grep remind-)
 
+		# Check for reminders, then cancel them all
 		if [[ -n "$timers" ]]; then
 			local services
 			services=$(echo "$timers" | sed 's/\.service$/.timer/')
@@ -36,10 +42,12 @@ remind() {
 		return 0
 	fi
 
+	# Initialize arguments
 	local delay="$1"
 	shift
 	local message="$*"
 
+	# Check for valid arguments
 	if [[ -z "$message" ]]; then
 		echo "Usage: remind <delay> <message>"
 		echo "       remind list  (or -l) to list active reminders"
@@ -47,10 +55,15 @@ remind() {
 		return 1
 	fi
 
+	# Set up a systemd timer unit name
 	local unit_name
 	unit_name="remind-$(date +%s%N)"
 
-	systemd-run --user --on-active="$delay" --timer-property=AccuracySec=1s --unit="$unit_name" --quiet bash -c 'notify-send --icon=clock --urgency=critical --app-name=Reminder "$1" && paplay /usr/share/sounds/freedesktop/stereo/complete.oga' _ "$message" &&
+	# Create a systemd timer unit that: sends a notification, plays a sound, and pings a KDE Connect device
+	systemd-run --user --on-active="$delay" --timer-property=AccuracySec=1s --unit="$unit_name" --quiet \
+		bash -c "notify-send --icon=clock --urgency=critical --app-name=Reminder "$message" && \
+		paplay /usr/share/sounds/freedesktop/stereo/complete.oga && \
+		kdeconnect-cli --ping-msg "$message" -n HERMES" &&
 		echo -e "Reminder set for $delay: '$message'\n\nUnit name: $unit_name" ||
 		echo "Valid arguments: remind <delay> <message>"
 }
