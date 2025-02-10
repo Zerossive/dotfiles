@@ -32,6 +32,7 @@ alias tws='timew summary :id :annotation'
 alias qc="qalc --terse"
 alias qci="qalc -c --interactive"
 alias hlui='hledger-ui --theme=terminal --tree --all'
+alias dockerl='docker ps --format "table {{.Names}}\t{{.ID}}\t{{.Status}}"'
 
 # H1: Preset Commands w/ Parameters
 alias {refresh,re}="source ~/.zshrc"
