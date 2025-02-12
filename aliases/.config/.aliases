@@ -50,7 +50,6 @@ alias playpause="playerctl play-pause"
 alias weather="curl -s -m 3 'https://wttr.in/mesquite?Q'"
 alias mnt-olympus="mountpoint -q /mnt/OLYMPUS && echo 'Already mounted' || sshfs -o allow_other,follow_symlinks,reconnect,default_permissions danny@olympus:/home/danny/ /mnt/OLYMPUS"
 alias umnt-olympus="umount /mnt/OLYMPUS"
-# alias daily="flatpak run com.vivaldi.Vivaldi --new-window https://monkeytype.com https://timeguessr.com && nvim -c 'VimBeGood'"
 alias daily="flatpak run com.vivaldi.Vivaldi --new-window https://monkeytype.com https://timeguessr.com https://vim-racer.com/game-mode/randomized/"
 alias {dailynote,dn}='nvim -c "DailyNote"'
 alias {q,quick,nq,eq,note}="nvim -c 'e ~/Elysium/Obsidian\\ Vault/Quick\\ Note.md'"
