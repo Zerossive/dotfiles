@@ -33,6 +33,7 @@ alias qc="qalc --terse"
 alias qci="qalc -c --interactive"
 alias hlui='hledger-ui --theme=terminal --tree --all'
 alias dockerl='docker ps --format "table {{.Names}}\t{{.ID}}\t{{.Status}}"'
+alias duc="du -sh"
 
 # H1: Preset Commands w/ Parameters
 alias {refresh,re}="source ~/.zshrc"
