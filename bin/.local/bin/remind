@@ -61,9 +61,9 @@ remind() {
 
 	# Create a systemd timer unit that: sends a notification, plays a sound, and pings a KDE Connect device
 	systemd-run --user --on-active="$delay" --timer-property=AccuracySec=1s --unit="$unit_name" --quiet \
-		bash -c "notify-send --icon=clock --urgency=critical --app-name=Reminder "$message" && \
+		bash -c "notify-send --icon=clock --urgency=critical --app-name=Reminder '$message' && \
 		paplay /usr/share/sounds/freedesktop/stereo/complete.oga && \
-		kdeconnect-cli --ping-msg "$message" -n HERMES" &&
+		kdeconnect-cli --ping-msg '$message' -n HERMES" &&
 		echo -e "Reminder set for $delay: '$message'\n\nUnit name: $unit_name" ||
 		echo "Valid arguments: remind <delay> <message>"
 }
