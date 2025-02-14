@@ -92,7 +92,7 @@ help() {
 
 # OTHER NOTABLE COMMANDS
 `fkill`, `weather`, `dufc`, `f`, `ff`, `fu`, `fa`, `dnfc`, `color`, `sshs`,
-`qalc`, `delta`, `re/refresh`, `ipc`, `timew/tw`, `pomodoro/pt`
+`qalc/qc/qci`, `delta`, `re/refresh`, `ipc`, `timew/tw`, `pomodoro/pt`, `mega-cmd`
 
 ## FUN COMMANDS
 `cmatrix`, `cava`, `figlet`, `showfigfontsc`
