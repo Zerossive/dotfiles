@@ -6,14 +6,19 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # node (node version manager)
-source ~/.nvm/nvm.sh
+# source ~/.nvm/nvm.sh
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 export EDITOR=nvim
+export LEDGER_FILE=~/Elysium/Documents/Danny/Finance/hledger.journal
 
 # Other directories in Path
 export PATH=$PATH:~/.local/bin
+# API Keys
+if [ -f ~/.api_keys ]; then
+  . ~/.api_keys
+fi
 
 # Theme
 ZSH_THEME="powerlevel10k/powerlevel10k" # default: robbyrussell
@@ -29,24 +34,6 @@ export BAT_THEME="base16"
 # Hyphen-insensitive completion
 HYPHEN_INSENSITIVE="true"
 
-# API Keys
-if [ -f ~/.api_keys ]; then
-  . ~/.api_keys
-fi
-
-### Updates
-
-# Uncomment one of the following lines to change the auto-update behavior
-# zstyle ':omz:update' mode disabled  # disable automatic updates
-# zstyle ':omz:update' mode auto      # update automatically without asking
-# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
-
-# Uncomment the following line to change how often to auto-update (in days).
-# zstyle ':omz:update' frequency 13
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
 # Completion waiting dots
 COMPLETION_WAITING_DOTS="true"
 
@@ -54,7 +41,7 @@ COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="yyyy-mm-dd"
 
 # Plugins
-plugins=(vi-mode colored-man-pages zsh-completions zsh-autosuggestions command-not-found zsh-syntax-highlighting thefuck zsh-fzf-history-search taskwarrior)
+plugins=(vi-mode colored-man-pages zsh-completions zsh-autosuggestions command-not-found zsh-syntax-highlighting thefuck zsh-fzf-history-search timewarrior)
 
 # vi-mode settings
 VI_MODE_SET_CURSOR=true
@@ -75,8 +62,8 @@ eval $(thefuck --alias)
 # Zoxide
 eval "$(zoxide init --cmd cd zsh)"
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
 # Homebrew
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
