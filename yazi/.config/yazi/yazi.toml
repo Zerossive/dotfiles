@@ -3,16 +3,27 @@ show_hidden = true
 ratio = [1, 2, 3]
 linemode = "size"
 sort_by = "natural"
+image_delay = 200
 
 [opener]
 edit = [
-	{ run = 'nvim "$@"', desc = "Neovim", block = true }
+	{ run = 'nvim "$@"', desc = "Neovim", block = true },
 ]
 play = [
-	# { run = 'flatpak run org.videolan.VLC "$@"', orphan = true, for = "unix" }
-	{ run = 'xdg-open "$@"', orphan = true, for = "unix" }
+	# { run = 'flatpak run org.videolan.VLC "$@"', orphan = true, for = "unix" },
+	{ run = 'xdg-open "$@"', orphan = true, for = "unix" },
 ]
 
 [preview]
 max_width = 1920
 max_height = 1080
+
+[[plugin.prepend_fetchers]]
+id   = "git"
+name = "*"
+run  = "git"
+
+[[plugin.prepend_fetchers]]
+id   = "git"
+name = "*/"
+run  = "git"

@@ -1,7 +1,6 @@
 [manager]
 prepend_keymap = [
-	{ on = [ "?" ], run = "help", desc = "Open help" },
-	{ on = [ "<C-w>" ], run = "close", desc = "Close the current tab, or quit if it is last tab" },
+	# directory shortcuts
 	{ on = [ "g" ,"y" ], run = "cd ~/.config/yazi", desc = "Go to the yazi config directory" },
 	{ on = [ "g" ,"e" ], run = "cd ~/Elysium/", desc = "Go to the Elysium directory" },
 	{ on = [ "g" ,"o" ], run = "cd /mnt/autofs/OLYMPUS/", desc = "Go to the OLYMPUS mounted directory" },
@@ -9,10 +8,20 @@ prepend_keymap = [
 	{ on = [ "g", "p" ], run = "cd ~/Elysium/Projects", desc = "Go to the projects directory" },
 	{ on = [ "g" ,"n" ], run = "cd ~/.config/nvim", desc = "Go to the neovim config directory" },
 	{ on = [ "g" ,"m" ], run = "cd /mnt", desc = "Go to the mnt directory" },
+	{ on = [ "g" ,"M" ], run = "cd /run/media/danny", desc = "Go to the media device directory" },
 	{ on = [ "g" ,"b" ], run = "cd ~/.local/bin", desc = "Go to the local bin directory" },
 	{ on = [ "g" ,"t" ], run = "cd ~/.local/share/Trash/files", desc = "Go to the trash directory" },
 	{ on = [ "g" ,"s" ], run = "cd ~/Pictures/Screenshots", desc = "Go to the screenshots directory" },
-	{ on = [ "\\" ], run = 'shell "$SHELL" --block --confirm', desc = "Open shell here" },
-	# { on = [ "" ], run = 'shell "$SHELL" --block --confirm', desc = "Open shell here" },
-	{ on = ["T"], run = "plugin --sync max-preview", desc = "Maximize or restore preview" },
+
+	# toggle panes
+	{ on = "<A-1>", run = "plugin toggle-view parent", desc = "Toggle parent" },
+    { on = "<A-2>", run = "plugin toggle-view current", desc = "Toggle current" },
+    { on = "<A-3>", run = "plugin toggle-view preview", desc = "Toggle preview" },
+
+	# other
+	{ on =  "\\" , run = 'shell "$SHELL" --block', desc = "Open shell here" },
+	{ on = "<A-->", run = "hardlink", desc = "Hardlink yanked files" },
+	{ on =  "?" , run = "help", desc = "Open help" },
+	# { on =  "<C-w>" , run = "close", desc = "Close the current tab, or quit if it is last tab" },
+	{ on =  "M" , run = "plugin mount" ,desc="Open mount menu"},
 ]
