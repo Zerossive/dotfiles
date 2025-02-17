@@ -21,7 +21,9 @@ flatpak
 steam
 discord
 jellyfin
-cava"
+cava
+qalc
+git-delta"
 
 FLATPAK_LIST="com.github.qarmin.czkawka
 com.belmoussaoui.Decoder
@@ -39,7 +41,10 @@ net.davidotek.pupgui2
 io.gitlab.theevilskeleton.Upscaler
 io.github.flattool.Warehouse"
 
-BREW_LIST="yazi"
+BREW_LIST="yazi
+sshs
+aichat
+exiftool"
 
 TERMINAL_LIST="bat
 btop
