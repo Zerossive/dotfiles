@@ -51,10 +51,12 @@ VI_MODE_RESET_PROMPT_ON_MODE_CHANGE=true
 source $ZSH/oh-my-zsh.sh
 
 # Aliases
-source /home/danny/.config/.aliases
+source $HOME/.config/.aliases
 
 # Disable highlight on paste
 zle_highlight+=(paste:none)
+
+# [[ Keep this at the end ]]
 
 # It said to put this after installing thefuck rpm (pip didn't work)
 eval $(thefuck --alias)
