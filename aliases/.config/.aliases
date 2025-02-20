@@ -430,8 +430,8 @@ find-trash() {
     local trashed_file
     trashed_file=$(list-trash | fzfc | sed 's|.*/||')
     if [ -n "$trashed_file" ]; then
-        copy "/home/danny/.local/share/Trash/files/$trashed_file" &&
-            echo "copied to clipboard:\n/home/danny/.local/share/Trash/files/$trashed_file"
+        copy "$HOME/.local/share/Trash/files/$trashed_file" &&
+            echo "copied to clipboard:\n$HOME/.local/share/Trash/files/$trashed_file"
     fi
 }
 alias ft="find-trash"
