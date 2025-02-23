@@ -56,6 +56,9 @@ source $HOME/.config/.aliases
 # Disable highlight on paste
 zle_highlight+=(paste:none)
 
+# [[ Custom Keybinds ]]
+bindkey -s "^F" "cdi\n"
+
 # [[ Keep this at the end ]]
 
 # It said to put this after installing thefuck rpm (pip didn't work)
