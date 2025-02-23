@@ -169,50 +169,29 @@ ff() {
     fi
 }
 
-# H2: Fuzzy search for bookmarked folders
-b() {
-    local bookmarks=(
-        ~/Elysium
-        ~/Elysium/Projects
-        ~/Elysium/Projects/*
-        ~/Downloads
-        ~/dotfiles
-        ~/.config
-        ~/Syncthing
-        ~/Elysium/Documents
-        ~/.local/bin
-        /mnt/1TB\ SSD
-        /mnt/1TB\ HDD
-        /mnt/OLYMPUS
-    )
-    local selected_path
-    selected_path=$(printf "%s\n" "${bookmarks[@]}" | sed 's/\/home\/danny/~/' | fzfc)
-    # selected_path=$(printf "%s\n" "${bookmarks[@]}" | sed 's/\/home\/danny/~/' | fzfc)
-    if [ -n "$selected_path" ]; then
-        cd "$(eval echo "$selected_path")" || exit
-    fi
-}
-
 # H2: Fuzzy search for parent directories to enter
 fu() {
+    # Construct list of parent directories
     local dir_list
     local parent_dir
     parent_dir=$(dirname "$(realpath "${1:-.}")")
-    while [ "$parent_dir" != "/" ]; do
-        dir_list+="\n$parent_dir"
-        parent_dir=$(dirname "$parent_dir")
-    done
-    dir_list=$(echo "$dir_list" | sed 's/\/home\/danny/~/' | grep -v -e '^/home$' -e '^$' -e '^~$' | fzfc)
-    if [ -n "$dir_list" ]; then
-        cd "$(eval echo "$dir_list")" || exit
+    if [[ "$parent_dir" == "$HOME"* ]]; then   # if parent resides in $HOME
+        while [ "$parent_dir" != "$HOME" ]; do # add to dir_list until parent IS $HOME
+            dir_list+="$parent_dir\n"
+            parent_dir=$(dirname "$parent_dir")
+        done
     fi
+    dir_list+="$HOME"
+    # Select directory to enter
+    local selected_path
+    selected_path=$(echo "$dir_list" | sed 's/\/home\/danny/~/' | fzfc)
+    [ -n "$selected_path" ] && cd "$(eval echo "$selected_path")" || return 1
 }
 
 # H2: Fuzzy search all directories and files
 fa() {
     local pathname
     pathname="$(locate "${1:-/}" | fzfc --bind "start:toggle-preview")"
-
     if [ -n "$pathname" ]; then
         if [ -d "$pathname" ]; then
             cd "$pathname" || exit
@@ -231,7 +210,6 @@ fkill() {
     else
         pid=$(ps -ef | sed 1d | fzfc | awk '{print $2}')
     fi
-
     if [ "x$pid" != "x" ]; then
         echo $pid | xargs kill -${1:-9}
     fi
@@ -327,7 +305,6 @@ optimize-images() {
         echo "\t- otherwise, optimize all images in input/"
         return
     fi
-
     local input
     declare -a images
     if [ "$#" -gt 0 ]; then
@@ -364,13 +341,11 @@ optimize-images() {
             images+=("$line")
         done < <(echo "$input")
     fi
-
     # Make output directory if it doesn't exist
     [ -d "./output" ] || {
         mkdir "output" &&
             echo "created: output/"
     }
-
     # Loop over each file
     local threshold1
     local threshold2
@@ -408,7 +383,6 @@ optimize-images() {
                 echo "error converting: $image"
         fi
     done
-
     if [ -d "output" ] && [ "$(ls -A output)" ]; then
         # confirm files in output dir
         [ "$(ls -A output)" ] && echo "COMPLETE"
