@@ -27,7 +27,8 @@ alias datetimec="date '+%Y-%m-%d %-I:%M %p' -d"
 alias ail="aichat -r linux"
 alias aig="aichat -r grammar --no-stream"
 alias aigc="wl-paste | aichat -r grammar --no-stream | wl-copy"
-alias ait="aichat -e"
+alias aie="aichat -e"
+alias aic="aichat -c"
 alias tws='timew summary :id :annotation'
 alias qc="qalc --terse"
 alias qci="qalc -c --interactive"
@@ -89,6 +90,7 @@ help() {
         `--ignore-existing` ignore existing files
         `--delete`          delete destination files
         `--exclude`         exclude based on given pattern
+`entr`          run commands when files change e.g. `ls FILE_PATTERN | entr COMMAND`
 
 # OTHER NOTABLE COMMANDS
 `fkill`, `weather`, `dufc`, `f`, `ff`, `fu`, `fa`, `dnfc`, `color`, `sshs`,
