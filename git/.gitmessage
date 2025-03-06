@@ -5,6 +5,7 @@
 # ├─ feat:         adding or removing features
 # ├─ fix:          bug fixes
 # ├─ refactor:     code changes that neither fix a bug nor add a feature
+# ├─ perf:         performance optimizations
 # ├─ content:      adds content e.g. articles, videos, etc.
 # ├─ docs:         changes to documentation
 # ├─ revert:       reverts a previous commit
