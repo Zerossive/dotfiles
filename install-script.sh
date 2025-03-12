@@ -23,7 +23,11 @@ discord
 jellyfin
 cava
 qalc
-git-delta"
+git-delta
+beets
+beets-doc
+beets-plugins
+mp3gain"
 
 FLATPAK_LIST="com.github.qarmin.czkawka
 com.belmoussaoui.Decoder
@@ -72,6 +76,7 @@ vscodium
 portmaster
 nomachine
 awakened poe trade
+exiled exchange 2
 brave
 vivaldi
 scc"
