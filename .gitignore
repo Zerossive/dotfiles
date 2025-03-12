@@ -1,0 +1,6 @@
+beets/.config/beets/library.db
+beets/.config/beets/spotify_token.json
+beets/.config/beets/state.pickle
+docker/dockge/data/dockge.db-shm
+docker/dockge/data/dockge.db-wal
+yazi/.config/yazi/plugins/yatline-catppuccin.yazi
