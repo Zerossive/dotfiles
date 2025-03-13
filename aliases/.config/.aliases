@@ -35,6 +35,7 @@ alias qci="qalc -c --interactive"
 alias hlui='hledger-ui --theme=terminal --tree --all'
 alias dockerl='docker ps --format "table {{.Names}}\t{{.ID}}\t{{.Status}}"'
 alias duc="du -sh"
+alias has="curl -sL https://git.io/_has | bash -s"
 
 # H1: Preset Commands w/ Parameters
 alias {refresh,re}="source ~/.zshrc"
@@ -49,8 +50,8 @@ alias lock="loginctl lock-session"
 alias unlock="loginctl unlock-session"
 alias playpause="playerctl play-pause"
 alias weather="curl -s -m 3 'https://wttr.in/mesquite?Q'"
-alias mnt-olympus="mountpoint -q /mnt/OLYMPUS && echo 'Already mounted' || sshfs -o allow_other,follow_symlinks,reconnect,default_permissions danny@olympus:/home/danny/ /mnt/OLYMPUS"
-alias umnt-olympus="umount /mnt/OLYMPUS"
+# alias mnt-olympus="mountpoint -q /mnt/OLYMPUS && echo 'Already mounted' || sshfs -o allow_other,follow_symlinks,reconnect,default_permissions danny@olympus:/home/danny/ /mnt/OLYMPUS"
+# alias umnt-olympus="umount /mnt/OLYMPUS"
 alias daily="flatpak run com.vivaldi.Vivaldi --new-window https://monkeytype.com https://timeguessr.com https://vim-racer.com/game-mode/randomized/"
 alias {dailynote,dn}='nvim -c "DailyNote"'
 alias {q,quick,nq,eq,note}="nvim -c 'e ~/Elysium/Obsidian\\ Vault/Quick\\ Note.md'"
@@ -90,11 +91,12 @@ help() {
         `--ignore-existing` ignore existing files
         `--delete`          delete destination files
         `--exclude`         exclude based on given pattern
-`entr`          run commands when files change e.g. `ls FILE_PATTERN | entr COMMAND`
+`entr`          run commands when files change e.g. `ls PATH | entr COMMAND`
 
 # OTHER NOTABLE COMMANDS
 `fkill`, `weather`, `dufc`, `f`, `ff`, `fu`, `fa`, `dnfc`, `color`, `sshs`,
-`qalc/qc/qci`, `delta`, `re/refresh`, `ipc`, `timew/tw`, `pomodoro/pt`, `mega-cmd`
+`qalc/qc/qci`, `delta`, `re/refresh`, `ipc`, `timew/tw`, `pomodoro/pt`,
+`mega-cmd`, `has`
 
 ## FUN COMMANDS
 `cmatrix`, `cava`, `figlet`, `showfigfontsc`
@@ -407,7 +409,7 @@ find-trash() {
     trashed_file=$(list-trash | fzfc | sed 's|.*/||')
     if [ -n "$trashed_file" ]; then
         copy "$HOME/.local/share/Trash/files/$trashed_file" &&
-            echo "copied to clipboard:\n$HOME/.local/share/Trash/files/$trashed_file"
+            echo "$HOME/.local/share/Trash/files/$trashed_file"
     fi
 }
 alias ft="find-trash"
