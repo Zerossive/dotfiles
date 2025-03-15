@@ -1,0 +1,21 @@
+directory: ~/Music/beets/music
+# library: ~/Music/beets/library.db
+plugins: chroma spotify deezer fromfilename duplicates edit embedart lastgenre lyrics replaygain fetchart info
+
+import:
+  # don't group based on folder structure
+  group_albums: true
+
+embedart:
+  # remove art files after embedding the compressed art
+  remove_art_file: true
+  quality: 70
+  maxwidth: 1000
+
+musicbrainz:
+  # also use extra tags for better matching
+  extra_tags: [year, catalognum, country, media, label]
+
+lastgenre:
+  # get the 3 most popular genres per-track
+  count: 3
