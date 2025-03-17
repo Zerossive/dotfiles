@@ -50,14 +50,14 @@ alias lock="loginctl lock-session"
 alias unlock="loginctl unlock-session"
 alias playpause="playerctl play-pause"
 alias weather="curl -s -m 3 'https://wttr.in/mesquite?Q'"
-# alias mnt-olympus="mountpoint -q /mnt/OLYMPUS && echo 'Already mounted' || sshfs -o allow_other,follow_symlinks,reconnect,default_permissions danny@olympus:/home/danny/ /mnt/OLYMPUS"
-# alias umnt-olympus="umount /mnt/OLYMPUS"
-alias daily="flatpak run com.vivaldi.Vivaldi --new-window https://monkeytype.com https://timeguessr.com https://vim-racer.com/game-mode/randomized/"
+alias daily="flatpak run com.vivaldi.Vivaldi --new-window https://monkeytype.com https://timeguessr.com https://vim-racer.com/game-mode/randomized/ https://www.geoguessr.com/vgp/3224 https://www.geoguessr.com/vgp/3003 https://www.geoguessr.com/vgp/3007"
 alias {dailynote,dn}='nvim -c "DailyNote"'
 alias {q,quick,nq,eq,note}="nvim -c 'e ~/Elysium/Obsidian\\ Vault/Quick\\ Note.md'"
 alias todo="n ~/Elysium/Obsidian\ Vault/To-Do.md"
 alias ipc='ip -4 -brief a'
 alias ta='tmux new-session -A -s work'
+alias lastcommit="gh search commits --committer Zerossive --sort committer-date --json commit --jq '.[0].commit.committer.date' --limit 1 | xargs date '+%Y-%m-%d %-I:%M %p' -d"
+alias lastcommits='gh search commits --committer Zerossive --sort committer-date'
 
 # H1: General Functions
 # H2: Print general help information -------------- 80 char max -------------- #
@@ -76,8 +76,6 @@ help() {
 # TERMINAL TOOLS
 `fzfc`          fuzzy search
 `lsblkc`        list block devices
-`b`             bookmarked directories
-`mnt-`...       mount various storage devices e.g. `mnt-olympus`
 `fc`            open last command in editor, quitting with `:cq` will cancel
 `cdi`           runs zoxide interactive window to fuzzy search directories
 `yy`,`e`        open yazi file explorer with automatic cd on quit
@@ -92,11 +90,12 @@ help() {
         `--delete`          delete destination files
         `--exclude`         exclude based on given pattern
 `entr`          run commands when files change e.g. `ls PATH | entr COMMAND`
+`remind`        set and list reminder notifications e.g. `remind 15m do task`
 
 # OTHER NOTABLE COMMANDS
 `fkill`, `weather`, `dufc`, `f`, `ff`, `fu`, `fa`, `dnfc`, `color`, `sshs`,
 `qalc/qc/qci`, `delta`, `re/refresh`, `ipc`, `timew/tw`, `pomodoro/pt`,
-`mega-cmd`, `has`
+`mega-cmd`, `has`, `lastcommit/lastcommits`
 
 ## FUN COMMANDS
 `cmatrix`, `cava`, `figlet`, `showfigfontsc`
