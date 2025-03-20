@@ -1,5 +1,5 @@
 [user]
-	name = Zerossive
+	name = Danny
 	email = 47612836+Zerossive@users.noreply.github.com
 [credential "https://github.com"]
 	helper = !/usr/bin/gh auth git-credential
