@@ -1,4 +1,4 @@
-directory: ~/Music/beets/music
+directory: ~/Music/beets
 # library: ~/Music/beets/library.db
 plugins: chroma spotify deezer fromfilename duplicates edit embedart lastgenre lyrics replaygain fetchart info
 
@@ -19,3 +19,9 @@ musicbrainz:
 lastgenre:
   # get the 3 most popular genres per-track
   count: 3
+
+lyrics:
+  # overwrite existing lyrics
+  force: yes
+  # prefer synced lyrics (from lrclib)
+  synced: yes
