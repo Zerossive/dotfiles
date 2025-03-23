@@ -20,14 +20,7 @@ vlc
 flatpak
 steam
 discord
-jellyfin
-cava
-qalc
-git-delta
-beets
-beets-doc
-beets-plugins
-mp3gain"
+jellyfin"
 
 FLATPAK_LIST="com.github.qarmin.czkawka
 com.belmoussaoui.Decoder
@@ -48,7 +41,8 @@ io.github.flattool.Warehouse"
 BREW_LIST="yazi
 sshs
 aichat
-exiftool"
+exiftool
+timer"
 
 TERMINAL_LIST="bat
 btop
@@ -69,10 +63,21 @@ duf
 speedtest-cli
 entr
 stow
-trash-cli"
+trash-cli
+cava
+qalc
+git-delta
+beets
+beets-doc
+beets-plugins
+mp3gain
+docker-ce
+timew
+lazygit
+tmux
+imagemagick"
 
 OTHER_LIST="feishin
-vscodium
 portmaster
 nomachine
 awakened poe trade
@@ -80,6 +85,8 @@ exiled exchange 2
 brave
 vivaldi
 scc"
+
+NPM_LIST="typescript"
 
 list_apps() {
 	local category="${1:-all}"
@@ -91,6 +98,8 @@ list_apps() {
 		echo "$BREW_LIST"
 	elif [ $category == "terminal" ]; then
 		echo "$TERMINAL_LIST"
+	elif [ $category == "npm" ]; then
+		echo "$NPM_LIST"
 	elif [ $category == "other" ]; then
 		echo "$OTHER_LIST"
 	elif [ $category == "all" ]; then
@@ -100,7 +109,7 @@ list_apps() {
 		echo "$TERMINAL_LIST"
 		echo "$OTHER_LIST"
 	else
-		echo "Invalid argument (valid arguments: package, flatpak, brew, terminal, other, all)"
+		echo "Invalid argument (valid arguments: package, flatpak, brew, terminal, npm, other, all)"
 	fi
 }
 
@@ -126,6 +135,14 @@ brewInstall() {
 		echo "Error: brew not found"
 	fi
 }
+npmInstall() {
+	if command -v npm &> /dev/null; then
+		echo "Installing npm apps..."
+		sudo npm install -g $1
+	else
+		echo "Error: npm not found"
+	fi
+}
 
 install_apps() {
 	local category="${1:-all}"
@@ -137,6 +154,8 @@ install_apps() {
 		brewInstall "$BREW_LIST"
 	elif [ $category == "terminal" ]; then
 		packageInstall "$TERMINAL_LIST"
+	elif [ $category == "npm" ]; then
+		packageInstall "$NPM_LIST"
 	elif [ $category == "all" ]; then
 		packageInstall "$PACKAGE_LIST"
 		flatpakInstall "$FLATPAK_LIST"
