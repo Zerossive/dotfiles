@@ -34,7 +34,10 @@ catppuccin_colors=(
 # H2: Function to display the color palette with fzf and copy the hex code
 color() {
 	search_term="$1"
-	selected_color=$(printf "%s\n" "${catppuccin_colors[@]}" | fzfc --prompt "Select a color: " --header "Catppuccin Color Palette" -q "$search_term" -1 -0)
+	selected_color=$(printf "%s\n" "${catppuccin_colors[@]}" | fzfc --prompt "Select a color: " \
+        --preview='echo {} | awk "{print \$3}" | xargs -I _ colorize "_" ██ {}' \
+        --header "Catppuccin Color Palette" \
+        -q "$search_term" -1 -0)
 
     echo "\nTerminal Colors:"
     count=0
