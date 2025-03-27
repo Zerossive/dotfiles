@@ -1,4 +1,25 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# ==============================================================================
+# Script Name: remind
+# Description: After some period of time, send a notification, play a sound,
+#              and ping a KDE Connect device
+# Author: Danny Harris
+# Dependencies: kdeconnect-cli, paplay, notify-send
+# ==============================================================================
+
+show_help() {
+	cat <<EOF
+Usage: $(basename "$0") [list|cancel|<delay> <message>]
+
+Description:
+  After some period of time, send a notification, play a sound, and ping a
+  KDE Connect device.
+
+Options:
+  -l, list    list active reminders
+  -c, cancel  cancel active reminders
+EOF
+}
 
 remind() {
 	# List active reminders
@@ -49,9 +70,7 @@ remind() {
 
 	# Check for valid arguments
 	if [[ -z "$message" ]]; then
-		echo "Usage: remind <delay> <message>"
-		echo "       remind list  (or -l) to list active reminders"
-		echo "       remind cancel (or -c) to cancel all reminders"
+		show_help
 		return 1
 	fi
 
@@ -69,3 +88,5 @@ remind() {
 }
 
 remind "$@"
+
+# vim: set ft=sh:

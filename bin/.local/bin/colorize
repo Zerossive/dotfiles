@@ -1,16 +1,22 @@
-#!/bin/zsh
-# [[ colorize text based on  ]]
+#!/usr/bin/env bash
+# ==============================================================================
+# Script Name: colorize
+# Description: Colorize text using hex color codes
+# Author: Danny Harris
+# ==============================================================================
+
+# -e: exit on error, -u: treat unset variables as errors, -o pipefail: pipe will fail if any command fails
+set -euo pipefail
 
 # print instructions
-instructions() {
-    echo "Usage:"
-    echo -e "\tcolorize [\e[1m#RRGGBB\e[0m|\e[1mdefault\e[0m|\e[1m.\e[0m|\e[1m-\e[0m] [\e[1mTEXT\e[0m]"
+usage() {
+    echo -e "Usage: colorize [\e[1m#RRGGBB\e[0m|\e[1mdefault\e[0m|\e[1m.\e[0m|\e[1m-\e[0m] [\e[1mTEXT\e[0m]"
 }
 
 # print error and instructions
 error-out() {
     echo "Error: $*" >&2
-    instructions >&2
+    usage >&2
     exit 1
 }
 
@@ -20,7 +26,7 @@ if [[ -z "$*" ]]; then
 fi
 
 # save first argument as color and ust the rest as text to colorize
-local color=$1
+color=$1
 shift
 
 # Ensure color is formatted correctly, or uses a valid default value
@@ -38,7 +44,7 @@ if [[ ! $color =~ ^# ]]; then
 fi
 
 # If arguments are passed as text to be colorized, use them, otherwise check stdin
-local text
+text=""
 if [[ -n "$*" ]]; then
     text="$*"
 else

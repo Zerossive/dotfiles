@@ -1,4 +1,11 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
+# ==============================================================================
+# Script Name: color
+# Description: A script to display the Catppuccin color palette and
+#              copy the hex code to the clipboard.
+# Author: Danny Harris
+# Dependencies: fzf/fzfc, colorize
+# ==============================================================================
 
 # H1: Color Picker
 # H2: Catppuccin color palette
@@ -31,15 +38,29 @@ catppuccin_colors=(
     "Crust - #11111B"
 )
 
+# predefined fzf options
+FZF_OPTS=(
+    --prompt "Select a color: "
+    --preview='echo {} | awk "{print \$3}" | xargs -I _ colorize "_" ██ {}'
+    --header "Catppuccin Color Palette"
+    -1
+    -0
+    --exact
+)
+
 # H2: Function to display the color palette with fzf and copy the hex code
 color() {
 	search_term="$1"
-	selected_color=$(printf "%s\n" "${catppuccin_colors[@]}" | fzfc --prompt "Select a color: " \
-        --preview='echo {} | awk "{print \$3}" | xargs -I _ colorize "_" ██ {}' \
-        --header "Catppuccin Color Palette" \
-        -q "$search_term" -1 -0)
 
-    echo "\nTerminal Colors:"
+    # use custom fzfc command if it exists
+    if command -v fzfc &> /dev/null; then
+        selected_color=$(printf "%s\n" "${catppuccin_colors[@]}" | fzfc "${FZF_OPTS[@]}" -q "$search_term")
+    else
+        selected_color=$(printf "%s\n" "${catppuccin_colors[@]}" | fzf "${FZF_OPTS[@]}" -q "$search_term")
+    fi
+
+    # print out terminal colors
+    echo -e "Terminal Colors:"
     count=0
     for i in {0..15}; do
         print -Pn "%-10s" "%K{$i}  %k%F{$i} ${(l:3::0:)i}%f "
@@ -49,7 +70,6 @@ color() {
             count=0
         fi
     done | column -t
-    echo
 
     echo -e "\nCatppuccin Color Palette:"
     count=0
@@ -59,20 +79,20 @@ color() {
         print -Pn "%-20s" "%K{$hex_code}  %k $color_name"
         ((count++))
         if (( count == 4 )); then
-            echo
+            echo "\n"
             count=0
         fi
     done | column -t
-    echo
 
     if [[ -n "$selected_color" ]]; then
         color_name="${selected_color%% -*}"
         hex_code="${selected_color##*- }"
         echo -n "$hex_code" | wl-copy
-        # print -Pn "%K{$hex_code}  %k %F{$hex_code}$hex_code ($color_name)%f copied to clipboard\n"
-        print -Pn "%K{$hex_code}  %k \033[1m$hex_code ($color_name)\033[0m copied to clipboard\n"
+        print -Pn "\n%K{$hex_code}  %k \033[1m$hex_code ($color_name)\033[0m copied to clipboard\n"
     fi
 }
 
 # H2: Call the function
 color "$@"
+
+# vim: set ft=sh:

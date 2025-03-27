@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# Script Name: notify-all
+# Description: sends a notification to all listed devices
+# Uasge: notify-all <message>
+# Author: Danny Harris
+# Dependencies: notify-send, paplay, kdeconnect-cli
+# ==============================================================================
+
+# -e: exit on error, -u: treat unset variables as errors, -o pipefail: pipe will fail if any command fails
+set -euo pipefail
+
+# global variables
+MESSAGE="$*"
+
+usage() {
+    echo "Usage:"
+    echo -e "        notify-all \e[1m<message>\e[0m"
+}
+error() {
+    echo "error: $*" >&2
+    usage >&2
+    exit 1
+}
+
+# check for empty message
+if [ -z "$MESSAGE" ]; then
+    error "no message provided"
+fi
+
+# check last argument for -h or --help
+if [ "${*: -1}" == "-h" ] || [ "${*: -1}" == "--help" ]; then
+    usage
+    exit 0
+fi
+
+# notify all kdeconnect devices
+notify-kdeconnect-devices() {
+    local KDE_DEVICES
+    KDE_DEVICES=($(kdeconnect-cli --list-available --name-only))
+    # check for available devices
+    if [ -z "${KDE_DEVICES[*]}" ]; then
+        error "no kdeconnect devices found"
+    else
+        for device in "${KDE_DEVICES[@]}"; do
+            echo "notifying $device"
+            kdeconnect-cli --ping-msg "$MESSAGE" -n "$device"
+        done
+    fi
+
+}
+
+# play desktop notification sound
+play-desktop-sound() {
+    # check for paplay
+    if command -v paplay &>/dev/null; then
+        # check for oga file
+        local AUDIO_FILE="/usr/share/sounds/freedesktop/stereo/complete.oga"
+        if [ -f "$AUDIO_FILE" ]; then
+            paplay "$AUDIO_FILE"
+        else
+            error "no oga file found for paplay"
+        fi
+    else
+        error "paplay is not installed"
+    fi
+}
+
+# notify desktop
+notify-desktop() {
+    echo 'notifying desktop'
+    notify-send --app-name="notify-all" --icon="clock" -t 5000 "$MESSAGE"
+}
+
+# check if notify-send is installed and notify desktop
+if command -v notify-send &>/dev/null; then
+    notify-desktop
+    play-desktop-sound
+else
+    error "notify-send is not installed"
+fi
+
+# check if kdeconnect-cli is installed and notify all devices
+if command -v kdeconnect-cli &>/dev/null; then
+    notify-kdeconnect-devices
+else
+    error "kdeconnect-cli is not installed"
+fi
+
+# vim: set ft=sh:
