@@ -97,7 +97,7 @@ help() {
 # OTHER NOTABLE COMMANDS
 `fkill`, `weather`, `dufc`, `f`, `ff`, `fu`, `fa`, `dnfc`, `color`, `sshs`,
 `qalc/qc/qci`, `delta`, `re/refresh`, `ipc`, `timew/tw`, `pomodoro/pt`,
-`mega-cmd`, `has`, `lastcommit/lastcommits`
+`mega-cmd`, `has`, `lastcommit/lastcommits`, `fm/fman`
 
 ## FUN COMMANDS
 `cmatrix`, `cava`, `figlet`, `showfigfontsc`
@@ -134,11 +134,13 @@ alias se="sudo /home/linuxbrew/.linuxbrew/bin/yazi"
 # H1: Fuzzy search
 # H2: Custom FZF
 alias fzfc=" \
-	fzf -m --prompt='⬗ ' --pointer='🞛 ' --marker='◈ ' --info=inline-right --header='Edit: ctrl-e    Open: ctrl-o    Preview: alt-p, alt-u/d    Copy: ctrl-y' --header-first \
-	--color=border:#74c7ec,gutter:-1,label:#74c7ec,bg+:#313244,pointer:#74c7ec,hl:#74c7ec,hl+:#74c7ec \
+	fzf -m --prompt='⬗ ' --pointer='🞛 ' --marker='◈ ' \
+    --header='Edit: ctrl-e    Open: ctrl-o    Preview: alt-p, alt-u/d    Copy: ctrl-y' --header-first \
+	--color=border:#74c7ec,gutter:-1,label:#74c7ec,bg:-1,pointer:#74c7ec,hl:#74c7ec,hl+:#74c7ec,info:#CBA6F7 \
+    --layout=reverse --height=~95% --border=rounded --info=inline-right \
     --preview='
       if [[ -d {} ]]; then
-        eza -alF --tree --icons --level=2 --no-permissions --no-user --group-directories-first --no-time --no-filesize {};
+        eza -alF --tree --icons --level=2 --no-permissions --no-user --group-directories-first --no-time --no-filesize --color=always {};
       else
         case {} in
           *.tar) tar -tf {} ;;
@@ -150,15 +152,14 @@ alias fzfc=" \
           *) bat --color=always --style=numbers --line-range=:500 {} ;;
         esac;
       fi' \
-	--preview-label='╢ Preview ╟' \
-	--preview-window hidden --preview-window=border \
+	--preview-border=left \
 	--bind='ctrl-d:half-page-down,ctrl-u:half-page-up,alt-d:preview-half-page-down,alt-u:preview-half-page-up,alt-p:toggle-preview,ctrl-e:execute(nvim -O {} > /dev/tty)+abort,ctrl-o:execute-silent(xdg-open {})+abort,ctrl-y:execute-silent(printf {} | cut -f 2- | wl-copy --trim-newline)' \
 	"
 
 # H2: Fuzzy search for a directory to enter
 f() {
     local dir
-    dir=$(fd . -d 3 -t d -H "$@" | fzfc --bind "start:toggle-preview")
+    dir=$(fd . -d 3 -t d -H "$@" | fzfc)
     if [ -n "$dir" ]; then
         cd "$dir" || exit
     fi
@@ -167,7 +168,7 @@ f() {
 # H2: Fuzzy search for files copy path
 ff() {
     local selected_path
-    selected_path=$(fd . -d 3 -t f -H "$@" | fzfc --bind "start:toggle-preview")
+    selected_path=$(fd . -d 3 -t f -H "$@" | fzfc)
     if [ -n "$selected_path" ]; then
         echo -n "$selected_path" | wl-copy
         echo "$selected_path"
@@ -196,7 +197,7 @@ fu() {
 # H2: Fuzzy search all directories and files
 fa() {
     local pathname
-    pathname="$(locate "${1:-/}" | fzfc --bind "start:toggle-preview")"
+    pathname="$(locate "${1:-/}" | fzfc)"
     if [ -n "$pathname" ]; then
         if [ -d "$pathname" ]; then
             cd "$pathname" || exit
@@ -226,6 +227,12 @@ dnfc() {
     result="$(dnf -qC repoquery "$@" --qf '%{name} - %{summary}\n' | fzfc --bind 'alt-u:half-page-up' --bind 'alt-d:half-page-down' | sed 's/ - .*//')"
     [ -n "$result" ] && sudo dnf install "$result"
 }
+
+# H2: Fuzzy search manpages
+fm() {
+    man $(apropos --long . | fzfc | awk '{print $2,$1}' | tr -d '()')
+}
+alias fman='fm'
 
 # H2: List notable figlet fonts using input text
 showfigfontsc() {
@@ -305,9 +312,9 @@ optimize-images() {
     if [[ " ${@} " == *" help "* ]] || [[ " ${@} " == *" h "* ]]; then
         echo "optimize-images [image-paths]"
         echo "alias: oi"
-        echo '\nResize, Convert, and Rename Images to Optimize for Web'
-        echo "\t- if props are passed, optimize those images"
-        echo "\t- otherwise, optimize all images in input/"
+        echo -e '\nResize, Convert, and Rename Images to Optimize for Web'
+        echo -e "\t- if props are passed, optimize those images"
+        echo -e "\t- otherwise, optimize all images in input/"
         return
     fi
     local input
@@ -318,7 +325,7 @@ optimize-images() {
         while IFS= read -r line; do
             # check if file exists
             [ -f "$line" ] || {
-                echo "invalid path: $line\nCANCELLED"
+                echo "invalid path: $line\nCANCELLED" >&2
                 return
             }
             images+=("$line")
@@ -327,20 +334,20 @@ optimize-images() {
         # WITHOUT INPUT ARGUMENTS
         # check if input dir exists
         [ -d "./input" ] || {
-            echo 'not found: input/\nCANCELLED'
+            echo 'not found: input/\nCANCELLED' >&2
             return
         }
         input=$(find input/*)
         # check if input dir is empty
         [ -n "$input" ] || {
-            echo 'empty: input/\nCANCELLED'
+            echo 'empty: input/\nCANCELLED' >&2
             return
         }
         # loop over each file in input dir
         while IFS= read -r line; do
             # check if file exists
             [ -f "$line" ] || {
-                echo "invalid path: $line\nCANCELLED"
+                echo "invalid path: $line\nCANCELLED" >&2
                 return
             }
             images+=("$line")
@@ -394,7 +401,7 @@ optimize-images() {
     else
         # delete output dir if empty
         rmdir "output" &&
-            echo "deleted: output/\nCANCELLED"
+            echo "deleted: output/\nCANCELLED" >&2
     fi
 }
 alias oi="optimize-images"
@@ -414,5 +421,11 @@ find-trash() {
     fi
 }
 alias ft="find-trash"
+
+# H1: KDE Connect Ping
+ping-hermes() {
+    kdeconnect-cli -n "HERMES" --ping-msg "$*"
+}
+alias {ping-phone,notify-hermes,notify-phone}="ping-hermes"
 
 # vim:ft=sh
