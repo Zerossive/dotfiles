@@ -1,0 +1,126 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# Script Name: optimize-images
+# Description: Resize, Convert, and Rename Images to Optimize for Web
+# Author: Danny Harris
+# Dependencies: exiftool, imagemagick
+# ==============================================================================
+
+# -e: exit on error, -u: treat unset variables as errors, -o pipefail: pipe will fail if any command fails
+set -euo pipefail
+
+# CONSTANTS
+ASSET_DIR="@/assets/images"
+IMAGE_TYPE="webp"
+
+error() {
+	printf "CANCELLED\n\n" >&2
+	printf "error: %s\n\n" "$*" >&2
+	show-help
+	exit 1
+}
+
+show-help() {
+	cat <<EOF
+Usage: optimize-images [image-paths] [-h | --help]
+
+Resize, Convert, and Rename Images to Optimize for Web
+  - if props are passed, optimize those images
+  - otherwise, optimize all images in input/
+EOF
+}
+
+# HELP
+if [[ -n "$*" && ("$1" == "-h" || "$1" == "--help") ]]; then
+	show-help
+	exit 0
+fi
+
+input=""
+declare -a images
+if [ "$#" -gt 0 ]; then
+	# WITH INPUT ARGUMENTS
+	input=$(echo "$*" | sed 's/ /\n/g')
+	while IFS= read -r line; do
+		# check if file exists
+		[ -f "$line" ] || error "invalid path: $line"
+
+		images+=("$line")
+	done < <(echo "$input")
+else
+	# WITHOUT INPUT ARGUMENTS
+	# check if input dir exists
+	[ -d "./input" ] || error 'not found: input/'
+
+	input=$(find input/*)
+	# check if input dir is empty
+	[ -n "$input" ] || error 'empty: input/'
+
+	# loop over each file in input dir
+	while IFS= read -r line; do
+		# check if file exists
+		[ -f "$line" ] || error "invalid path: $line"
+
+		images+=("$line")
+	done < <(echo "$input")
+fi
+
+# Make output directory if it doesn't exist
+[ -d "./output" ] || {
+	mkdir "output" &&
+		echo "created: output/"
+}
+
+# Loop over each file
+threshold1=1920
+threshold2=1200
+threshold3=400
+width=0
+imageName=""
+for image in "${images[@]}"; do
+	# User image width to determine resize breakpoints
+	width=$(exiftool -ImageWidth "$image" -s -s -s || return)
+	imageName=$(basename "${image%.*}" | sed 's/ /_/g')
+	if [ "$width" -gt "$threshold1" ]; then
+		magick "$image" "output/${imageName}_full.$IMAGE_TYPE" &&
+			magick "$image" -resize ${threshold1}x "output/${imageName}_${threshold1}.$IMAGE_TYPE" &&
+			magick "$image" -resize ${threshold2}x "output/${imageName}_${threshold2}.$IMAGE_TYPE" &&
+			magick "$image" -resize ${threshold3}x "output/${imageName}_${threshold3}.$IMAGE_TYPE" &&
+			echo "converted: $image" ||
+			echo "error converting: $image" >&2
+	elif [ "$width" -gt "$threshold2" ]; then
+		magick "$image" "output/${imageName}_full.$IMAGE_TYPE" &&
+			magick "$image" -resize ${threshold2}x "output/${imageName}_${threshold2}.$IMAGE_TYPE" &&
+			magick "$image" -resize ${threshold3}x "output/${imageName}_${threshold3}.$IMAGE_TYPE" &&
+			echo "converted: $image" ||
+			echo "error converting: $image" >&2
+	elif [ "$width" -gt "$threshold3" ]; then
+		magick "$image" "output/${imageName}_full.$IMAGE_TYPE" &&
+			magick "$image" -resize ${threshold3}x "output/${imageName}_${threshold3}.$IMAGE_TYPE" &&
+			echo "converted: $image" ||
+			echo "error converting: $image" >&2
+	else
+		magick "$image" "output/${imageName}_full.$IMAGE_TYPE" &&
+			echo "converted: $image" ||
+			echo "error converting: $image" >&2
+	fi
+done
+
+if [ -d "output" ] && [ "$(ls -A output)" ]; then
+	# confirm files in output dir
+	[ "$(ls -A output)" ] && echo "ALL IMAGES OPTIMIZED"
+
+	# create file with import statements for images
+	IMAGE_LIST=($(find output/ -type f -name "*.$IMAGE_TYPE" -printf '%f\n'))
+	printf "" >./output/imports.js
+	for image in "${IMAGE_LIST[@]}"; do
+		printf "import %s from '%s/%s'\n" "${image%.*}" "$ASSET_DIR" "$image" >>./output/imports.js
+	done
+	echo "created: output/imports.js"
+else
+	# delete output dir if empty
+	rmdir "output" &&
+		error "missing: output/*"
+fi
+
+# vim: set ft=sh:
