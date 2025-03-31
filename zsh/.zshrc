@@ -5,9 +5,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# node (node version manager)
-# source ~/.nvm/nvm.sh
-
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 export EDITOR=nvim
@@ -41,11 +38,14 @@ COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="yyyy-mm-dd"
 
 # Plugins
-plugins=(vi-mode colored-man-pages zsh-completions zsh-autosuggestions command-not-found zsh-syntax-highlighting thefuck zsh-fzf-history-search timewarrior)
+plugins=(vi-mode colored-man-pages zsh-completions zsh-autosuggestions command-not-found zsh-syntax-highlighting thefuck zsh-fzf-history-search timewarrior zsh-interactive-cd)
 
 # vi-mode settings
 VI_MODE_SET_CURSOR=true
 VI_MODE_RESET_PROMPT_ON_MODE_CHANGE=true
+
+# Homebrew (keep before omzsh)
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # Load omzsh script
 source $ZSH/oh-my-zsh.sh
@@ -67,8 +67,8 @@ eval $(thefuck --alias)
 # Zoxide
 eval "$(zoxide init --cmd cd zsh)"
 
-# Homebrew
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/home/danny/.lmstudio/bin"
