@@ -1,4 +1,10 @@
-#!/bin/sh
+#!/usr/bin/env sh
+# ==============================================================================
+# Script Name: install-script.sh
+# Description: A script to install various applications and utilities.
+# Author: Danny Harris
+# Dependencies: dnf, flatpak, brew, npm
+# ==============================================================================
 
 PACKAGE_LIST="audacity
 blender
@@ -84,7 +90,8 @@ awakened poe trade
 exiled exchange 2
 brave
 vivaldi
-scc"
+scc
+krohnkite (kwin script, fork)"
 
 NPM_LIST="typescript"
 
@@ -119,7 +126,7 @@ packageInstall() {
 	sudo dnf install $1
 }
 flatpakInstall() {
-	if command -v flatpak &> /dev/null; then
+	if command -v flatpak &>/dev/null; then
 		echo "Installing flatpak apps..."
 		flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 		sudo flatpak install $1
@@ -128,7 +135,7 @@ flatpakInstall() {
 	fi
 }
 brewInstall() {
-	if command -v brew &> /dev/null; then
+	if command -v brew &>/dev/null; then
 		echo "Installing brew apps..."
 		brew install $1
 	else
@@ -136,7 +143,7 @@ brewInstall() {
 	fi
 }
 npmInstall() {
-	if command -v npm &> /dev/null; then
+	if command -v npm &>/dev/null; then
 		echo "Installing npm apps..."
 		sudo npm install -g $1
 	else
