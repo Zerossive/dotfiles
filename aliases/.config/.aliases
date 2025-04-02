@@ -13,14 +13,12 @@ alias hl='hledger'
 alias ll="eza -hlF --icons --no-permissions --no-user --group-directories-first --time-style relative"
 alias lla="eza -halF --icons --no-user --group-directories-first --time-style relative"
 alias lt="eza -T --icons --group-directories-first"
-alias dufc="duf --hide-fs squashfs --hide-mp /boot,/boot/efi,/" # Disk usage
 alias rsyncc="rsync -haviP"
 alias install="sudo dnf install"
 alias remove="sudo dnf remove"
 alias search="sudo dnf search"
 alias ne="nvim -c 'OilPreview'"
-alias afk="cmatrix -s -C blue"                                     # Matrix AFK screen
-alias status_code="curl -s -m 5 -o /dev/null -w '%{http_code}' -L" # Get status code of a website
+alias status_code="curl -s -m 5 -o /dev/null -w '%{http_code}\n' -L" # Get status code of a website
 alias datec="date '+%Y-%m-%d' -d"
 alias timec="date '+%-I:%M %p' -d"
 alias datetimec="date '+%Y-%m-%d %-I:%M %p' -d"
@@ -31,12 +29,7 @@ alias aie="aichat -e"
 alias aic="aichat -c"
 alias tws='timew summary :id :annotation'
 alias qc="qalc --terse"
-alias qci="qalc -c --interactive"
-alias hlui='hledger-ui --theme=terminal --tree --all'
-alias dockerl='docker ps --format "table {{.Names}}\t{{.ID}}\t{{.Status}}"'
-alias duc="du -sh"
-alias has="curl -sL https://git.io/_has | bash -s"
-alias vivaldi="flatpak run com.vivaldi.Vivaldi $* 1>/dev/null 2>&1"
+alias browser="flatpak run com.vivaldi.Vivaldi $* 1>/dev/null 2>&1"
 
 # H1: Preset Commands w/ Parameters
 alias {refresh,re}="source ~/.zshrc"
@@ -60,6 +53,13 @@ alias ipc='ip -4 -brief a'
 alias ta='tmux new-session -A -s work'
 alias lastcommit="gh search commits --committer Zerossive --sort committer-date --json commit --jq '.[0].commit.committer.date' --limit 1 | xargs date '+%Y-%m-%d %-I:%M %p' -d"
 alias lastcommits='gh search commits --committer Zerossive --sort committer-date'
+alias dufc="duf --hide-fs squashfs --hide-mp /boot,/boot/efi,/" # Disk usage
+alias afk="cmatrix -s -C blue"                                  # Matrix AFK screen
+alias qci="qalc -c --interactive"
+alias hlui='hledger-ui --theme=terminal --tree --all'
+alias dockerl='docker ps --format "table {{.Names}}\t{{.ID}}\t{{.Status}}"'
+alias duc="du -sh"
+alias has="curl -sL https://git.io/_has | bash -s"
 
 # H1: General Functions
 # H2: Print general help information -------------- 80 char max -------------- #
@@ -212,9 +212,9 @@ fa() {
 fkill() {
     local pid
     if [ "$UID" != "0" ]; then
-        pid=$(ps -f -u $UID | sed 1d | fzfc | awk '{print $2}')
+        pid=$(ps -f -u $UID | sed 1d | fzfc --no-preview | awk '{print $2}')
     else
-        pid=$(ps -ef | sed 1d | fzfc | awk '{print $2}')
+        pid=$(ps -ef | sed 1d | fzfc --no-preview | awk '{print $2}')
     fi
     if [ "x$pid" != "x" ]; then
         echo $pid | xargs kill -${1:-9}
@@ -224,13 +224,13 @@ fkill() {
 # H2: Fuzzy search for a package to install
 dnfc() {
     local result
-    result="$(dnf -qC repoquery "$@" --qf '%{name} - %{summary}\n' | fzfc --bind 'alt-u:half-page-up' --bind 'alt-d:half-page-down' | sed 's/ - .*//')"
+    result="$(dnf -qC repoquery "$@" --qf '%{name} - %{summary}\n' | fzfc --bind 'alt-u:half-page-up' --bind 'alt-d:half-page-down' --no-preview | sed 's/ - .*//')"
     [ -n "$result" ] && sudo dnf install "$result"
 }
 
 # H2: Fuzzy search manpages
 fm() {
-    man $(apropos --long . | fzfc | awk '{print $2,$1}' | tr -d '()')
+    man $(apropos --long . | fzfc --no-preview | awk '{print $2,$1}' | tr -d '()')
 }
 alias fman='fm'
 
