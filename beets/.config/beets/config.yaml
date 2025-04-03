@@ -21,7 +21,9 @@ lastgenre:
   count: 3
 
 lyrics:
-  # overwrite existing lyrics
-  force: yes
   # prefer synced lyrics (from lrclib)
   synced: yes
+
+replaygain:
+  # set ffmpeg as the backend for better support e.g. flac
+  backend: ffmpeg
