@@ -12,7 +12,6 @@ bottles
 boxes
 corectrl
 firefox
-fragments
 inkscape
 krita
 lutris
@@ -26,7 +25,9 @@ vlc
 flatpak
 steam
 discord
-jellyfin"
+jellyfin
+nicotine+
+qbittorrent"
 
 FLATPAK_LIST="com.github.qarmin.czkawka
 com.belmoussaoui.Decoder
