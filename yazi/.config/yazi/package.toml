@@ -23,6 +23,11 @@ use = "imsi32/yatline"
 rev = "9328205"
 hash = "3e51d1fd8a2e481fcfa8eab1251d1c5f"
 
+[[plugin.deps]]
+use = "boydaihungst/mediainfo"
+rev = "447fe95"
+hash = "dcaebc8bc261206f6b59e2c67464af5"
+
 [[flavor.deps]]
 use = "yazi-rs/flavors:catppuccin-mocha"
 rev = "1a419b2"

@@ -8,10 +8,14 @@ image_delay = 200
 [opener]
 edit = [
 	{ run = 'nvim "$@"', desc = "Neovim", block = true },
+	{ run = 'flatpak run com.vivaldi.Vivaldi "$@"', desc = "Browser", orphan = true },
 ]
 play = [
-	# { run = 'flatpak run org.videolan.VLC "$@"', orphan = true, for = "unix" },
-	{ run = 'xdg-open "$@"', orphan = true, for = "unix" },
+	{ run = 'xdg-open "$@"', desc = "Play", orphan = true },
+]
+open = [
+	{ run = 'xdg-open "$@"', desc = "Open", orphan = true },
+	{ run = 'flatpak run com.vivaldi.Vivaldi "$@"', desc = "Browser", orphan = true },
 ]
 
 [preview]
@@ -27,3 +31,18 @@ run  = "git"
 id   = "git"
 name = "*/"
 run  = "git"
+
+[plugin]
+  prepend_preloaders = [
+    # Replace magick, image, video with mediainfo
+    { mime = "{audio,video,image}/*", run = "mediainfo" },
+    { mime = "application/subrip", run = "mediainfo" },
+  ]
+  prepend_previewers = [
+    # Replace magick, image, video with mediainfo
+    { mime = "{audio,video,image}/*", run = "mediainfo"},
+    { mime = "application/subrip", run = "mediainfo" },
+  ]
+  # There are more extensions which are supported by mediainfo.
+  # Just add file's MIME type to `previewers`, `preloaders` above.
+  # https://mediaarea.net/en/MediaInfo/Support/Formats
