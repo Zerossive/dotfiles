@@ -27,7 +27,8 @@ steam
 discord
 jellyfin
 nicotine+
-qbittorrent"
+qbittorrent
+mediainfo"
 
 FLATPAK_LIST="com.github.qarmin.czkawka
 com.belmoussaoui.Decoder
