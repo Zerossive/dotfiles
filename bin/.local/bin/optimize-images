@@ -10,8 +10,8 @@
 set -euo pipefail
 
 # CONSTANTS
-ASSET_DIR="@/assets/images"
-IMAGE_TYPE="webp"
+asset_dir="@/assets/images"
+image_type="webp"
 
 error() {
 	printf "CANCELLED\n\n" >&2
@@ -82,25 +82,25 @@ for image in "${images[@]}"; do
 	width=$(exiftool -ImageWidth "$image" -s -s -s || return)
 	imageName=$(basename "${image%.*}" | sed 's/ /_/g')
 	if [ "$width" -gt "$threshold1" ]; then
-		magick "$image" "output/${imageName}_full.$IMAGE_TYPE" &&
-			magick "$image" -resize ${threshold1}x "output/${imageName}_${threshold1}.$IMAGE_TYPE" &&
-			magick "$image" -resize ${threshold2}x "output/${imageName}_${threshold2}.$IMAGE_TYPE" &&
-			magick "$image" -resize ${threshold3}x "output/${imageName}_${threshold3}.$IMAGE_TYPE" &&
+		magick "$image" "output/${imageName}_full.$image_type" &&
+			magick "$image" -resize ${threshold1}x "output/${imageName}_${threshold1}.$image_type" &&
+			magick "$image" -resize ${threshold2}x "output/${imageName}_${threshold2}.$image_type" &&
+			magick "$image" -resize ${threshold3}x "output/${imageName}_${threshold3}.$image_type" &&
 			echo "converted: $image" ||
 			echo "error converting: $image" >&2
 	elif [ "$width" -gt "$threshold2" ]; then
-		magick "$image" "output/${imageName}_full.$IMAGE_TYPE" &&
-			magick "$image" -resize ${threshold2}x "output/${imageName}_${threshold2}.$IMAGE_TYPE" &&
-			magick "$image" -resize ${threshold3}x "output/${imageName}_${threshold3}.$IMAGE_TYPE" &&
+		magick "$image" "output/${imageName}_full.$image_type" &&
+			magick "$image" -resize ${threshold2}x "output/${imageName}_${threshold2}.$image_type" &&
+			magick "$image" -resize ${threshold3}x "output/${imageName}_${threshold3}.$image_type" &&
 			echo "converted: $image" ||
 			echo "error converting: $image" >&2
 	elif [ "$width" -gt "$threshold3" ]; then
-		magick "$image" "output/${imageName}_full.$IMAGE_TYPE" &&
-			magick "$image" -resize ${threshold3}x "output/${imageName}_${threshold3}.$IMAGE_TYPE" &&
+		magick "$image" "output/${imageName}_full.$image_type" &&
+			magick "$image" -resize ${threshold3}x "output/${imageName}_${threshold3}.$image_type" &&
 			echo "converted: $image" ||
 			echo "error converting: $image" >&2
 	else
-		magick "$image" "output/${imageName}_full.$IMAGE_TYPE" &&
+		magick "$image" "output/${imageName}_full.$image_type" &&
 			echo "converted: $image" ||
 			echo "error converting: $image" >&2
 	fi
@@ -111,10 +111,10 @@ if [ -d "output" ] && [ "$(ls -A output)" ]; then
 	[ "$(ls -A output)" ] && echo "ALL IMAGES OPTIMIZED"
 
 	# create file with import statements for images
-	IMAGE_LIST=($(find output/ -type f -name "*.$IMAGE_TYPE" -printf '%f\n'))
+	IMAGE_LIST=($(find output/ -type f -name "*.$image_type" -printf '%f\n'))
 	printf "" >./output/imports.js
 	for image in "${IMAGE_LIST[@]}"; do
-		printf "import %s from '%s/%s'\n" "${image%.*}" "$ASSET_DIR" "$image" >>./output/imports.js
+		printf "import %s from '%s/%s'\n" "${image%.*}" "$asset_dir" "$image" >>./output/imports.js
 	done
 	echo "created: output/imports.js"
 else

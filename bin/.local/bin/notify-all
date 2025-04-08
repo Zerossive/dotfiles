@@ -2,7 +2,7 @@
 # ==============================================================================
 # Script Name: notify-all
 # Description: sends a notification to all listed devices
-# Uasge: notify-all <message>
+# Usage: notify-all <message>
 # Author: Danny Harris
 # Dependencies: notify-send, paplay, kdeconnect-cli
 # ==============================================================================
@@ -11,7 +11,7 @@
 set -euo pipefail
 
 # global variables
-MESSAGE="$*"
+message="$*"
 
 usage() {
     echo "Usage:"
@@ -24,7 +24,7 @@ error() {
 }
 
 # check for empty message
-if [ -z "$MESSAGE" ]; then
+if [ -z "$message" ]; then
     error "no message provided"
 fi
 
@@ -44,7 +44,7 @@ notify-kdeconnect-devices() {
     else
         for device in "${KDE_DEVICES[@]}"; do
             echo "notifying $device"
-            kdeconnect-cli --ping-msg "$MESSAGE" -n "$device"
+            kdeconnect-cli --ping-msg "$message" -n "$device"
         done
     fi
 
@@ -69,7 +69,7 @@ play-desktop-sound() {
 # notify desktop
 notify-desktop() {
     echo 'notifying desktop'
-    notify-send --app-name="notify-all" --icon="clock" -t 5000 "$MESSAGE"
+    notify-send --app-name="notify-all" --icon="clock" -t 5000 "$message"
 }
 
 # check if notify-send is installed and notify desktop

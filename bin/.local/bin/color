@@ -39,7 +39,7 @@ catppuccin_colors=(
 )
 
 # predefined fzf options
-FZF_OPTS=(
+fzf_opts=(
     --prompt "Select a color: "
     --preview='echo {} | awk "{print \$3}" | xargs -I _ colorize "_" ██ {}'
     --header "Catppuccin Color Palette"
@@ -54,9 +54,9 @@ color() {
 
     # use custom fzfc command if it exists
     if command -v fzfc &> /dev/null; then
-        selected_color=$(printf "%s\n" "${catppuccin_colors[@]}" | fzfc "${FZF_OPTS[@]}" -q "$search_term")
+        selected_color=$(printf "%s\n" "${catppuccin_colors[@]}" | fzfc "${fzf_opts[@]}" -q "$search_term")
     else
-        selected_color=$(printf "%s\n" "${catppuccin_colors[@]}" | fzf "${FZF_OPTS[@]}" -q "$search_term")
+        selected_color=$(printf "%s\n" "${catppuccin_colors[@]}" | fzf "${fzf_opts[@]}" -q "$search_term")
     fi
 
     # print out terminal colors
