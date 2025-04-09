@@ -52,5 +52,13 @@ config.adjust_window_size_when_changing_font_size = false
 config.warn_about_missing_glyphs = false
 config.max_fps = 144
 
+-- [[ Custom Keyboard Shortcuts ]]
+config.keys = {
+	{ key = "h", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Left") },
+	{ key = "l", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Right") },
+	{ key = "j", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Down") },
+	{ key = "k", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Up") },
+}
+
 -- and finally, return the configuration to wezterm
 return config
