@@ -58,6 +58,13 @@ zle_highlight+=(paste:none)
 
 # [[ Custom Keybinds ]]
 bindkey -s "^F" "cdi\n"
+bindkey "^[h" backward-char
+bindkey "^[l" forward-char
+bindkey "^[w" forward-word
+bindkey "^[b" backward-word
+bindkey "^[e" emacs-forward-word
+bindkey "^@" list-choices
+bindkey -r "^d"
 
 # [[ Keep this at the end ]]
 
