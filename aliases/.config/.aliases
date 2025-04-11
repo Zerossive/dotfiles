@@ -132,7 +132,7 @@ function yy() {
     rm -f -- "$tmp"
 }
 alias e="yy"
-alias se="sudo /home/linuxbrew/.linuxbrew/bin/yazi"
+alias se="sudo --preserve-env=YAZI_CONFIG_HOME /home/linuxbrew/.linuxbrew/bin/yazi"
 
 # H1: Fuzzy search
 # H2: Custom FZF
