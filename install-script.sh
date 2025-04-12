@@ -1,178 +1,229 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 # ==============================================================================
 # Script Name: install-script.sh
 # Description: A script to install various applications and utilities.
+# Usage: install-script.sh [-h | -l | -i] <cateogry>
 # Author: Danny Harris
 # Dependencies: dnf, flatpak, brew, npm
 # ==============================================================================
 
-PACKAGE_LIST="audacity
-blender
-bottles
-boxes
-corectrl
-firefox
-inkscape
-krita
-lutris
-picard
-obs-studio
-openrgb
-piper
-protontricks
-syncthing
-vlc
-flatpak
-steam
-discord
-jellyfin
-nicotine+
-qbittorrent
-mediainfo"
+# -e: exit on error, -u: treat unset variables as errors, -o pipefail: pipe will fail if any command fails
+set -euo pipefail
 
-FLATPAK_LIST="com.github.qarmin.czkawka
-com.belmoussaoui.Decoder
-org.nickvision.money
-com.github.tenderowl.frog
-fr.handbrake.ghb
-com.heroicgameslauncher.hgl
-org.gnome.design.Lorem
-io.github.seadve.Mousai
-md.obsidian.Obsidian
-org.nickvision.tubeconverter
-community.pathofbuilding.PathOfBuilding
-org.gnome.World.PikaBackup
-net.davidotek.pupgui2
-io.gitlab.theevilskeleton.Upscaler
-io.github.flattool.Warehouse"
+# set options
+testing=false
+steam_flatpak=true
 
-BREW_LIST="yazi
-sshs
-aichat
-exiftool
-timer"
+# application lists
+package_list=(
+	# GENERAL
+	corectrl
+	firefox
+	flatpak
+	mediainfo
+	nicotine+
+	obs-studio
+	openrgb
+	piper
+	qbittorrent
+	syncthing
 
-TERMINAL_LIST="bat
-btop
-fd-find
-figlet
-fzf
-git
-fastfetch
-neovim
-npm
-nvtop
-ripgrep
-tldr
-thefuck
-zoxide
-eza
-duf
-speedtest-cli
-entr
-stow
-trash-cli
-cava
-qalc
-git-delta
-beets
-beets-doc
-beets-plugins
-mp3gain
-docker-ce
-timew
-lazygit
-tmux
-imagemagick"
+	# MEDIA
+	beets
+	beets-doc
+	beets-plugins
+	ImageMagick
+	mp3gain
 
-OTHER_LIST="feishin
-portmaster
-nomachine
-awakened poe trade
-exiled exchange 2
-brave
-vivaldi
-scc
-krohnkite (kwin script, fork)"
+	# TOOLS
+	btop
+	fastfetch
+	nvtop
+	qalc
+	speedtest-cli
+	stow
+	thefuck
+	timew
+	trash-cli
 
-NPM_LIST="typescript"
+	# OTHER
+	cava
+	figlet
+)
+$steam_flatpak || package_list+=(
+	steam protontricks
+)
+$testing && package_list=("qalc" "figlet")
 
-list_apps() {
+# TODO: refactor to make dev_essentials a boolean that lists/installs a subset of all other lists
+dev_list=(
+	bat
+	docker-ce
+	duf
+	entr
+	eza
+	fd-find
+	fzf
+	git
+	git-delta
+	lazygit
+	neovim
+	npm
+	ripgrep
+	tmux
+	zoxide
+)
+$testing && dev_list=("git" "fzf")
+
+flatpak_list=(
+	# GENERAL
+	com.heroicgameslauncher.hgl
+	md.obsidian.Obsidian
+	org.nickvision.money
+	app.zen_browser.zen
+	com.brave.Browser
+	com.vivaldi.Vivaldi
+	com.github.iwalton3.jellyfin-media-player
+	com.usebottles.bottles
+	org.gnome.Boxes
+	org.videolan.VLC
+
+	# MEDIA TOOLS
+	fr.handbrake.ghb
+	io.gitlab.theevilskeleton.Upscaler
+	org.nickvision.tubeconverter # parabolic media downloader
+	org.kde.krita
+	org.inkscape.Inkscape
+	org.audacityteam.Audacity
+	org.musicbrainz.Picard    # music tagger
+	com.github.qarmin.czkawka # duplicate finder
+	io.github.seadve.Mousai   # music recognition
+
+	# TOOLS
+	com.github.tenderowl.frog # ocr
+	io.github.flattool.Warehouse
+	org.gnome.World.PikaBackup
+	org.gnome.SimpleScan # document scanner
+	com.protonvpn.www    # proton vpn
+	org.localsend.localsend_app
+	it.mijorus.gearlever
+	com.github.tchx84.Flatseal
+	net.davidotek.pupgui2 # protonup-qt
+)
+$steam_flatpak && flatpak_list+=(
+	com.valvesoftware.Steam
+	com.github.Matoking.protontricks
+)
+$testing && flatpak_list=("io.github.flattool.Warehouse" "io.github.flattool.Warehouse")
+
+brew_list=(
+	yazi
+	aichat
+	sshs
+	exiftool
+	timer
+	tlrc # tldr in rust
+)
+$testing && brew_list=("exiftool")
+
+npm_list=(
+	typescript
+)
+$testing && npm_list=("typescript")
+
+# things like app images, docker containers, etc.
+other_list=(
+	"awakened poe trade"
+	"exiled exchange 2"
+	"path of building 1/2"
+	feishin
+	krohnkite # (kwin script, fork)
+	nomachine
+	portmaster
+	scc
+)
+$testing && other_list=("other item")
+
+listApps() {
 	local category="${1:-all}"
-	if [ $category == "package" ]; then
-		echo "$PACKAGE_LIST"
-	elif [ $category == "flatpak" ]; then
-		echo "$FLATPAK_LIST"
-	elif [ $category == "brew" ]; then
-		echo "$BREW_LIST"
-	elif [ $category == "terminal" ]; then
-		echo "$TERMINAL_LIST"
-	elif [ $category == "npm" ]; then
-		echo "$NPM_LIST"
-	elif [ $category == "other" ]; then
-		echo "$OTHER_LIST"
-	elif [ $category == "all" ]; then
-		echo "$PACKAGE_LIST"
-		echo "$FLATPAK_LIST"
-		echo "$BREW_LIST"
-		echo "$TERMINAL_LIST"
-		echo "$OTHER_LIST"
-	else
-		echo "Invalid argument (valid arguments: package, flatpak, brew, terminal, npm, other, all)"
-	fi
+	case "$category" in
+	"package") printf "%s\n" "${package_list[@]}" ;;
+	"dev") printf "%s\n" "${dev_list[@]}" ;;
+	"flatpak") printf "%s\n" "${flatpak_list[@]}" ;;
+	"brew") printf "%s\n" "${brew_list[@]}" ;;
+	"npm") printf "%s\n" "${npm_list[@]}" ;;
+	"other") printf "%s\n" "${other_list[@]}" ;;
+	"all")
+		printf "[PACKAGE]\n"
+		printf "%s\n" "${package_list[@]}"
+		printf "\n[DEV]\n"
+		printf "%s\n" "${dev_list[@]}"
+		printf "\n[FLATPAK]\n"
+		printf "%s\n" "${flatpak_list[@]}"
+		printf "\n[BREW]\n"
+		printf "%s\n" "${brew_list[@]}"
+		printf "\n[NPM]\n"
+		printf "%s\n" "${npm_list[@]}"
+		printf "\n[OTHER]\n"
+		printf "%s\n" "${other_list[@]}"
+		;;
+	*) printf "Invalid argument (valid arguments: package, dev, flatpak, brew, npm, other, all)\n" ;;
+	esac
 }
 
 # Installers
 packageInstall() {
-	echo "Installing packages..."
-	sudo dnf install $1
+	printf "Installing packages...\n"
+	sudo dnf install "${package_list[@]}"
+}
+devInstall() {
+	printf "Installing dev tools...\n"
+	sudo dnf install "${dev_list[@]}"
 }
 flatpakInstall() {
 	if command -v flatpak &>/dev/null; then
-		echo "Installing flatpak apps..."
+		printf "Installing flatpak applications...\n"
 		flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-		sudo flatpak install $1
+		sudo flatpak install "${flatpak_list[@]}"
 	else
-		echo "Error: flatpak not found"
+		printf "Error: flatpak not found\n"
 	fi
 }
 brewInstall() {
 	if command -v brew &>/dev/null; then
-		echo "Installing brew apps..."
-		brew install $1
+		printf "Installing brew applications...\n"
+		brew install "${brew_list[@]}"
 	else
-		echo "Error: brew not found"
+		printf "Error: brew not found\n"
 	fi
 }
 npmInstall() {
 	if command -v npm &>/dev/null; then
-		echo "Installing npm apps..."
-		sudo npm install -g $1
+		printf "Installing npm applications...\n"
+		sudo npm install -g "${npm_list[@]}"
 	else
-		echo "Error: npm not found"
+		printf "Error: npm not found\n"
 	fi
 }
 
 install_apps() {
 	local category="${1:-all}"
-	if [ $category == "package" ]; then
-		packageInstall "$PACKAGE_LIST"
-	elif [ $category == "flatpak" ]; then
-		flatpakInstall "$FLATPAK_LIST"
-	elif [ $category == "brew" ]; then
-		brewInstall "$BREW_LIST"
-	elif [ $category == "terminal" ]; then
-		packageInstall "$TERMINAL_LIST"
-	elif [ $category == "npm" ]; then
-		packageInstall "$NPM_LIST"
-	elif [ $category == "all" ]; then
-		packageInstall "$PACKAGE_LIST"
-		flatpakInstall "$FLATPAK_LIST"
-		brewInstall "$BREW_LIST"
-		packageInstall "$TERMINAL_LIST"
-	else
-		echo "Invalid argument (valid arguments: package, flatpak, brew, terminal, all)"
-	fi
+	case "$category" in
+	"package") packageInstall ;;
+	"dev") devInstall ;;
+	"flatpak") flatpakInstall ;;
+	"brew") brewInstall ;;
+	"npm") npmInstall ;;
+	"all")
+		packageInstall
+		devInstall
+		flatpakInstall
+		brewInstall
+		npmInstall
+		packageInstall
+		;;
+	*) printf "Invalid argument (valid arguments: package, dev, flatpak, brew, npm, all)\n" ;;
+	esac
 }
 
 help() {
@@ -180,11 +231,11 @@ help() {
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 ▏Install Script▕
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-Syntax: install-script.sh [-h|l|i]
+Usage: install-script.sh [-h | -l | -i] <cateogry>
 
 -l	LIST applications by category
 	Requires one of the following arguments:
-		package, flatpak, brew, terminal, other, all
+		package, dev, flatpak, brew, other, all
 	Example:
 		install-script.sh -l all
 	Example:
@@ -192,7 +243,7 @@ Syntax: install-script.sh [-h|l|i]
 
 -i	INSTALL applications by category
 	Requires one of the following arguments:
-		package, flatpak, brew, terminal, all
+		package, dev, flatpak, brew, all
 	Example:
 		install-script.sh -i package
 
@@ -207,11 +258,11 @@ while getopts ":hl:i:" option; do
 		exit
 		;;
 	\?) # Second: check for invalid options
-		echo "Error: Invalid option"
+		printf "Error: Invalid option\n"
 		exit
 		;;
 	l) # List apps by category
-		list_apps "$OPTARG"
+		listApps "$OPTARG"
 		exit
 		;;
 	i) # Install apps by category
@@ -219,10 +270,12 @@ while getopts ":hl:i:" option; do
 		exit
 		;;
 	*)
-		echo "Error: Invalid option, or missing arguments"
+		printf "Error: Invalid option, or missing arguments\n"
 		exit
 		;;
 	esac
 done
 
 help
+
+# vim: set ft=sh:
