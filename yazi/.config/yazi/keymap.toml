@@ -14,9 +14,9 @@ prepend_keymap = [
 	{ on = [ "g" ,"s" ], run = "cd ~/Pictures/Screenshots", desc = "Go to the screenshots directory" },
 
 	# toggle panes
-	{ on = "<A-1>", run = "plugin toggle-view parent", desc = "Toggle parent" },
-    { on = "<A-2>", run = "plugin toggle-view current", desc = "Toggle current" },
-    { on = "<A-3>", run = "plugin toggle-view preview", desc = "Toggle preview" },
+	{ on = "<A-1>", run = "plugin toggle-pane min-parent", desc = "Toggle parent" },
+    { on = "<A-2>", run = "plugin toggle-pane min-current", desc = "Toggle current" },
+    { on = "<A-3>", run = "plugin toggle-pane min-preview", desc = "Toggle preview" },
 
 	# other
 	{ on =  "\\" , run = 'shell "$SHELL" --block', desc = "Open shell here" },
