@@ -47,7 +47,7 @@ alias unlock="loginctl unlock-session"
 alias playpause="playerctl play-pause"
 alias weather="curl -s -m 3 'https://wttr.in/mesquite?Q'"
 alias temp='curl -sm 3 wttr.in/mesquite\?format="%c%t%20(%f)\n" | sed "s/ \?+//g"'
-alias daily="flatpak run com.vivaldi.Vivaldi --new-window https://monkeytype.com https://timeguessr.com https://vim-racer.com/game-mode/randomized/ https://www.geoguessr.com/vgp/3224 https://www.geoguessr.com/vgp/3003 https://www.geoguessr.com/vgp/3007"
+alias daily="flatpak run com.vivaldi.Vivaldi --new-window https://monkeytype.com https://timeguessr.com https://vim-racer.com/game-mode/randomized/ https://www.geoguessr.com/vgp/3224 https://www.geoguessr.com/vgp/3003 https://www.geoguessr.com/vgp/3007 https://www.mathmammoth.com/practice/multiplication"
 alias {dailynote,dn}='nvim -c "DailyNote"'
 alias {q,quick,nq,eq,note}="nvim -c 'e ~/Elysium/Obsidian\\ Vault/Quick\\ Note.md'"
 alias {vault,oo}="cd ~/Elysium/Obsidian\ Vault && nvim && cd -"
@@ -63,6 +63,7 @@ alias hlui='hledger-ui --theme=terminal --tree --all'
 alias dockerl='docker ps --format "table {{.Names}}\t{{.ID}}\t{{.Status}}"'
 alias duc="du -sh"
 alias has="curl -sL https://git.io/_has | bash -s"
+alias dnfl="dnf list --installed | fzfc --no-preview"
 
 # H1: General Functions
 # H2: Print general help information -------------- 80 char max -------------- #
