@@ -3,13 +3,14 @@
 # Script Name: remind
 # Description: After some period of time, send a notification, play a sound,
 #              and ping a KDE Connect device
+# Usage: remind [OPTIONS] <delay> <message>
 # Author: Danny Harris
 # Dependencies: kdeconnect-cli, paplay, notify-send
 # ==============================================================================
 
 show_help() {
 	cat <<EOF
-Usage: $(basename "$0") [list|cancel|<delay> <message>]
+Usage: $(basename "$0") [-l | list] [-c | cancel] <delay> <message>
 
 Description:
   After some period of time, send a notification, play a sound, and ping a
