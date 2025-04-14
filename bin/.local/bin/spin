@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# Script Name: spin
+# Description: Displays a loading spinner
+# Usage: spin [<type> | help | -h] [<speed>]
+# Author: Danny Harris
+# ==============================================================================
+
+# -e: exit on error, -u: treat unset variables as errors, -o pipefail: pipe will fail if any command fails
+set -euo pipefail
+
+# TODO: make this command accept another command as an argument and run it in the background
+
+# set variables
+loading_characters=()
+selection="${1:-line}"
+speed="${2:-0.1}"
+
+# check for help
+if [[ $selection == "help" || $selection == "-h" ]]; then
+	cat <<-EOF
+		Usage: spin [<type> | help | -h] [<speed>]
+
+		Type:
+		    line(default): /
+		    star: *
+		    dot: ⠧
+		    box: ▖
+		    barcode: |
+		    moon: 🌘
+		    arrow: ↗
+		    circle: ◐
+		    clock: 🕑
+
+		Speed is the duration of each character in seconds
+	EOF
+	exit 0
+fi
+
+# if only speed is given, set correct speed & set selection to line
+if [[ "$selection" =~ ^[0-9]+([.][0-9]+)?$ ]]; then
+	speed="$1"
+	selection="line"
+fi
+
+# check if speed is a number
+if ! [[ "$speed" =~ ^[0-9]+([.][0-9]+)?$ ]]; then
+	echo "Invalid speed: $speed"
+	exit 1
+fi
+
+# choose character set
+case $selection in
+"line") loading_characters=(\| / - \\) ;;
+"star") loading_characters=(· • * • ·) ;;
+"dot") loading_characters=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏) ;;
+"box") loading_characters=(▖ ▘ ▝ ▗) ;;
+"barcode") loading_characters=("|   " "||  " "||| " "||||" "  |||" "   ||" "    |") ;;
+"moon") loading_characters=(🌑 🌒 🌓 🌔 🌕 🌖 🌗 🌘) ;;
+"arrow") loading_characters=(← ↖ ↑ ↗ → ↘ ↓ ↙) ;;
+"circle") loading_characters=(◐ ◓ ◑ ◒) ;;
+"clock") loading_characters=(🕐 🕑 🕒 🕓 🕔 🕕 🕖 🕗 🕘 🕙 🕚 🕛) ;;
+"bubble") loading_characters=(◯ ◉ ◎ ●) ;;
+"rectangle") loading_characters=(▉ ▊ ▋ ▌ ▍ ▎ ▏ ▎ ▍ ▌ ▋ ▊ ▉) ;;
+*)
+	echo "Invalid selection type: $selection"
+	exit 1
+	;;
+esac
+
+# continuously print character sequence
+while true; do
+	for char in "${loading_characters[@]}"; do
+		printf "\r%s\033[K" "$char"
+		sleep "$speed"
+	done
+done
+
+printf "\n"
+
+# vim: set ft=sh:
