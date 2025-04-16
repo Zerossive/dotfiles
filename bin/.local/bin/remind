@@ -83,7 +83,8 @@ remind() {
 	systemd-run --user --on-active="$delay" --timer-property=AccuracySec=1s --unit="$unit_name" --quiet \
 		bash -c "notify-send --icon=clock --urgency=critical --app-name=Reminder '$message' && \
 		paplay /usr/share/sounds/freedesktop/stereo/complete.oga && \
-		kdeconnect-cli --ping-msg '$message' -n HERMES" &&
+		kdeconnect-cli --ping-msg '$message' -n HERMES && \
+		kdeconnect-cli --ping-msg '$message' -d 'e988ac39f25149468a36d54f265c521f'" &&
 		echo -e "Reminder set for $delay: '$message'\n\nUnit name: $unit_name" ||
 		echo "Valid arguments: remind <delay> <message>"
 }
