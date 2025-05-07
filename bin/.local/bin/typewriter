@@ -9,19 +9,13 @@
 # -e: exit on error, -u: treat unset variables as errors, -o pipefail: pipe will fail if any command fails
 set -euo pipefail
 
-# check if not running in a terminal
-if [ ! -t 1 ]; then
-	printf "%s\n" "$*"
-	exit 0
-fi
-
 # TODO: make other options
 # -l: set left string
 # -r: set right string
 # -h: print help (also print if no arguments)
 # -s/r/?: set sleep duration/speed (like in `spin`)
 
-string="$*"
+string=("$*")
 constructed_list=""
 
 # check if stdin is being piped
@@ -29,12 +23,22 @@ if [ -p /dev/stdin ]; then
 	string=($(cat))
 fi
 
-# print string one chracter at a time
-for ((i = 0; i < ${#string}; i++)); do
-	constructed_list="$constructed_list${string:$i:1}"
-	echo -en "\r$constructed_list"
-	sleep 0.05
-done
+# check if not running in a terminal
+if [ ! -t 1 ]; then
+	printf "%s\n" "${string[@]}"
+	exit 0
+fi
+
+# print string one chracter at a time if it exists
+if [ ${#string[@]} -eq 0 ]; then
+	printf "\n"
+else
+	for ((i = 0; i < ${#string}; i++)); do
+		constructed_list="$constructed_list${string:$i:1}"
+		printf "\r%s" "$constructed_list"
+		sleep 0.05
+	done
+fi
 
 printf "\n"
 
