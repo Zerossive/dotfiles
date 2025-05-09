@@ -59,7 +59,6 @@ $testing && package_list=("qalc" "figlet")
 dev_list=(
 	bat
 	docker-ce
-	duf
 	entr
 	eza
 	fd-find
@@ -123,6 +122,7 @@ brew_list=(
 	exiftool
 	timer
 	tlrc # tldr in rust
+	dysk
 )
 $testing && brew_list=("exiftool")
 

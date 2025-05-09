@@ -55,8 +55,7 @@ alias ipc='ip -4 -brief a'
 alias ta='tmux new-session -A -s work'
 alias lastcommit="gh search commits --committer Zerossive --sort committer-date --json commit --jq '.[0].commit.committer.date' --limit 1 | xargs date '+%Y-%m-%d %-I:%M %p' -d"
 alias lastcommits='gh search commits --committer Zerossive --sort committer-date'
-alias dufc="duf --hide-fs squashfs,tmpfs" # Disk usage
-alias afk="cmatrix -s -C blue"            # Matrix AFK screen
+alias afk="cmatrix -s -C blue" # Matrix AFK screen
 alias qci="qalc -c --interactive"
 alias hlui='hledger-ui --theme=terminal --tree --all'
 alias dockerl='docker ps --format "table {{.Names}}\t{{.ID}}\t{{.Status}}"'
@@ -98,7 +97,7 @@ help() {
 `remind`        set and list reminder notifications e.g. `remind 15m do task`
 
 # OTHER NOTABLE COMMANDS
-`fkill`, `weather`, `dufc`, `f`, `ff`, `fu`, `fa`, `dnfc`, `color`, `sshs`,
+`fkill`, `weather`, `dysk`, `f`, `ff`, `fu`, `fa`, `dnfc`, `color`, `sshs`,
 `qalc/qc/qci`, `delta`, `re/refresh`, `ipc`, `timew/tw`, `pomodoro/pt`,
 `mega-cmd`, `has`, `lastcommit/lastcommits`, `fm/fman`
 
