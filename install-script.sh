@@ -97,6 +97,7 @@ flatpak_list=(
 	org.musicbrainz.Picard    # music tagger
 	com.github.qarmin.czkawka # duplicate finder
 	io.github.seadve.Mousai   # music recognition
+	com.authormore.penpotdesktop
 
 	# TOOLS
 	com.github.tenderowl.frog # ocr
