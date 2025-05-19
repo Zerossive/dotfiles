@@ -62,6 +62,14 @@ alias dockerl='docker ps --format "table {{.Names}}\t{{.ID}}\t{{.Status}}"'
 alias duc="du -sh"
 alias has="curl -sL https://git.io/_has | bash -s"
 alias dnfl="dnf list --installed | fzfc --no-preview"
+# GitHub CLI
+alias ghs="gh status"
+alias ghila='gh search issues --assignee=@me'
+alias ghil="gh issue list"
+alias ghis="gh issue status"
+alias ghic="gh issue create --assignee '@me'"
+alias ghicb="gh issue create --assignee '@me' --label 'bug'"
+alias ghice="gh issue create --assignee '@me' --label 'enhancement'"
 
 # H1: General Functions
 # H2: Print general help information -------------- 80 char max -------------- #
