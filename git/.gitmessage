@@ -7,6 +7,7 @@
 # ├─ refactor:     code changes that neither fix a bug nor add a feature
 # ├─ perf:         performance optimizations
 # ├─ content:      adds content e.g. articles, videos, etc.
+# ├─ style:        visual changes that do not affect functionality
 # ├─ docs:         changes to documentation
 # ├─ revert:       reverts a previous commit
 # └─ chore:        miscellaneous changes
@@ -19,7 +20,7 @@
 #
 # This is another body paragraph, and below is the footer.
 #
-# Closes #1, Fixes #2, Resolves #3
+# closes #1, fixes #2, resolves #3
 #
 # BREAKING CHANGE: either this line or the "!" above are required
 # Co-authored-by: Jane Doe
