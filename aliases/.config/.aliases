@@ -53,8 +53,6 @@ alias {vault,oo}="cd ~/Elysium/Obsidian\ Vault && nvim && cd -"
 alias todo="n ~/Elysium/Obsidian\ Vault/To-Do.md"
 alias ipc='ip -4 -brief a'
 alias ta='tmux new-session -A -s work'
-alias lastcommit="gh search commits --committer Zerossive --sort committer-date --json commit --jq '.[0].commit.committer.date' --limit 1 | xargs date '+%Y-%m-%d %-I:%M %p' -d"
-alias lastcommits='gh search commits --committer Zerossive --sort committer-date'
 alias afk="cmatrix -s -C blue" # Matrix AFK screen
 alias qci="qalc -c --interactive"
 alias hlui='hledger-ui --theme=terminal --tree --all'
@@ -70,6 +68,8 @@ alias ghis="gh issue status"
 alias ghic="gh issue create --assignee '@me'"
 alias ghicb="gh issue create --assignee '@me' --label 'bug'"
 alias ghice="gh issue create --assignee '@me' --label 'enhancement'"
+alias ghc="gh search commits --committer Zerossive --sort committer-date --json commit --jq '.[0].commit.committer.date' --limit 1 | xargs date '+%Y-%m-%d %-I:%M %p' -d"
+alias ghcl='gh search commits --committer Zerossive --sort committer-date'
 
 # H1: General Functions
 # H2: Print general help information -------------- 80 char max -------------- #
@@ -107,7 +107,7 @@ help() {
 # OTHER NOTABLE COMMANDS
 `fkill`, `weather`, `dysk`, `f`, `ff`, `fu`, `fa`, `dnfc`, `color`, `sshs`,
 `qalc/qc/qci`, `delta`, `re/refresh`, `ipc`, `timew/tw`, `pomodoro/pt`,
-`mega-cmd`, `has`, `lastcommit/lastcommits`, `fm/fman`
+`mega-cmd`, `has`, `ghc/ghcl`, `fm/fman`
 
 ## FUN COMMANDS
 `cmatrix`, `cava`, `figlet`, `showfigfontsc`
