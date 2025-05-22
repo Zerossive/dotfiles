@@ -70,6 +70,7 @@ alias ghicb="gh issue create --assignee '@me' --label 'bug'"
 alias ghice="gh issue create --assignee '@me' --label 'enhancement'"
 alias ghc="gh search commits --committer Zerossive --sort committer-date --json commit --jq '.[0].commit.committer.date' --limit 1 | xargs date '+%Y-%m-%d %-I:%M %p' -d"
 alias ghcl='gh search commits --committer Zerossive --sort committer-date'
+alias npmd='npm run dev -- --host'
 
 # H1: General Functions
 # H2: Print general help information -------------- 80 char max -------------- #
