@@ -108,7 +108,7 @@ help() {
 # OTHER NOTABLE COMMANDS
 `fkill`, `weather`, `dysk`, `f`, `ff`, `fu`, `fa`, `dnfc`, `color`, `sshs`,
 `qalc/qc/qci`, `delta`, `re/refresh`, `ipc`, `timew/tw`, `pomodoro/pt`,
-`mega-cmd`, `has`, `ghc/ghcl`, `fm/fman`
+`mega-cmd`, `has`, `ghc/ghcl`, `fm/fman`, `xh`, `wiki-tui`
 
 ## FUN COMMANDS
 `cmatrix`, `cava`, `figlet`, `showfigfontsc`
