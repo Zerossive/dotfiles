@@ -4,7 +4,7 @@
 # Description: A script to install various applications and utilities.
 # Usage: install-script.sh [-h | -l | -i] <cateogry>
 # Author: Danny Harris
-# Dependencies: dnf, flatpak, brew, npm
+# Dependencies: dnf, flatpak, brew, npm, cargo
 # ==============================================================================
 
 # -e: exit on error, -u: treat unset variables as errors, -o pipefail: pipe will fail if any command fails
@@ -119,13 +119,23 @@ $testing && flatpak_list=("io.github.flattool.Warehouse" "io.github.flattool.War
 brew_list=(
 	yazi
 	aichat
-	sshs
-	exiftool
+	sshs     # ssh tui
+	exiftool # file metadata viewer
 	timer
 	tlrc # tldr in rust
-	dysk
+	dysk # disk usage analyzer
+	xh   # easier curl
 )
 $testing && brew_list=("exiftool")
+
+# TODO: add cargo list
+cargo_list=(
+	cargo-list
+	cargo-update
+	cargo-watch
+	wiki-tui
+)
+$testing && cargo_list=("cargo-list")
 
 npm_list=(
 	typescript
