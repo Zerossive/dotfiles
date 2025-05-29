@@ -1,4 +1,4 @@
-[manager]
+[mgr]
 prepend_keymap = [
 	# directory shortcuts
 	{ on = [ "g" ,"y" ], run = "cd ~/.config/yazi", desc = "Go to the yazi config directory" },
