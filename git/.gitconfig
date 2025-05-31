@@ -9,10 +9,13 @@
 	defaultBranch = main
 [push]
 	autoSetupRemote = true
+[branch]
+	sort = -committerdate
 [alias]
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 	s = status -s
 	a = add
+	ap = add --patch
 	c = commit
 	cm = commit -m
 	ac = !git add -A && git commit
@@ -34,8 +37,16 @@
 [delta]
 	navigate = true ; navigate using 'n' and 'N'
 [merge]
-	conflictstyle = diff3
+	conflictstyle = zdiff3
 [commit]
 	template = /home/danny/.gitmessage
 [diff]
 	tool = nvimdiff
+	algorithm = histogram
+	colorMoved = default
+[rerere]
+	enabled = true
+[url "git@github.com:"]
+	insteadOf = "https://github.com/"
+[url "git@github.com:"]
+	insteadOf = "gh:"
