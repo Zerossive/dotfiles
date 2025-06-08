@@ -122,9 +122,10 @@ brew_list=(
 	sshs     # ssh tui
 	exiftool # file metadata viewer
 	timer
-	tlrc # tldr in rust
-	dysk # disk usage analyzer
-	xh   # easier curl
+	tlrc   # tldr in rust
+	dysk   # disk usage analyzer
+	xh     # easier curl
+	pastel # color manipulation
 )
 $testing && brew_list=("exiftool")
 
