@@ -63,13 +63,18 @@ alias dnfl="dnf list --installed | fzfc --no-preview"
 # GitHub CLI
 alias ghs="gh status"
 alias ghila='gh search issues --assignee=@me'
-alias ghil="gh issue list"
 alias ghis="gh issue status"
+alias ghil="gh issue list"
+alias ghiv="gh issue view"
+alias ghix="gh issue close"
+alias ghie="gh issue edit"
 alias ghic="gh issue create --assignee '@me'"
 alias ghicb="gh issue create --assignee '@me' --label 'bug'"
 alias ghice="gh issue create --assignee '@me' --label 'enhancement'"
 alias ghc="gh search commits --committer Zerossive --sort committer-date --json commit --jq '.[0].commit.committer.date' --limit 1 | xargs date '+%Y-%m-%d %-I:%M %p' -d"
 alias ghcl='gh search commits --committer Zerossive --sort committer-date'
+alias ghrc="gh repo create"
+alias ghrv="gh repo view"
 alias npmd='npm run dev -- --host'
 
 # H1: General Functions
