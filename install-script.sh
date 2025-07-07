@@ -109,6 +109,7 @@ flatpak_list=(
 	it.mijorus.gearlever
 	com.github.tchx84.Flatseal
 	net.davidotek.pupgui2 # protonup-qt
+	me.iepure.devtoolbox  # dev tools
 )
 $steam_flatpak && flatpak_list+=(
 	com.valvesoftware.Steam
