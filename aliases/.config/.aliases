@@ -112,8 +112,9 @@ help() {
 
 # OTHER NOTABLE COMMANDS
 `fkill`, `weather`, `dysk`, `f`, `ff`, `fu`, `fa`, `dnfc`, `color`, `sshs`,
-`qalc/qc/qci`, `delta`, `re/refresh`, `ipc`, `timew/tw`, `pomodoro/pt`,
-`mega-cmd`, `has`, `ghc/ghcl`, `fm/fman`, `xh`, `wiki-tui`, `pastel`
+`qalc/qc/qci`, `delta`, `re/refresh`, `ipc`, `timew/tw`, `pomodoro/pt`, `has`,
+`ghc/ghcl`, `fm/fman`, `xh`, `wiki-tui`, `pastel`, `cargo install-update -a`,
+`bacon`
 
 ## FUN COMMANDS
 `cmatrix`, `cava`, `figlet`, `showfigfontsc`
