@@ -75,6 +75,7 @@ alias ghc="gh search commits --committer Zerossive --sort committer-date --json 
 alias ghcl='gh search commits --committer Zerossive --sort committer-date'
 alias ghrc="gh repo create"
 alias ghrv="gh repo view"
+alias ghp="xdg-open 'https://github.com/zerossive'"
 alias npmd='npm run dev -- --host'
 
 # H1: General Functions
@@ -99,7 +100,6 @@ help() {
 `yy`,`e`        open yazi file explorer with automatic cd on quit
 `atool`         archiving tool (`-l` list, `-x` extract, `-a` add)
 `magick`        image conversion tool (filetypes, sizes, effects, etc.)
-`navi`          interactive cli cheatsheet (`navi fn welcome` for cheatsheet)
 `wtf`           print various error logs
 `rsyncc`        copy using `rsync -haviP`
         `-n`                dry-run
@@ -112,15 +112,15 @@ help() {
 
 # OTHER NOTABLE COMMANDS
 `fkill`, `weather`, `dysk`, `f`, `ff`, `fu`, `fa`, `dnfc`, `color`, `sshs`,
-`qalc/qc/qci`, `delta`, `re/refresh`, `ipc`, `timew/tw`, `pomodoro/pt`, `has`,
-`ghc/ghcl`, `fm/fman`, `xh`, `wiki-tui`, `pastel`, `cargo install-update -a`,
-`bacon`
+`delta`, `re/refresh`, `ipc`, `timew/tw`, `pomodoro/pt`, `has`, `ghc/ghcl`,
+`fm/fman`, `wiki-tui`, `pastel`, `cargo install-update -a`, `bacon`
 
 ## FUN COMMANDS
 `cmatrix`, `cava`, `figlet`, `showfigfontsc`
 
 # ALTERNATE PRORGRAMS
-`grep` -> `rg`, `find` -> `fd`, `ls` -> `eza`, `cd` -> `z (zoxide)`
+`grep` -> `rg`, `find` -> `fd`, `ls` -> `eza`, `cd` -> `z (zoxide)`,
+`bc` -> `qalc/qc/qci`, `curl` -> `xh`
 
 # OTHER
 **awesome-cli-apps**        https://github.com/agarrharr/awesome-cli-apps
