@@ -5,6 +5,13 @@
 # Author: Danny Harris
 # ==============================================================================
 
+# TODO: convert to the following `pastel` command
+#
+# bg="hotpink"
+# fg="$(pastel textcolor "$bg")"
+#
+# pastel paint "$fg" --on "$bg" "well readable text"
+
 # -e: exit on error, -u: treat unset variables as errors, -o pipefail: pipe will fail if any command fails
 set -euo pipefail
 
