@@ -54,10 +54,19 @@ config.max_fps = 144
 
 -- [[ Custom Keyboard Shortcuts ]]
 config.keys = {
+	-- pane navigation
 	{ key = "h", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Left") },
 	{ key = "l", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Right") },
 	{ key = "j", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Down") },
 	{ key = "k", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Up") },
+	-- scrolling
+	{ key = "j", mods = "ALT|SHIFT", action = wezterm.action.ScrollByPage(0.5) },
+	{ key = "k", mods = "ALT|SHIFT", action = wezterm.action.ScrollByPage(-0.5) },
+	-- tab navigation
+	{ key = "h", mods = "ALT|SHIFT", action = wezterm.action.ActivateTabRelative(-1) },
+	{ key = "l", mods = "ALT|SHIFT", action = wezterm.action.ActivateTabRelative(1) },
+	{ key = "h", mods = "CTRL|ALT|SHIFT", action = wezterm.action.MoveTabRelative(-1) },
+	{ key = "l", mods = "CTRL|ALT|SHIFT", action = wezterm.action.MoveTabRelative(1) },
 }
 
 -- and finally, return the configuration to wezterm
