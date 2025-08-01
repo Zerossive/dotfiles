@@ -75,7 +75,7 @@ alias ghc="gh search commits --committer Zerossive --sort committer-date --json 
 alias ghcl='gh search commits --committer Zerossive --sort committer-date'
 alias ghrc="gh repo create"
 alias ghrv="gh repo view"
-alias ghp="xdg-open 'https://github.com/zerossive'"
+alias ghb="xdg-open 'https://github.com/zerossive'"
 alias npmd='npm run dev -- --host'
 
 # H1: General Functions
