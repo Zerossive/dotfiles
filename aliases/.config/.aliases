@@ -77,6 +77,7 @@ alias ghrc="gh repo create"
 alias ghrv="gh repo view"
 alias ghb="xdg-open 'https://github.com/zerossive'"
 alias npmd='npm run dev -- --host'
+alias sandbox="docker compose -f \"$HOME/Documents/local-docker/fedora-sandbox/docker-compose.yml\" run --rm sandbox"
 
 # H1: General Functions
 # H2: Print general help information -------------- 80 char max -------------- #
