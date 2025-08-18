@@ -110,6 +110,7 @@ help() {
         `--exclude`         exclude based on given pattern
 `entr`          run commands when files change e.g. `ls PATH | entr COMMAND`
 `remind`        set and list reminder notifications e.g. `remind 15m do task`
+`fx`            json viewer and processor
 
 # OTHER NOTABLE COMMANDS
 `fkill`, `weather`, `dysk`, `f`, `ff`, `fu`, `fa`, `dnfc`, `color`, `sshs`,

@@ -127,6 +127,7 @@ brew_list=(
 	dysk   # disk usage analyzer
 	xh     # easier curl
 	pastel # color manipulation
+	fx     # json viewer
 )
 $testing && brew_list=("exiftool")
 
