@@ -12,6 +12,8 @@ prepend_keymap = [
 	{ on = [ "g" ,"b" ], run = "cd ~/.local/bin", desc = "Go to the local bin directory" },
 	{ on = [ "g" ,"t" ], run = "cd ~/.local/share/Trash/files", desc = "Go to the trash directory" },
 	{ on = [ "g" ,"s" ], run = "cd ~/Pictures/Screenshots", desc = "Go to the screenshots directory" },
+	{ on = [ "g" ,"S" ], run = "cd ~/Syncthing", desc = "Go to the syncthing directory" },
+	{ on = [ "g" ,"D" ], run = "cd ~/Documents/", desc = "Go to the documents directory" },
 
 	# toggle panes
 	{ on = "<A-1>", run = "plugin toggle-pane min-parent", desc = "Toggle parent" },
