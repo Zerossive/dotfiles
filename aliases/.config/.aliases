@@ -78,6 +78,8 @@ alias ghrv="gh repo view"
 alias ghb="xdg-open 'https://github.com/zerossive'"
 alias npmd='npm run dev -- --host'
 alias sandbox="docker compose -f \"$HOME/Documents/local-docker/fedora-sandbox/docker-compose.yml\" run --rm sandbox"
+alias elysium-backup-pause="mega-sync /home/danny/Elysium -p"
+alias elysium-backup-enable="mega-sync /home/danny/Elysium -e"
 
 # H1: General Functions
 # H2: Print general help information -------------- 80 char max -------------- #
