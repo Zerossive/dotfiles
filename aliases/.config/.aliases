@@ -60,6 +60,7 @@ alias dockerl='docker ps --format "table {{.Names}}\t{{.ID}}\t{{.Status}}"'
 alias duc="du -sh"
 alias has="curl -sL https://git.io/_has | bash -s"
 alias dnfl="dnf list --installed | fzfc --no-preview"
+alias docker-prune="ssh olympus 'docker image prune -fa'"
 # GitHub CLI
 alias ghs="gh status"
 alias ghila='gh search issues --assignee=@me'
@@ -78,8 +79,9 @@ alias ghrv="gh repo view"
 alias ghb="xdg-open 'https://github.com/zerossive'"
 alias npmd='npm run dev -- --host'
 alias sandbox="docker compose -f \"$HOME/Documents/local-docker/fedora-sandbox/docker-compose.yml\" run --rm sandbox"
-alias elysium-backup-pause="mega-sync /home/danny/Elysium -p"
-alias elysium-backup-enable="mega-sync /home/danny/Elysium -e"
+alias backup-elysium-pause="mega-sync /home/danny/Elysium -p"
+alias backup-elysium-enable="mega-sync /home/danny/Elysium -e"
+alias backup-music="rsyncc danny@olympus:/home/danny/media/music/ /mnt/1TB\ SSD/Backup/Music"
 
 # H1: General Functions
 # H2: Print general help information -------------- 80 char max -------------- #
