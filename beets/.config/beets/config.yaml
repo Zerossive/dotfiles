@@ -14,7 +14,7 @@ embedart:
 
 musicbrainz:
   # also use extra tags for better matching
-  extra_tags: [year, catalognum, country, media, label]
+  extra_tags: [barcode, catalognum, country, label, media, year]
 
 lastgenre:
   # get the 3 most popular genres per-track
