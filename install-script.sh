@@ -59,6 +59,7 @@ $testing && package_list=("qalc" "figlet")
 dev_list=(
 	bat
 	docker-ce
+	distrobox
 	entr
 	eza
 	fd-find
