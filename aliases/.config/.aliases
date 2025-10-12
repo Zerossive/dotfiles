@@ -82,6 +82,7 @@ alias sandbox="docker compose -f \"$HOME/Documents/local-docker/fedora-sandbox/d
 alias backup-elysium-pause="mega-sync /home/danny/Elysium -p"
 alias backup-elysium-enable="mega-sync /home/danny/Elysium -e"
 alias backup-music="rsyncc danny@olympus:/home/danny/media/music/ /mnt/1TB\ SSD/Backup/Music"
+alias backup-immich="rsyncc --update danny@olympus:/home/danny/media/photos danny@olympus:/home/danny/media/videos danny@olympus:/home/danny/media/immich/library /mnt/1TB\ SSD/Backup/Immich"
 
 # H1: General Functions
 # H2: Print general help information -------------- 80 char max -------------- #
@@ -108,8 +109,8 @@ help() {
 `wtf`           print various error logs
 `rsyncc`        copy using `rsync -haviP`
         `-n`                dry-run
-        `-u`                don't replace newer files
-        `--ignore-existing` ignore existing files
+        `--update, -u`      skip newer files
+        `--ignore-existing` skip existing files
         `--delete`          delete destination files
         `--exclude`         exclude based on given pattern
 `entr`          run commands when files change e.g. `ls PATH | entr COMMAND`
