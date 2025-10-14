@@ -136,8 +136,8 @@ $testing && brew_list=("exiftool")
 cargo_list=(
 	cargo-list
 	cargo-update
-	cargo-watch
 	wiki-tui
+	bacon
 )
 $testing && cargo_list=("cargo-list")
 
