@@ -177,9 +177,16 @@ alias fzfc=" \
         esac;
       fi' \
 	--preview-border=left \
-	--bind='ctrl-d:half-page-down,ctrl-u:half-page-up,alt-d:preview-half-page-down,alt-u:preview-half-page-up,alt-p:toggle-preview,ctrl-e:execute(nvim -O {} > /dev/tty)+abort,ctrl-o:execute-silent(xdg-open {})+abort,ctrl-y:execute-silent(printf {} | cut -f 2- | wl-copy --trim-newline)' \
+	--bind='ctrl-y:execute-silent(printf {} | cut -f 2- | wl-copy --trim-newline)' \
+	--bind='ctrl-e:execute(nvim -O {} > /dev/tty)+abort' \
+	--bind='alt-p:toggle-preview' \
+	--bind='alt-u:preview-half-page-up' \
+	--bind='alt-d:preview-half-page-down' \
+	--bind='ctrl-u:half-page-up' \
+	--bind='ctrl-d:half-page-down' \
 	"
 
+# --bind='ctrl-d:half-page-down,ctrl-u:half-page-up,alt-d:preview-half-page-down,alt-u:preview-half-page-up,alt-p:toggle-preview,ctrl-e:execute(nvim -O {} > /dev/tty)+abort,ctrl-o:execute-silent(xdg-open {})+abort,ctrl-y:execute-silent(printf {} | cut -f 2- | wl-copy --trim-newline)' \
 # H2: Fuzzy search for a directory to enter
 f() {
     local dir
