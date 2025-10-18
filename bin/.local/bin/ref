@@ -26,7 +26,7 @@ fzf_opts=(
 
 # exit if notes dir doesn't exist
 if [[ ! -d "$NOTES_DIR" ]]; then
-    printf "%s\n" "error: directory doesn't exist: $NOTES_DIR"
+    printf "%s\n" "error: directory doesn't exist: $NOTES_DIR" >&2
     exit 1
 fi
 
