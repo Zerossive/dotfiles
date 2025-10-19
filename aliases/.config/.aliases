@@ -83,6 +83,7 @@ alias backup-elysium-pause="mega-sync /home/danny/Elysium -p"
 alias backup-elysium-enable="mega-sync /home/danny/Elysium -e"
 alias backup-music="rsyncc danny@olympus:/home/danny/media/music/ /mnt/1TB\ SSD/Backup/Music"
 alias backup-immich="rsyncc --update danny@olympus:/home/danny/media/photos danny@olympus:/home/danny/media/videos danny@olympus:/home/danny/media/immich/library /mnt/1TB\ SSD/Backup/Immich"
+alias list-commands='compgen -c | fzfc'
 
 # H1: General Functions
 # H2: Print general help information -------------- 80 char max -------------- #
@@ -120,7 +121,8 @@ help() {
 # OTHER NOTABLE COMMANDS
 `fkill`, `weather`, `dysk`, `f`, `ff`, `fu`, `fa`, `dnfc`, `color`, `sshs`,
 `delta`, `re/refresh`, `ipc`, `timew/tw`, `pomodoro/pt`, `has`, `ghc/ghcl`,
-`fm/fman`, `wiki-tui`, `pastel`, `cargo install-update -a`, `bacon`
+`fm/fman`, `wiki-tui`, `pastel`, `cargo install-update -a`, `bacon`,
+`list-commands`
 
 ## FUN COMMANDS
 `cmatrix`, `cava`, `figlet`, `showfigfontsc`
