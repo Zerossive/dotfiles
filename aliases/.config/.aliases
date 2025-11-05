@@ -36,6 +36,7 @@ alias browser="flatpak run com.vivaldi.Vivaldi $* 1>/dev/null 2>&1"
 alias {refresh,re}="source ~/.zshrc"
 alias aliases="bat --style plain ~/.config/.aliases" # List aliases
 alias ea="nvim ~/.config/.aliases"                   # Edit aliases
+alias ei="nvim ~/dotfiles/install-script.sh"         # Edit aliases
 alias lsblkc="lsblk -Mpo LABEL,NAME,FSTYPE,SIZE,FSAVAIL,FSUSE%,MOUNTPOINT -e7"
 alias fl="flatpak list --app --columns=size,application,version,name | tr -d ' ' | sort -hr | column -t | bat --style plain" # list flatpaks installed sorted by size
 alias now="date '+%-I:%M %p' | tee >(copy -n)"
@@ -84,6 +85,7 @@ alias backup-elysium-enable="mega-sync /home/danny/Elysium -e"
 alias backup-music="rsyncc danny@olympus:/home/danny/media/music/ /mnt/1TB\ SSD/Backup/Music"
 alias backup-immich="rsyncc --update danny@olympus:/home/danny/media/photos danny@olympus:/home/danny/media/videos danny@olympus:/home/danny/media/immich/library /mnt/1TB\ SSD/Backup/Immich"
 alias list-commands='compgen -c | fzfc'
+alias update-other='brew update && brew upgrade && sudo npm update -g && rustup update && cargo install-update -a'
 
 # H1: General Functions
 # H2: Print general help information -------------- 80 char max -------------- #
