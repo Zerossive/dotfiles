@@ -153,7 +153,6 @@ other_list=(
 	"path of building 1/2"
 	feishin
 	krohnkite # (kwin script, fork)
-	nomachine
 	portmaster
 	scc
 )
@@ -201,7 +200,7 @@ flatpakInstall() {
 		flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 		sudo flatpak install "${flatpak_list[@]}"
 	else
-		printf "Error: flatpak not found\n"
+		printf "Error: flatpak not found\n" >&2
 	fi
 }
 brewInstall() {
@@ -209,7 +208,7 @@ brewInstall() {
 		printf "Installing brew applications...\n"
 		brew install "${brew_list[@]}"
 	else
-		printf "Error: brew not found\n"
+		printf "Error: brew not found\n" >&2
 	fi
 }
 npmInstall() {
@@ -217,7 +216,7 @@ npmInstall() {
 		printf "Installing npm applications...\n"
 		sudo npm install -g "${npm_list[@]}"
 	else
-		printf "Error: npm not found\n"
+		printf "Error: npm not found\n" >&2
 	fi
 }
 
@@ -273,7 +272,7 @@ while getopts ":hl:i:" option; do
 		exit
 		;;
 	\?) # Second: check for invalid options
-		printf "Error: Invalid option\n"
+		printf "Error: Invalid option\n" >&2
 		exit
 		;;
 	l) # List apps by category
@@ -285,7 +284,7 @@ while getopts ":hl:i:" option; do
 		exit
 		;;
 	*)
-		printf "Error: Invalid option, or missing arguments\n"
+		printf "Error: Invalid option, or missing arguments\n" >&2
 		exit
 		;;
 	esac
