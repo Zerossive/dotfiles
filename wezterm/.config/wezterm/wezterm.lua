@@ -52,6 +52,9 @@ config.adjust_window_size_when_changing_font_size = false
 config.warn_about_missing_glyphs = false
 config.max_fps = 144
 
+-- disable window close confirmation
+config.window_close_confirmation = "NeverPrompt"
+
 -- [[ Custom Keyboard Shortcuts ]]
 config.keys = {
 	-- pane navigation
