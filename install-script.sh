@@ -187,6 +187,7 @@ listApps() {
 
 # Installers
 packageInstall() {
+	# TODO: add support for different package managers (dnf, pacman, apt, etc.)
 	printf "Installing packages...\n"
 	sudo dnf install "${package_list[@]}"
 }
