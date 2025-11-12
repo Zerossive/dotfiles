@@ -1,26 +1,26 @@
 # H1: Renamed Commands
-alias copy="wl-copy"
 alias ai="aichat"
-alias t="tmux"
 alias n="nvim"
 alias c="clear"
 alias lg="lazygit"
 alias tw='timew'
-alias open="xdg-open"
-alias hl='hledger'
+alias z='zellij'
 
 # H1: Preset Flags
 alias ll="eza -hlF --icons --no-permissions --no-user --group-directories-first --time-style relative"
 alias lla="eza -halF --icons --no-user --group-directories-first --time-style relative"
 alias lt="eza -T --icons --group-directories-first"
 alias rsyncc="rsync -haviP"
+# software management
 alias install="sudo dnf install"
 alias remove="sudo dnf remove"
+#
 alias search="sudo dnf search"
-alias status_code="curl -s -m 5 -o /dev/null -w '%{http_code}\n' -L" # Get status code of a website
+alias status_code="curl -s -m 5 -o /dev/null -w '%{http_code}\n' -L" # get status code of a website
 alias datec="date '+%Y-%m-%d' -d"
 alias timec="date '+%-I:%M %p' -d"
 alias datetimec="date '+%Y-%m-%d %-I:%M %p' -d"
+# ai
 alias ail="aichat -r linux"
 alias aig="aichat -r grammar --no-stream"
 alias aigc="wl-paste | aichat -r grammar --no-stream | wl-copy"
@@ -28,39 +28,38 @@ alias aie="aichat -e"
 alias aic="aichat -c"
 alias ain="aichat --rag notes"
 alias ainr="ain --rebuild-rag"
+#
 alias tws='timew summary :id :annotation'
 alias qc="qalc --terse"
 alias browser="flatpak run com.vivaldi.Vivaldi $* 1>/dev/null 2>&1"
 
 # H1: Preset Commands w/ Parameters
-alias {refresh,re}="source ~/.zshrc"
-alias aliases="bat --style plain ~/.config/.aliases" # List aliases
-alias ea="nvim ~/.config/.aliases"                   # Edit aliases
-alias ei="nvim ~/dotfiles/install-script.sh"         # Edit aliases
+alias re="source ~/.zshrc"
+alias ea="nvim ~/.config/.aliases"
+alias ei="nvim ~/dotfiles/install-script.sh"
 alias lsblkc="lsblk -Mpo LABEL,NAME,FSTYPE,SIZE,FSAVAIL,FSUSE%,MOUNTPOINT -e7"
+# software management
+alias update-other='brew update && brew upgrade && sudo npm update -g && rustup update && cargo install-update -a'
 alias fl="flatpak list --app --columns=size,application,version,name | tr -d ' ' | sort -hr | column -t | bat --style plain" # list flatpaks installed sorted by size
-alias now="date '+%-I:%M %p' | tee >(copy -n)"
-alias today="date '+%Y-%m-%d' | tee >(copy -n)"
-alias datetime="date '+%Y-%m-%d %-I:%M %p' | tee >(copy -n)"
+alias dnfl="dnf list --installed | fzfc --no-preview"
+#
+alias now="date '+%-I:%M %p' | tee >(wl-copy -n)"
+alias today="date '+%Y-%m-%d' | tee >(wl-copy -n)"
+alias datetime="date '+%Y-%m-%d %-I:%M %p' | tee >(wl-copy -n)"
 alias lock="loginctl lock-session"
 alias unlock="loginctl unlock-session"
 alias playpause="playerctl play-pause"
 alias weather="curl -s -m 3 'https://wttr.in/mesquite?Q'"
 alias temp='curl -sm 3 wttr.in/mesquite\?format="%c%20%t%20(%f)\n" | sed "s/ \?+//g"'
 alias daily="flatpak run com.vivaldi.Vivaldi --new-window https://monkeytype.com https://timeguessr.com https://vim-racer.com/game-mode/randomized/ https://www.geoguessr.com/vgp/3224 https://www.geoguessr.com/vgp/3003 https://www.geoguessr.com/vgp/3007 https://www.mathmammoth.com/practice/multiplication"
+# notes
 alias {dailynote,dn}='nvim -c "DailyNote"'
 alias {q,quick,nq,eq,note}="nvim -c 'e ~/Elysium/Obsidian\\ Vault/Quick\\ Note.md'"
 alias {vault,oo}="cd ~/Elysium/Obsidian\ Vault && nvim && cd -"
 alias todo="n ~/Elysium/Obsidian\ Vault/To-Do.md"
-alias ipc='ip -4 -brief a'
-alias ta='tmux new-session -A -s work'
-alias afk="cmatrix -s -C blue" # Matrix AFK screen
-alias qci="qalc -c --interactive"
-alias hlui='hledger-ui --theme=terminal --tree --all'
+#
+alias afk="cmatrix -s -C blue"
 alias dockerl='docker ps --format "table {{.Names}}\t{{.ID}}\t{{.Status}}"'
-alias duc="du -sh"
-alias has="curl -sL https://git.io/_has | bash -s"
-alias dnfl="dnf list --installed | fzfc --no-preview"
 alias docker-prune="ssh olympus 'docker image prune -fa'"
 # GitHub CLI
 alias ghs="gh status"
@@ -78,16 +77,14 @@ alias ghcl='gh search commits --committer Zerossive --sort committer-date'
 alias ghrc="gh repo create"
 alias ghrv="gh repo view"
 alias ghb="xdg-open 'https://github.com/zerossive'"
-alias npmd='npm run dev -- --host'
-alias sandbox="docker compose -f \"$HOME/Documents/local-docker/fedora-sandbox/docker-compose.yml\" run --rm sandbox"
+# backup
 alias backup-elysium-pause="mega-sync /home/danny/Elysium -p"
 alias backup-elysium-enable="mega-sync /home/danny/Elysium -e"
 alias backup-music="rsyncc danny@olympus:/home/danny/media/music/ /mnt/1TB\ SSD/Backup/Music"
 alias backup-immich="rsyncc --update danny@olympus:/home/danny/media/photos danny@olympus:/home/danny/media/videos danny@olympus:/home/danny/media/immich/library /mnt/1TB\ SSD/Backup/Immich"
-alias list-commands='compgen -c | fzfc'
-alias update-other='brew update && brew upgrade && sudo npm update -g && rustup update && cargo install-update -a'
 
 # H1: General Functions
+# TODO: move help command to separate binary and make `eh` command to edit help
 # H2: Print general help information -------------- 80 char max -------------- #
 help() {
     bat -l md --style plain <<"EOF"
@@ -95,8 +92,8 @@ help() {
 ▏HELP▕
 ▔▔▔▔▔▔
 # GENERAL
-**OS:**         Fedora Linux 40
-**DE:**         KDE Plasma 6.1.1
+**OS:**         Fedora Linux 43
+**DE:**         KDE Plasma 6
 **IP:**         *ATLAS:* 192.168.1.89
                 *OLYMPUS:* 192.168.1.231
                 *ATLANTIS:* 192.168.1.230
@@ -106,7 +103,7 @@ help() {
 `lsblkc`        list block devices
 `fc`            open last command in editor, quitting with `:cq` will cancel
 `cdi`           runs zoxide interactive window to fuzzy search directories
-`yy`,`e`        open yazi file explorer with automatic cd on quit
+`e`             open yazi file explorer with automatic cd on quit
 `atool`         archiving tool (`-l` list, `-x` extract, `-a` add)
 `magick`        image conversion tool (filetypes, sizes, effects, etc.)
 `wtf`           print various error logs
@@ -122,16 +119,16 @@ help() {
 
 # OTHER NOTABLE COMMANDS
 `fkill`, `weather`, `dysk`, `f`, `ff`, `fu`, `fa`, `dnfc`, `color`, `sshs`,
-`delta`, `re/refresh`, `ipc`, `timew/tw`, `pomodoro/pt`, `has`, `ghc/ghcl`,
-`fm/fman`, `wiki-tui`, `pastel`, `cargo install-update -a`, `bacon`,
-`list-commands`
+`delta`, `re` (source zshrc), `ip -4 -brief a`, `timew/tw`, `pt` (pomodoro timer), `ghc/ghcl`,
+`fm` (manpages), `wiki-tui`, `pastel`, `cargo install-update -a`, `bacon`,
+`compgen -c`
 
 ## FUN COMMANDS
-`cmatrix`, `cava`, `figlet`, `showfigfontsc`
+`cmatrix/afk`, `cava`, `figlet`, `showfigfonts`
 
 # ALTERNATE PRORGRAMS
 `grep` -> `rg`, `find` -> `fd`, `ls` -> `eza`, `cd` -> `z (zoxide)`,
-`bc` -> `qalc/qc/qci`, `curl` -> `xh`
+`bc` -> `qalc/qc`, `curl` -> `xh`
 
 # OTHER
 **awesome-cli-apps**        https://github.com/agarrharr/awesome-cli-apps
@@ -148,7 +145,7 @@ function wtf() {
 }
 
 # H1: Yazi shortcut to allow for the changing of directories after quitting
-function yy() {
+function e() {
     local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
     yazi "$@" --cwd-file="$tmp"
     if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
@@ -156,7 +153,6 @@ function yy() {
     fi
     rm -f -- "$tmp"
 }
-alias e="yy"
 alias se="sudo --preserve-env=YAZI_CONFIG_HOME /home/linuxbrew/.linuxbrew/bin/yazi"
 
 # H1: Fuzzy search
@@ -190,7 +186,6 @@ alias fzfc=" \
 	--bind='ctrl-d:half-page-down' \
 	"
 
-# --bind='ctrl-d:half-page-down,ctrl-u:half-page-up,alt-d:preview-half-page-down,alt-u:preview-half-page-up,alt-p:toggle-preview,ctrl-e:execute(nvim -O {} > /dev/tty)+abort,ctrl-o:execute-silent(xdg-open {})+abort,ctrl-y:execute-silent(printf {} | cut -f 2- | wl-copy --trim-newline)' \
 # H2: Fuzzy search for a directory to enter
 f() {
     local dir
@@ -267,68 +262,9 @@ dnfc() {
 fm() {
     man $(apropos --long . | fzfc --no-preview | awk '{print $2,$1}' | tr -d '()')
 }
-alias fman='fm'
-
-# H2: List notable figlet fonts using input text
-showfigfontsc() {
-    # if not input, set default
-    [ -z "$*" ] && set -- "ABC Abc abc"
-    echo "format: figlet -f <font> <text>\n"
-    echo 'THIS'
-    figlet -ctW -f THIS "$@"
-    echo 'Sweet'
-    figlet -ctW -f Sweet "$@"
-    echo 'Sub-Zero'
-    figlet -ctW -f Sub-Zero "$@"
-    echo 'swampland'
-    figlet -ctW -f swampland "$@"
-    echo 'starwars'
-    figlet -ctW -f starwars "$@"
-    echo 'standard'
-    figlet -ctW -f standard "$@"
-    echo 'Speed'
-    figlet -ctW -f Speed "$@"
-    echo 'slant'
-    figlet -ctW -f slant "$@"
-    echo 'Poison'
-    figlet -ctW -f Poison "$@"
-    echo 'Isometric1'
-    figlet -ctW -f Isometric1 "$@"
-    echo 'Shimrod'
-    figlet -ctW -f Shimrod "$@"
-    echo 'Rounded'
-    figlet -ctW -f Rounded "$@"
-    echo 'Roman'
-    figlet -ctW -f Roman "$@"
-    echo 'miniwi'
-    figlet -ctW -f miniwi "$@"
-    echo 'maxiwi'
-    figlet -ctW -f maxiwi "$@"
-    echo 'Blocks'
-    figlet -ctW -f Blocks "$@"
-    echo 'kompaktblk'
-    figlet -ctW -f kompaktblk "$@"
-    echo 'halfiwi'
-    figlet -ctW -f halfiwi "$@"
-    echo 'Epic'
-    figlet -ctW -f Epic "$@"
-    echo 'Elite'
-    figlet -ctW -f Elite "$@"
-    echo 'Electronic'
-    figlet -ctW -f Electronic "$@"
-    echo 'Doom'
-    figlet -ctW -f Doom "$@"
-    echo 'Cybermedium'
-    figlet -ctW -f Cybermedium "$@"
-    echo 'Crawford2'
-    figlet -ctW -f Crawford2 "$@"
-    echo 'cosmic'
-    figlet -ctW -f cosmic "$@"
-    echo "\nformat: figlet -f <font> <text>"
-}
 
 # H2: Pomodoro Timer
-pomodoro() {
+pt() {
     local duration="$1"
     local name="$2"
     #if no duration, set default
@@ -339,28 +275,26 @@ pomodoro() {
         notify-send "${name} complete" &&
         paplay /usr/share/sounds/freedesktop/stereo/complete.oga
 }
-alias {pt,pomo}="pomodoro"
 
 # H2: List trashed files from the current directory
-list-trash() {
-    local current_dir
-    current_dir=$(realpath .) &&
-        rg -o "Path=$current_dir/.*" --no-filename "$HOME"/.local/share/Trash/info/* | sed 's/^Path=//' | python3 -c "import sys, urllib.parse; print(urllib.parse.unquote(sys.stdin.read()))"
-}
-find-trash() {
+ft() {
+    list-trash() {
+        local current_dir
+        current_dir=$(realpath .) &&
+            rg -o "Path=$current_dir/.*" --no-filename "$HOME"/.local/share/Trash/info/* | sed 's/^Path=//' | python3 -c "import sys, urllib.parse; print(urllib.parse.unquote(sys.stdin.read()))"
+    }
+
     local trashed_file
     trashed_file=$(list-trash | fzfc | sed 's|.*/||')
     if [ -n "$trashed_file" ]; then
-        copy "$HOME/.local/share/Trash/files/$trashed_file" &&
+        wl-copy "$HOME/.local/share/Trash/files/$trashed_file" &&
             echo "$HOME/.local/share/Trash/files/$trashed_file"
     fi
 }
-alias ft="find-trash"
 
 # H1: KDE Connect Ping
-ping-hermes() {
+notify-hermes() {
     kdeconnect-cli -n "HERMES" --ping-msg "$*"
 }
-alias {ping-phone,notify-hermes,notify-phone}="ping-hermes"
 
 # vim:ft=sh
