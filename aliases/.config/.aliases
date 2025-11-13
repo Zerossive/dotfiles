@@ -82,6 +82,8 @@ alias backup-elysium-pause="mega-sync /home/danny/Elysium -p"
 alias backup-elysium-enable="mega-sync /home/danny/Elysium -e"
 alias backup-music="rsyncc danny@olympus:/home/danny/media/music/ /mnt/1TB\ SSD/Backup/Music"
 alias backup-immich="rsyncc --update danny@olympus:/home/danny/media/photos danny@olympus:/home/danny/media/videos danny@olympus:/home/danny/media/immich/library /mnt/1TB\ SSD/Backup/Immich"
+alias sandbox='distrobox create --name sandbox --image archlinux:latest --yes --home ~/sandbox --additional-packages "gcc make git ripgrep fd unzip neovim fzf tldr eza zellij zoxide bat entr" --init-hooks "touch ~/.zshrc" && distrobox enter sandbox'
+alias sandbox-delete='distrobox rm sandbox --rm-home && podman image prune -af'
 
 # H1: General Functions
 # TODO: move help command to separate binary and make `eh` command to edit help
@@ -249,6 +251,16 @@ fkill() {
     if [ "x$pid" != "x" ]; then
         echo $pid | xargs kill -${1:-9}
     fi
+}
+
+# H2: Fuzzy find a password & copy to clipboard
+fpw() {
+    account_info="$(bw list items --search "$*" --pretty | jq -r '.[] | "\(.name)|\(.login.username)|\(.login.password)"' | column -ts "|" | fzfc --no-preview)"
+    if [ -z "$account_info" ]; then
+        printf "%s\n" "no account selected"
+        return 1
+    fi
+    wl-copy "$(printf "%s\n" "$account_info" | awk '{print $NF}')" && printf "%s\n" "copied password to clipboard"
 }
 
 # H2: Fuzzy search for a package to install
