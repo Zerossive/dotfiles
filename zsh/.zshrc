@@ -8,13 +8,13 @@ fi
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 export EDITOR=nvim
-export LEDGER_FILE=~/Elysium/Documents/Danny/Finance/hledger.journal
 
 # Other directories in Path
 export PATH=$PATH:~/.local/bin
+
 # API Keys
 if [ -f ~/.api_keys ]; then
-  . ~/.api_keys
+  source ~/.api_keys
 fi
 
 # Theme
@@ -38,7 +38,7 @@ COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="yyyy-mm-dd"
 
 # Plugins
-plugins=(vi-mode colored-man-pages zsh-completions zsh-autosuggestions command-not-found zsh-syntax-highlighting thefuck zsh-fzf-history-search timewarrior zsh-interactive-cd)
+plugins=(vi-mode colored-man-pages zsh-completions zsh-autosuggestions zsh-syntax-highlighting zsh-fzf-history-search)
 
 # vi-mode settings
 VI_MODE_SET_CURSOR=true
@@ -67,9 +67,6 @@ bindkey "^@" list-choices
 bindkey -r "^d"
 
 # [[ Keep this at the end ]]
-
-# It said to put this after installing thefuck rpm (pip didn't work)
-eval $(thefuck --alias)
 
 # Zoxide
 eval "$(zoxide init --cmd cd zsh)"
