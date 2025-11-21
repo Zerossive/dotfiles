@@ -1,0 +1,98 @@
+#!/usr/bin/env zsh
+# ==============================================================================
+# Script Name: devlog
+# Description: create or view manual device logs
+# Usage: devlog [<note name>]
+# Author: Danny Harris
+# Dependencies: fzfc, neovim, fd, bat
+# ==============================================================================
+
+# -e: exit on error, -u: treat unset variables as errors, -o pipefail: pipe will fail if any command fails
+set -euo pipefail
+
+# set global variables
+LOG_DIR="$HOME/Elysium/Obsidian Vault/Notes/Devlog/"
+DEVICE_LIST=(
+    ATLAS
+    OLYMPUS
+    BOYCE-PC
+    HERMES
+    HYPNOS
+)
+DATE="$(date +%Y-%m-%d)"
+
+# default fzf options
+fzf_opts=(
+    --prompt "Select a log: "
+    --preview "printf \"%s\" \"$LOG_DIR{}.md\" | xargs -I _ bat --color always --style plain _"
+    --header 'Delete: ctrl-x    Add New: ctrl-a    Preview: alt-p, alt-u/d    Copy: ctrl-y'
+    --height '100%'
+    --bind "ctrl-x:execute(printf \"%s\" \"$LOG_DIR{}.md\" | xargs -I _ rm _)+exclude"
+    --bind "ctrl-a:execute(
+        CLEANED=\$(sed \"s/^'//; s/'$//\" <<< {q});
+        device_list=(${DEVICE_LIST});
+        device=\"\$(printf \"%s\n\" \"\${device_list[@]}\" | fzfc --no-preview --prompt \"Select a device: \")\";
+        [[ -z \"\$device\" ]] && printf \"%s\n\" \"device selection cancelled\" >&2 && exit 1;
+        FILE=\"$LOG_DIR/$DATE [\$device] \$CLEANED.md\";
+        nvim \"\$FILE\" -c \"norm i# $DATE \$device \$CLEANEDgogoG\"
+    )+change-query(NULL)+print-query"
+    --bind "enter:accept-or-print-query"
+)
+
+# exit if log dir doesn't exist
+if [[ ! -d "$LOG_DIR" ]]; then
+    printf "%s\n" "error: directory doesn't exist: $LOG_DIR" >&2
+    exit 1
+fi
+
+select_device() {
+    printf "%s\n" "${DEVICE_LIST[@]}" | fzfc "${fzf_opts[@]}" --no-preview --prompt "Select a device: "
+    exit 0
+}
+
+# if no arguments, list logs
+if [ $# -eq 0 ]; then
+    # select log to edit or create
+    selected_log="$(
+        fd --absolute-path --extension md --type f . "$LOG_DIR" |
+            sed "s|^$LOG_DIR||; s|.md$||" |
+            fzfc --tac "${fzf_opts[@]}" || printf ""
+    )"
+
+    # exit if no log is selected
+    if [[ -z "$selected_log" ]]; then
+        printf "%s\n" "device log selection cancelled" >&2
+        exit 1
+    fi
+
+    # exit if selected log is named NULL (for creating new logs within fzf)
+    if [[ "$selected_log" == "NULL" ]]; then
+        exit 0
+    fi
+
+    # create new log if selected log doesn't exist
+    if [[ ! -f "$LOG_DIR/$selected_log.md" ]]; then
+        device="$(select_device)"
+        [[ -z "$device" ]] && printf "%s\n" "device selection cancelled" >&2 && exit 1
+        nvim "$LOG_DIR/$DATE [$device] $selected_log.md" -c "norm i# $DATE $device $selected_loggogoG"
+        exit 0
+    fi
+
+    # open selected log
+    nvim "$LOG_DIR/$selected_log.md"
+    exit 0
+fi
+
+# show help
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    printf "%s\n" "usage: ref [<log name>]"
+    printf "%s\n" "create or view device logs"
+    exit 0
+fi
+
+# create a new log if arguments are provided
+device="$(select_device)"
+[[ -z "$device" ]] && printf "%s\n" "device selection cancelled" >&2 && exit 1
+nvim "$LOG_DIR/$DATE [$device] $*.md" -c "norm i# $DATE $device $*gogoG"
+
+# vim: set ft=sh:
