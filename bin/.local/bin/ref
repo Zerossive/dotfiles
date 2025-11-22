@@ -4,7 +4,7 @@
 # Description: create or view reference notes in obsidian vault
 # Usage: ref [<note name>]
 # Author: Danny Harris
-# Dependencies: fzfc, neovim, fd
+# Dependencies: fzfc, neovim, fd, bat
 # ==============================================================================
 
 # -e: exit on error, -u: treat unset variables as errors, -o pipefail: pipe will fail if any command fails
@@ -15,12 +15,16 @@ NOTES_DIR="$HOME/Elysium/Obsidian Vault/Notes/Reference/"
 
 # default fzf options
 fzf_opts=(
-    --prompt "Select a note: "
+    --prompt "Select a reference: "
     --preview "printf \"%s\" \"$NOTES_DIR{}.md\" | xargs -I _ bat --color always --style plain _"
     --header 'Delete: ctrl-x    Add New: ctrl-a    Preview: alt-p, alt-u/d    Copy: ctrl-y'
     --height '100%'
     --bind "ctrl-x:execute(printf \"%s\" \"$NOTES_DIR{}.md\" | xargs -I _ rm _)+exclude"
-    --bind "ctrl-a:execute(printf \"%s\" '$NOTES_DIR{q}.md' | xargs -I _ nvim _ -c \"norm i# \$(echo {q} | sed \"s/^'//; s/'$//\")gogoG\")+change-query(NULL)+print-query"
+    --bind "ctrl-a:execute(
+        CLEANED=\$(sed \"s/^'//; s/'$//\" <<< {q});
+        FILE=\"$NOTES_DIR\$CLEANED.md\";
+        nvim \"\$FILE\" -c \"norm i# \$CLEANEDgogoG\"
+    )+change-query(NULL)+print-query"
     --bind "enter:accept-or-print-query"
 )
 
@@ -41,8 +45,8 @@ if [ $# -eq 0 ]; then
 
     # exit if no note is selected
     if [[ -z "$selected_note" ]]; then
-        printf "%s\n" "note selection cancelled"
-        exit 0
+        printf "%s\n" "note selection cancelled" >&2
+        exit 1
     fi
 
     # exit if selected note is named NULL (for creating new notes within fzf)
@@ -50,7 +54,7 @@ if [ $# -eq 0 ]; then
         exit 0
     fi
 
-    # create new note if selected note doesn't exit
+    # create new note if selected note doesn't exist
     if [[ ! -f "$NOTES_DIR/$selected_note.md" ]]; then
         nvim "$NOTES_DIR/$selected_note.md" -c "norm i# $selected_notegogoG"
         exit 0
