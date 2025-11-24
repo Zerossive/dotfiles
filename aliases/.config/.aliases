@@ -37,6 +37,7 @@ alias browser="flatpak run com.vivaldi.Vivaldi $* 1>/dev/null 2>&1"
 alias re="source ~/.zshrc"
 alias ea="nvim ~/.config/.aliases"
 alias ei="nvim ~/dotfiles/install-script.sh"
+alias ep="nvim /mnt/autofs/OLYMPUS/data/stacks/caddy/conf/Caddyfile" # edit Caddyfile reverse proxy
 alias lsblkc="lsblk -Mpo LABEL,NAME,FSTYPE,SIZE,FSAVAIL,FSUSE%,MOUNTPOINT -e7"
 # software management
 alias update-other='brew update && brew upgrade && sudo npm update -g && rustup update && cargo install-update -a'
