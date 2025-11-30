@@ -11,26 +11,26 @@
 set -euo pipefail
 
 # set global variables
-NOTES_DIR="$HOME/Elysium/Obsidian Vault/Notes/Reference/"
+notes_dir="$HOME/Elysium/Obsidian Vault/Notes/Reference/"
 
 # default fzf options
 fzf_opts=(
     --prompt "Select a reference: "
-    --preview "printf \"%s\" \"$NOTES_DIR{}.md\" | xargs -I _ bat --color always --style plain _"
+    --preview "printf \"%s\" \"$notes_dir{}.md\" | xargs -I _ bat --color always --style plain _"
     --header 'Delete: ctrl-x    Add New: ctrl-a    Preview: alt-p, alt-u/d    Copy: ctrl-y'
     --height '100%'
-    --bind "ctrl-x:execute(printf \"%s\" \"$NOTES_DIR{}.md\" | xargs -I _ rm _)+exclude"
+    --bind "ctrl-x:execute(printf \"%s\" \"$notes_dir{}.md\" | xargs -I _ rm _)+exclude"
     --bind "ctrl-a:execute(
         CLEANED=\$(sed \"s/^'//; s/'$//\" <<< {q});
-        FILE=\"$NOTES_DIR\$CLEANED.md\";
+        FILE=\"$notes_dir\$CLEANED.md\";
         nvim \"\$FILE\" -c \"norm i# \$CLEANEDgogoG\"
     )+change-query(NULL)+print-query"
     --bind "enter:accept-or-print-query"
 )
 
 # exit if notes dir doesn't exist
-if [[ ! -d "$NOTES_DIR" ]]; then
-    printf "%s\n" "error: directory doesn't exist: $NOTES_DIR" >&2
+if [[ ! -d "$notes_dir" ]]; then
+    printf "%s\n" "error: directory doesn't exist: $notes_dir" >&2
     exit 1
 fi
 
@@ -38,8 +38,8 @@ fi
 if [ $# -eq 0 ]; then
     # select note to edit or create
     selected_note="$(
-        fd --absolute-path --extension md --type f . "$NOTES_DIR" |
-            sed "s|^$NOTES_DIR||; s|.md$||" |
+        fd --absolute-path --extension md --type f . "$notes_dir" |
+            sed "s|^$notes_dir||; s|.md$||" |
             fzfc "${fzf_opts[@]}" || printf ""
     )"
 
@@ -55,13 +55,13 @@ if [ $# -eq 0 ]; then
     fi
 
     # create new note if selected note doesn't exist
-    if [[ ! -f "$NOTES_DIR/$selected_note.md" ]]; then
-        nvim "$NOTES_DIR/$selected_note.md" -c "norm i# $selected_notegogoG"
+    if [[ ! -f "$notes_dir/$selected_note.md" ]]; then
+        nvim "$notes_dir/$selected_note.md" -c "norm i# $selected_notegogoG"
         exit 0
     fi
 
     # open selected note
-    nvim "$NOTES_DIR/$selected_note.md"
+    nvim "$notes_dir/$selected_note.md"
     exit 0
 fi
 
@@ -73,6 +73,6 @@ if [[ "$1" == "-h" || "$1" == "--help" ]]; then
 fi
 
 # create a new note if arguments are provided
-nvim "$NOTES_DIR/$*.md" -c "norm i# $*gogoG"
+nvim "$notes_dir/$*.md" -c "norm i# $*gogoG"
 
 # vim: set ft=sh:
