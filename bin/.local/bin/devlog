@@ -11,42 +11,42 @@
 set -euo pipefail
 
 # set global variables
-LOG_DIR="$HOME/Elysium/Obsidian Vault/Notes/Devlog/"
-DEVICE_LIST=(
+log_dir="$HOME/Elysium/Obsidian Vault/Notes/Devlog/"
+device_list=(
     ATLAS
     OLYMPUS
     BOYCE-PC
     HERMES
     HYPNOS
 )
-DATE="$(date +%Y-%m-%d)"
+current_date="$(date +%Y-%m-%d)"
 
 # default fzf options
 fzf_opts=(
     --prompt "Select a log: "
-    --preview "printf \"%s\" \"$LOG_DIR{}.md\" | xargs -I _ bat --color always --style plain _"
+    --preview "printf \"%s\" \"$log_dir{}.md\" | xargs -I _ bat --color always --style plain _"
     --header 'Delete: ctrl-x    Add New: ctrl-a    Preview: alt-p, alt-u/d    Copy: ctrl-y'
     --height '100%'
-    --bind "ctrl-x:execute(printf \"%s\" \"$LOG_DIR{}.md\" | xargs -I _ rm _)+exclude"
+    --bind "ctrl-x:execute(printf \"%s\" \"$log_dir{}.md\" | xargs -I _ rm _)+exclude"
     --bind "ctrl-a:execute(
         CLEANED=\$(sed \"s/^'//; s/'$//\" <<< {q});
-        device_list=(${DEVICE_LIST});
+        device_list=(${device_list});
         device=\"\$(printf \"%s\n\" \"\${device_list[@]}\" | fzfc --no-preview --prompt \"Select a device: \")\";
         [[ -z \"\$device\" ]] && printf \"%s\n\" \"device selection cancelled\" >&2 && exit 1;
-        FILE=\"$LOG_DIR/$DATE [\$device] \$CLEANED.md\";
-        nvim \"\$FILE\" -c \"norm i# $DATE \$device \$CLEANEDgogoG\"
+        FILE=\"$log_dir/$current_date [\$device] \$CLEANED.md\";
+        nvim \"\$FILE\" -c \"norm i# $current_date \$device \$CLEANEDgogoG\"
     )+change-query(NULL)+print-query"
     --bind "enter:accept-or-print-query"
 )
 
 # exit if log dir doesn't exist
-if [[ ! -d "$LOG_DIR" ]]; then
-    printf "%s\n" "error: directory doesn't exist: $LOG_DIR" >&2
+if [[ ! -d "$log_dir" ]]; then
+    printf "%s\n" "error: directory doesn't exist: $log_dir" >&2
     exit 1
 fi
 
 select_device() {
-    printf "%s\n" "${DEVICE_LIST[@]}" | fzfc "${fzf_opts[@]}" --no-preview --prompt "Select a device: "
+    printf "%s\n" "${device_list[@]}" | fzfc "${fzf_opts[@]}" --no-preview --prompt "Select a device: "
     exit 0
 }
 
@@ -54,8 +54,8 @@ select_device() {
 if [ $# -eq 0 ]; then
     # select log to edit or create
     selected_log="$(
-        fd --absolute-path --extension md --type f . "$LOG_DIR" |
-            sed "s|^$LOG_DIR||; s|.md$||" |
+        fd --absolute-path --extension md --type f . "$log_dir" |
+            sed "s|^$log_dir||; s|.md$||" |
             fzfc --tac "${fzf_opts[@]}" || printf ""
     )"
 
@@ -71,15 +71,15 @@ if [ $# -eq 0 ]; then
     fi
 
     # create new log if selected log doesn't exist
-    if [[ ! -f "$LOG_DIR/$selected_log.md" ]]; then
+    if [[ ! -f "$log_dir/$selected_log.md" ]]; then
         device="$(select_device)"
         [[ -z "$device" ]] && printf "%s\n" "device selection cancelled" >&2 && exit 1
-        nvim "$LOG_DIR/$DATE [$device] $selected_log.md" -c "norm i# $DATE $device $selected_loggogoG"
+        nvim "$log_dir/$current_date [$device] $selected_log.md" -c "norm i# $current_date $device $selected_loggogoG"
         exit 0
     fi
 
     # open selected log
-    nvim "$LOG_DIR/$selected_log.md"
+    nvim "$log_dir/$selected_log.md"
     exit 0
 fi
 
@@ -93,6 +93,6 @@ fi
 # create a new log if arguments are provided
 device="$(select_device)"
 [[ -z "$device" ]] && printf "%s\n" "device selection cancelled" >&2 && exit 1
-nvim "$LOG_DIR/$DATE [$device] $*.md" -c "norm i# $DATE $device $*gogoG"
+nvim "$log_dir/$current_date [$device] $*.md" -c "norm i# $current_date $device $*gogoG"
 
 # vim: set ft=sh:
