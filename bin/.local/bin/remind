@@ -1,71 +1,121 @@
 #!/usr/bin/env bash
 # ==============================================================================
 # Script Name: remind
-# Description: After some period of time, send a notification, play a sound,
-#              and ping a KDE Connect device
-# Usage: remind [OPTIONS] <delay> <message>
+# Description: At some specific time, sends out a notification.
+# Usage: remind [options] <time> <message>
 # Author: Danny Harris
-# Dependencies: kdeconnect-cli, paplay, notify-send
+# Dependencies: at, kdeconnect-cli, paplay, notify-send
 # ==============================================================================
 
 show_help() {
-	cat <<EOF
-Usage: $(basename "$0") [-l | list] [-c | cancel] <delay> <message>
+	local cmd="${0##*/}"
+	cat <<-EOF
+		Sends out a notification at a specific time.
 
-Description:
-  After some period of time, send a notification, play a sound, and ping a
-  KDE Connect device.
+		Usage: $cmd [options] <time> <message>
 
-Options:
-  -l, list    list active reminders
-  -c, cancel  cancel active reminders
-EOF
+		Options:
+		  -l, ls                list active reminders
+		  -r ID..., rm ID...    remove specific reminders
+		  -a, rma               remove all reminders
+
+		Examples:
+		  $cmd now+1hour complete this task
+		  $cmd 10amtomorrow complete this other task
+		  $cmd rm 1 2 3 4 5
+	EOF
 }
 
-remind() {
-	# List active reminders
-	if [[ "$1" == "list" || "$1" == "-l" ]]; then
-		# Get timer data
-		local timers
-		timers=$(systemctl --user list-timers --no-pager --no-legend | awk '{print $NF}' | grep remind- || true)
+# dependency checks
+dependencies=(at notify-send)
+for cmd in "${dependencies[@]}"; do
+	if ! command -v "$cmd" >/dev/null 2>&1; then
+		printf "error: '%s' command does not exist\n" "$cmd" >&2
+		exit 1
+	fi
+done
 
-		# Check for reminders, then list them
-		if [[ -n "$timers" ]]; then
-			echo "Active Reminders:"
-			systemctl --user list-timers --no-pager --all 'remind-*'
-			for timer in $timers; do
-				echo "$timer"
-				echo "        $(systemctl --user show "$timer" --property Description --value | sed 's/^[^ ]* [^ ]*//')"
-			done
-		else
-			echo "No active reminders"
-		fi
-		return 0
+notify() {
+	local time="$1"
+	local message="$2"
+
+	# check for `notify-all` command
+	if ! command -v notify-all >/dev/null 2>&1; then
+		printf 'error: notify-all does not exist, running notify-send instead\n' >&2
+		at "$time" <<<"notify-send --app-name='notify-all' --icon='clock' -t 5000 --urgency='urgent' '$message'"
+		exit 0
 	fi
 
-	# Cancel all reminders
-	if [[ $# -eq 1 && ("$1" == "cancel" || "$1" == "-c") ]]; then
-		# Get timer data
-		local timers
-		timers=$(systemctl --user list-timers --no-pager --no-legend | awk '{print $NF}' | grep remind-)
+	at "$time" <<<"notify-all -i '$message'"
+}
 
-		# Check for reminders, then cancel them all
-		if [[ -n "$timers" ]]; then
-			local services
-			services=$(echo "$timers" | sed 's/\.service$/.timer/')
+# delete everything after the first tab (keep id)
+parse_id() {
+	printf "%s\n" "${*%%$'\t'*}"
+}
 
-			echo "$timers $services" | xargs -r systemctl --user stop
-			systemctl --user reset-failed
+parse_date() {
+	local date="${*% * *}"
+	date="${date#*$'\t'}"
+	date="$(date '+%Y-%m-%d|%H:%M|%-I:%M %p' -d "$date")"
+	printf "%s\n" "$date"
+}
 
-			echo "All reminders cancelled"
+parse_script() {
+	printf "%s\n" "$(at -c "$*" | sed -e '1,/SHELL:-/d' -e '$d' -e "s/^[^']*'//; s/'[^']*\$//")"
+}
+
+main() {
+	# List active reminders
+	if [[ "$1" == "ls" || "$1" == "-l" ]]; then
+		mapfile -t reminders_raw < <(atq)
+		local id date script
+		local reminders_sorted=()
+		for reminder in "${reminders_raw[@]}"; do
+			id="$(parse_id "$reminder")"
+			date="$(parse_date "$reminder")"
+			script="$(parse_script "$id")"
+			reminders_sorted+=("$date|[$id]|$script")
+		done
+		mapfile -t reminders_sorted < <(printf "%s\n" "${reminders_sorted[@]}" | sort)
+		printf "%s\n" "$(printf "%s\n" "${reminders_sorted[@]}" | sort | column -t -s '|')"
+		exit 0
+	fi
+
+	if [[ "$1" == "rm" || "$1" == "-r" ]]; then
+		shift
+		local ids_to_remove=("$@")
+		for id in "${ids_to_remove[@]}"; do
+			atrm "$id" &&
+				printf 'Removed: %s\n' "$id"
+		done
+		exit 0
+	fi
+
+	# Delete all reminders
+	if [[ $# -eq 1 && ("$1" == "rma" || "$1" == "-a") ]]; then
+		local confirmation
+		read -r -n 1 -p 'Delete all reminders? [y/N] ' confirmation
+		printf "\n"
+		if [[ "$confirmation" =~ ^[Yy]$ ]]; then
+			mapfile -t reminders < <(atq)
+			local id date script
+			for reminder in "${reminders[@]}"; do
+				id="$(parse_id "$reminder")"
+				date="$(parse_date "$reminder")"
+				script="$(parse_script "$id")"
+
+				atrm "$id" &&
+					printf "Removed: %s\n" "$date|[$id]|$script" | column -t -s '|'
+			done
 		else
-			echo "No active reminders to cancel"
+			printf "Deletion canceled.\n"
 		fi
-		return 0
+		exit 0
 	fi
 
 	# Initialize arguments
-	local delay="$1"
+	local time="$1"
 	shift
 	local message="$*"
 
@@ -75,20 +125,10 @@ remind() {
 		return 1
 	fi
 
-	# Set up a systemd timer unit name
-	local unit_name
-	unit_name="remind-$(date +%s%N)"
-
-	# Create a systemd timer unit that: sends a notification, plays a sound, and pings a KDE Connect device
-	systemd-run --user --on-active="$delay" --timer-property=AccuracySec=1s --unit="$unit_name" --quiet \
-		bash -c "notify-send --icon=clock --urgency=critical --app-name=Reminder '$message' && \
-		paplay /usr/share/sounds/freedesktop/stereo/complete.oga && \
-		kdeconnect-cli --ping-msg '$message' -n HERMES && \
-		kdeconnect-cli --ping-msg '$message' -d 'e988ac39f25149468a36d54f265c521f'" &&
-		echo -e "Reminder set for $delay: '$message'\n\nUnit name: $unit_name" ||
-		echo "Valid arguments: remind <delay> <message>"
+	# send notifications
+	notify "$time" "$message"
 }
 
-remind "$@"
+main "$@"
 
 # vim: set ft=sh:
