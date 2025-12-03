@@ -50,7 +50,7 @@ fzf_opts=(
 
 # H2: Function to display the color palette with fzf and copy the hex code
 color() {
-	search_term="$1"
+	local search_term="$1"
 
     # use custom fzfc command if it exists
     if command -v fzfc &> /dev/null; then

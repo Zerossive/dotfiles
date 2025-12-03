@@ -12,7 +12,9 @@ set -euo pipefail
 
 # global variables
 message="$*"
+urgency="normal"
 
+# TODO: replace all 'echo' with 'printf'
 usage() {
     echo "Usage:"
     echo -e "        notify-all \e[1m<message>\e[0m"
@@ -34,15 +36,21 @@ if [ "${*: -1}" == "-h" ] || [ "${*: -1}" == "--help" ]; then
     exit 0
 fi
 
+if [[ "$1" == "important" || "$1" == "-i" ]]; then
+    urgency="critical"
+    shift
+    message="$*"
+fi
+
 # notify all kdeconnect devices
 notify-kdeconnect-devices() {
-    local KDE_DEVICES
-    KDE_DEVICES=($(kdeconnect-cli --list-available --name-only))
+    local kde_devices
+    mapfile -t kde_devices < <(kdeconnect-cli --list-available --name-only)
     # check for available devices
-    if [ -z "${KDE_DEVICES[*]}" ]; then
+    if [ -z "${kde_devices[*]}" ]; then
         error "no kdeconnect devices found"
     else
-        for device in "${KDE_DEVICES[@]}"; do
+        for device in "${kde_devices[@]}"; do
             echo "notifying $device"
             kdeconnect-cli --ping-msg "$message" -n "$device"
         done
@@ -69,7 +77,7 @@ play-desktop-sound() {
 # notify desktop
 notify-desktop() {
     echo 'notifying desktop'
-    notify-send --app-name="notify-all" --icon="clock" -t 5000 "$message"
+    notify-send --app-name="notify-all" --icon="clock" -t 5000 --urgency="$urgency" "$message"
 }
 
 # check if notify-send is installed and notify desktop
