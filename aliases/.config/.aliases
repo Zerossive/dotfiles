@@ -1,94 +1,95 @@
 # H1: Renamed Commands
-alias ai="aichat"
-alias n="nvim"
-alias c="clear"
-alias lg="lazygit"
+alias ai='aichat'
+alias n='nvim'
+alias c='clear'
+alias lg='lazygit'
 alias tw='timew'
 alias z='zellij'
+alias t='tmux'
 
 # H1: Preset Flags
 #
 # software management
-alias install="sudo dnf install"
-alias remove="sudo dnf remove"
-alias search="sudo dnf search"
+alias install='sudo dnf install'
+alias remove='sudo dnf remove'
+alias search='sudo dnf search'
 # datetime
 alias datec="date '+%Y-%m-%d' -d"
 alias timec="date '+%-I:%M %p' -d"
 alias datetimec="date '+%Y-%m-%d %-I:%M %p' -d"
 # ai
-alias ail="aichat -r linux"
-alias aig="aichat -r grammar --no-stream"
-alias aigc="wl-paste | aichat -r grammar --no-stream | wl-copy"
-alias aie="aichat -e"
-alias aic="aichat -c"
-alias ain="aichat --rag notes"
-alias ainr="ain --rebuild-rag"
+alias ail='aichat -r linux'
+alias aig='aichat -r grammar --no-stream'
+alias aigc='wl-paste | aichat -r grammar --no-stream | wl-copy'
+alias aie='aichat -e'
+alias aic='aichat -c'
+alias ain='aichat --rag notes'
+alias ainr='ain --rebuild-rag'
 # other
-alias ll="eza -hlF --icons --no-permissions --no-user --group-directories-first --time-style relative"
-alias lla="eza -halF --icons --no-user --group-directories-first --time-style relative"
-alias lt="eza -T --icons --group-directories-first"
-alias rsyncc="rsync -haviP"
+alias ll='eza -hlF --icons --no-permissions --no-user --group-directories-first --time-style relative'
+alias lla='eza -halF --icons --no-user --group-directories-first --time-style relative'
+alias lt='eza -T --icons --group-directories-first'
+alias rsyncc='rsync -haviP'
 alias tws='timew summary :id :annotation'
-alias qc="qalc --terse"
+alias qc='qalc --terse'
 alias browser="flatpak run com.vivaldi.Vivaldi $* 1>/dev/null 2>&1"
 
 # H1: Preset Commands w/ Parameters
 #
 # editing shortcuts
-alias ea="nvim ~/.config/.aliases"
-alias ei="nvim ~/dotfiles/install-script.sh"
-alias ep="nvim /mnt/autofs/OLYMPUS/data/stacks/caddy/conf/Caddyfile" # edit Caddyfile reverse proxy
+alias ea='nvim ~/.config/.aliases'
+alias ei='nvim ~/dotfiles/install-script.sh'
+alias ep='nvim /mnt/autofs/OLYMPUS/data/stacks/caddy/conf/Caddyfile' # edit Caddyfile reverse proxy
 # software management
 alias update-other='brew update && brew upgrade && sudo npm update -g && rustup update && cargo install-update -a'
 alias fl="flatpak list --app --columns=size,application,version,name | tr -d ' ' | sort -hr | column -t | bat --style plain" # list flatpaks installed sorted by size
-alias dnfl="dnf list --installed | fzfc --no-preview"
+alias dnfl='dnf list --installed | fzfc --no-preview'
 # datetime
 alias now="date '+%-I:%M %p' | tee >(wl-copy -n)"
 alias today="date '+%Y-%m-%d' | tee >(wl-copy -n)"
 alias datetime="date '+%Y-%m-%d %-I:%M %p' | tee >(wl-copy -n)"
 # system control
-alias lock="loginctl lock-session"
-alias unlock="loginctl unlock-session"
-alias playpause="playerctl play-pause"
+alias lock='loginctl lock-session'
+alias unlock='loginctl unlock-session'
+alias playpause='playerctl play-pause'
 # notes
 alias dn='nvim -c "DailyNote"'
 alias q="nvim -c 'e ~/Elysium/Obsidian\\ Vault/Quick\\ Note.md'"
-alias oo="cd ~/Elysium/Obsidian\ Vault && nvim && cd -"
-alias todo="n ~/Elysium/Obsidian\ Vault/To-Do.md"
+alias oo='cd ~/Elysium/Obsidian\ Vault && nvim && cd -'
+alias todo='n ~/Elysium/Obsidian\ Vault/To-Do.md'
 # containers
 alias dockerl='docker ps --format "table {{.Names}}\t{{.ID}}\t{{.Status}}"'
 alias docker-prune="ssh olympus 'docker image prune -fa'"
 alias sandbox='distrobox create --name sandbox --image archlinux:latest --yes --home ~/sandbox --additional-packages "gcc make git ripgrep fd unzip neovim fzf tldr eza zellij zoxide bat entr" --init-hooks "touch ~/.zshrc" && distrobox enter sandbox'
 alias sandbox-delete='distrobox rm sandbox --rm-home && podman image prune -af'
 # GitHub CLI
-alias ghs="gh status"
+alias ghs='gh status'
 alias ghila='gh search issues --assignee=@me'
-alias ghis="gh issue status"
-alias ghil="gh issue list"
-alias ghiv="gh issue view"
-alias ghix="gh issue close"
-alias ghie="gh issue edit"
+alias ghis='gh issue status'
+alias ghil='gh issue list'
+alias ghiv='gh issue view'
+alias ghix='gh issue close'
+alias ghie='gh issue edit'
 alias ghic="gh issue create --assignee '@me'"
 alias ghicb="gh issue create --assignee '@me' --label 'bug'"
 alias ghice="gh issue create --assignee '@me' --label 'enhancement'"
 alias ghc="gh search commits --committer Zerossive --sort committer-date --json commit --jq '.[0].commit.committer.date' --limit 1 | xargs date '+%Y-%m-%d %-I:%M %p' -d"
 alias ghcl='gh search commits --committer Zerossive --sort committer-date'
-alias ghrc="gh repo create"
-alias ghrv="gh repo view"
+alias ghrc='gh repo create'
+alias ghrv='gh repo view'
 alias ghb="xdg-open 'https://github.com/zerossive'"
 # backup
-alias backup-elysium-pause="mega-sync /home/danny/Elysium -p"
-alias backup-elysium-enable="mega-sync /home/danny/Elysium -e"
-alias backup-music="rsyncc --update danny@olympus:/home/danny/media/music/ /mnt/1TB\ SSD/Backup/Music"
-alias backup-immich="rsyncc --update danny@olympus:/home/danny/media/photos danny@olympus:/home/danny/media/videos danny@olympus:/home/danny/media/immich/library /mnt/1TB\ SSD/Backup/Immich"
+alias backup-elysium-pause='mega-sync /home/danny/Elysium -p'
+alias backup-elysium-enable='mega-sync /home/danny/Elysium -e'
+alias backup-music='rsyncc --update danny@olympus:/home/danny/media/music/ /mnt/1TB\ SSD/Backup/Music'
+alias backup-immich='rsyncc --update danny@olympus:/home/danny/media/photos danny@olympus:/home/danny/media/videos danny@olympus:/home/danny/media/immich/library /mnt/1TB\ SSD/Backup/Immich'
 # other
-alias re="source ~/.zshrc"
-alias lsblkc="lsblk -Mpo LABEL,NAME,FSTYPE,SIZE,FSAVAIL,FSUSE%,MOUNTPOINT -e7"
+alias re='source ~/.zshrc'
+alias lsblkc='lsblk -Mpo LABEL,NAME,FSTYPE,SIZE,FSAVAIL,FSUSE%,MOUNTPOINT -e7'
 alias weather="curl -s -m 10 'https://wttr.in/mesquite?Q'"
 alias temp='curl -sm 3 wttr.in/mesquite\?format="%c%20%t%20(%f)\n" | sed "s/ \?+//g"'
-alias daily="flatpak run com.vivaldi.Vivaldi --new-window https://monkeytype.com https://timeguessr.com https://vim-racer.com/game-mode/randomized/ https://www.geoguessr.com/vgp/3224 https://www.geoguessr.com/vgp/3003 https://www.geoguessr.com/vgp/3007 https://www.mathmammoth.com/practice/multiplication"
-alias afk="cmatrix -s -C blue"
+alias daily='flatpak run com.vivaldi.Vivaldi --new-window https://monkeytype.com https://timeguessr.com https://vim-racer.com/game-mode/randomized/ https://www.geoguessr.com/vgp/3224 https://www.geoguessr.com/vgp/3003 https://www.geoguessr.com/vgp/3007 https://www.mathmammoth.com/practice/multiplication'
+alias afk='cmatrix -s -C blue'
 
 # H1: General Functions
 # TODO: move help command to separate binary and make `eh` command to edit help
