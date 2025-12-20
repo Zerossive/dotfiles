@@ -1,4 +1,5 @@
 # H1: Renamed Commands
+
 alias ai='aichat'
 alias n='nvim'
 alias c='clear'
@@ -8,7 +9,7 @@ alias z='zellij'
 alias t='tmux'
 
 # H1: Preset Flags
-#
+
 # software management
 alias install='sudo dnf install'
 alias remove='sudo dnf remove'
@@ -35,7 +36,7 @@ alias qc='qalc --terse'
 alias browser="flatpak run com.vivaldi.Vivaldi $* 1>/dev/null 2>&1"
 
 # H1: Preset Commands w/ Parameters
-#
+
 # editing shortcuts
 alias ea='nvim ~/.config/.aliases'
 alias ei='nvim ~/dotfiles/install-script.sh'
@@ -91,9 +92,11 @@ alias temp='curl -sm 3 wttr.in/mesquite\?format="%c%20%t%20(%f)\n" | sed "s/ \?+
 alias daily='flatpak run com.vivaldi.Vivaldi --new-window https://monkeytype.com https://timeguessr.com https://vim-racer.com/game-mode/randomized/ https://www.geoguessr.com/vgp/3224 https://www.geoguessr.com/vgp/3003 https://www.geoguessr.com/vgp/3007 https://www.mathmammoth.com/practice/multiplication'
 alias afk='cmatrix -s -C blue'
 
-# H1: General Functions
+# H1: Functions
+
 # TODO: move help command to separate binary and make `eh` command to edit help
-# H2: Print general help information -------------- 80 char max -------------- #
+
+# Print general help information -------------- 80 char max -------------- #
 hp() {
     bat -l md --style plain <<"EOF"
 ▁▁▁▁▁▁
@@ -144,7 +147,7 @@ EOF
 }
 # ---------------------------------------------------------------------------- #
 
-# H1: Print various error logs
+# Print various error logs
 function wtf() {
     printf '\njournalctl:\n'
     journalctl -p 3 -xb
@@ -152,7 +155,7 @@ function wtf() {
     sudo dmesg | grep -i 'error\|fail\|segault'
 }
 
-# H1: Yazi shortcut to allow for the changing of directories after quitting
+# Yazi shortcut to allow for the changing of directories after quitting
 function e() {
     local tmp
     tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
@@ -164,8 +167,7 @@ function e() {
 }
 alias se="sudo --preserve-env=YAZI_CONFIG_HOME /home/linuxbrew/.linuxbrew/bin/yazi"
 
-# H1: Fuzzy search
-# H2: Custom FZF
+# Custom FZF
 alias fzfc=" \
 	fzf -m --prompt='⬗ ' --pointer='🞛 ' --marker='◈ ' \
     --header='Edit: ctrl-e    Open: ctrl-o    Preview: alt-p, alt-u/d    Copy: ctrl-y' --header-first \
@@ -195,7 +197,7 @@ alias fzfc=" \
 	--bind='ctrl-d:half-page-down' \
 	"
 
-# H2: Fuzzy search for a directory to enter
+# Fuzzy search for a directory to enter
 f() {
     local dir
     dir=$(fd . -d 3 -t d -H "$@" | fzfc)
@@ -204,7 +206,7 @@ f() {
     fi
 }
 
-# H2: Fuzzy search for files copy path
+# Fuzzy search for files copy path
 ff() {
     local selected_path
     selected_path=$(fd . -d 3 -t f -H "$@" | fzfc)
@@ -214,7 +216,7 @@ ff() {
     fi
 }
 
-# H2: Fuzzy search for parent directories to enter
+# Fuzzy search for parent directories to enter
 fu() {
     # Construct list of parent directories
     local dir_list
@@ -233,7 +235,7 @@ fu() {
     [ -n "$selected_path" ] && cd "$(eval echo "$selected_path")" || return 1
 }
 
-# H2: Fuzzy search all directories and files
+# Fuzzy search all directories and files
 fa() {
     local pathname
     pathname="$(locate "${1:-/}" | fzfc)"
@@ -247,7 +249,7 @@ fa() {
     fi
 }
 
-# H2: Fuzzy search for processes to kill
+# Fuzzy search for processes to kill
 fkill() {
     local pid
     if [ "$UID" != "0" ]; then
@@ -260,7 +262,7 @@ fkill() {
     fi
 }
 
-# H2: Fuzzy find a password & copy to clipboard
+# Fuzzy find a password & copy to clipboard
 fpw() {
     account_info="$(bw list items --search "$*" --pretty | jq -r '.[] | "\(.name)|\(.login.username)|\(.login.password)"' | column -ts "|" | fzfc --no-preview)"
     if [ -z "$account_info" ]; then
@@ -270,19 +272,19 @@ fpw() {
     wl-copy "$(printf "%s\n" "$account_info" | awk '{print $NF}')" && printf "%s\n" "copied password to clipboard"
 }
 
-# H2: Fuzzy search for a package to install
+# Fuzzy search for a package to install
 dnfc() {
     local result
     result="$(dnf -qC repoquery "$@" --qf '%{name} - %{summary}\n' | fzfc --bind 'alt-u:half-page-up' --bind 'alt-d:half-page-down' --no-preview | sed 's/ - .*//')"
     [ -n "$result" ] && sudo dnf install "$result"
 }
 
-# H2: Fuzzy search manpages
+# Fuzzy search manpages
 fm() {
     man $(apropos --long . | fzfc --no-preview | awk '{print $2,$1}' | tr -d '()')
 }
 
-# H2: Pomodoro Timer
+# Pomodoro Timer
 pt() {
     local duration="$1"
     local name="$2"
@@ -295,7 +297,7 @@ pt() {
         paplay /usr/share/sounds/freedesktop/stereo/complete.oga
 }
 
-# H2: List trashed files from the current directory
+# List trashed files from the current directory
 ft() {
     list-trash() {
         local current_dir
@@ -311,7 +313,7 @@ ft() {
     fi
 }
 
-# H1: KDE Connect Ping
+# KDE Connect Ping
 notify-hermes() {
     kdeconnect-cli -n "HERMES" --ping-msg "$*"
 }
