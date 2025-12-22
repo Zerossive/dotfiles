@@ -94,59 +94,6 @@ alias afk='cmatrix -s -C blue'
 
 # H1: Functions
 
-# TODO: move help command to separate binary and make `eh` command to edit help
-
-# Print general help information -------------- 80 char max -------------- #
-hp() {
-    bat -l md --style plain <<"EOF"
-▁▁▁▁▁▁
-▏HELP▕
-▔▔▔▔▔▔
-# GENERAL
-**OS:**         Fedora Linux 43
-**DE:**         KDE Plasma 6
-**IP:**         *ATLAS:* 192.168.1.89
-                *OLYMPUS:* 192.168.1.231
-                *ATLANTIS:* 192.168.1.230
-
-# TERMINAL TOOLS
-`fzfc`          fuzzy search
-`lsblkc`        list block devices
-`fc`            open last command in editor, quitting with `:cq` will cancel
-`cdi`           runs zoxide interactive window to fuzzy search directories
-`e`             open yazi file explorer with automatic cd on quit
-`atool`         archiving tool (`-l` list, `-x` extract, `-a` add)
-`magick`        image conversion tool (filetypes, sizes, effects, etc.)
-`wtf`           print various error logs
-`rsyncc`        copy using `rsync -haviP`
-        `-n`                dry-run
-        `--update, -u`      skip newer files
-        `--ignore-existing` skip existing files
-        `--delete`          delete destination files
-        `--exclude`         exclude based on given pattern
-`entr`          run commands when files change e.g. `ls PATH | entr COMMAND`
-`remind`        set and list reminder notifications e.g. `remind 15m do task`
-`fx`            json viewer and processor
-
-# OTHER NOTABLE COMMANDS
-`fkill`, `weather`, `dysk`, `f`, `ff`, `fu`, `fa`, `dnfc`, `color`, `sshs`,
-`delta`, `re` (source zshrc), `ip -4 -brief a`, `timew/tw`, `pt` (pomodoro timer), `ghc/ghcl`,
-`fm` (manpages), `wiki-tui`, `pastel`, `cargo install-update -a`, `bacon`,
-`compgen -c`
-
-## FUN COMMANDS
-`cmatrix/afk`, `cava`, `figlet`, `showfigfonts`
-
-# ALTERNATE PRORGRAMS
-`grep` -> `rg`, `find` -> `fd`, `ls` -> `eza`, `cd` -> `z (zoxide)`,
-`bc` -> `qalc/qc`, `curl` -> `xh`
-
-# OTHER
-**awesome-cli-apps**        https://github.com/agarrharr/awesome-cli-apps
-EOF
-}
-# ---------------------------------------------------------------------------- #
-
 # Print various error logs
 function wtf() {
     printf '\njournalctl:\n'
