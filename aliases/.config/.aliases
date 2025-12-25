@@ -260,9 +260,4 @@ ft() {
     fi
 }
 
-# KDE Connect Ping
-notify-hermes() {
-    kdeconnect-cli -n "HERMES" --ping-msg "$*"
-}
-
 # vim:ft=sh
