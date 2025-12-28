@@ -211,12 +211,23 @@ fkill() {
 
 # Fuzzy find a password & copy to clipboard
 fpw() {
-    account_info="$(bw list items --search "$*" --pretty | jq -r '.[] | "\(.name)|\(.login.username)|\(.login.password)"' | column -ts "|" | fzfc --no-preview)"
-    if [ -z "$account_info" ]; then
-        printf "%s\n" "no account selected"
+    if [[ "$(bw status | jq -r '.status')" == "locked" ]]; then
+        printf 'vault is locked\n'
+        bw unlock
+    elif [[ "$(bw status | jq -r '.status')" == "unauthenticated" ]]; then
+        printf 'you are not authenticated in\n'
+        bw login
+    elif [[ "$(bw status | jq -r '.status')" == "unlocked" ]]; then
+        account_info="$(bw list items --search "$*" --pretty | jq -r '.[] | "\(.name)|\(.login.username)|\(.login.password)"' | column -ts "|" | fzfc --no-preview)"
+        if [ -z "$account_info" ]; then
+            printf "%s\n" "no account selected"
+            return 1
+        fi
+        wl-copy "$(printf "%s\n" "$account_info" | awk '{print $NF}')" && printf "%s\n" "copied password to clipboard"
+    else
+        printf 'error: unkown\n'
         return 1
     fi
-    wl-copy "$(printf "%s\n" "$account_info" | awk '{print $NF}')" && printf "%s\n" "copied password to clipboard"
 }
 
 # Fuzzy search for a package to install
