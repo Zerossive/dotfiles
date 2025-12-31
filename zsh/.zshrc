@@ -66,6 +66,8 @@ bindkey "^[e" emacs-forward-word
 bindkey "^@" list-choices
 bindkey -r "^d"
 bindkey "^X^E" edit-command-line
+bindkey "^[u" undo
+bindkey "^[r" redo
 
 # [[ Keep this at the end ]]
 
