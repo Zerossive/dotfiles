@@ -45,7 +45,7 @@ output=$(
 `fkill`, `dysk`, `f`, `ff`, `fu`, `fa`, `dnfc`, `color`, `sshs`,
 `re/source ~/.zshrc`, `ip -4 -brief a`, `timew/tw`, `pt` (pomodoro timer),
 `ghc/ghcl`, `fm` (manpages), `pastel`, `cargo install-update -a`,
-`bacon`, `compgen -c`, `fpw`
+`bacon`, `compgen -c`, `fpw`, `hermes/hermes-camera/scrcpy`
 
 ## FUN COMMANDS
 `cmatrix/afk`, `cava`, `figlet`, `showfigfonts`

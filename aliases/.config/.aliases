@@ -92,6 +92,8 @@ alias weather="curl -s -m 10 'https://wttr.in/mesquite?Q'"
 alias temp='curl -sm 3 wttr.in/mesquite\?format="%c%20%t%20(%f)\n" | sed "s/ \?+//g"'
 alias daily='flatpak run com.vivaldi.Vivaldi --new-window https://monkeytype.com https://timeguessr.com https://vim-racer.com/game-mode/randomized/ https://www.geoguessr.com/vgp/3224 https://www.geoguessr.com/vgp/3003 https://www.geoguessr.com/vgp/3007 https://www.mathmammoth.com/practice/multiplication'
 alias afk='cmatrix -s -C blue'
+alias hermes='scrcpy --window-title=HERMES --tcpip --disable-screensaver'
+alias hermes-camera='scrcpy --window-title=HERMES-CAMERA --tcpip --disable-screensaver --video-source=camera'
 
 # H1: Functions
 
