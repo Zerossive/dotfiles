@@ -1,6 +1,7 @@
 directory: ~/Music/beets
 # library: ~/Music/beets/library.db
-plugins: chroma spotify deezer fromfilename duplicates edit embedart lastgenre lyrics replaygain fetchart info
+# plugins: chroma spotify deezer fromfilename duplicates edit embedart lastgenre lyrics replaygain fetchart info
+plugins: spotify deezer fromfilename duplicates edit embedart lyrics replaygain fetchart info
 
 import:
   # don't group based on folder structure
