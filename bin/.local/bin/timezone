@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# Script Name: launch
+# Description: convert to/from the current timezone,
+#              then copy the time to the clipboard
+# Author: Danny Harris
+# Dependencies: fzf, fuzzel
+# ==============================================================================
+
+show_help() {
+	local cmd="${0##*/}"
+	cat <<-EOF
+		$cmd - convert to/from the current timezone, then copy the time to the clipboard
+
+		Usage: $cmd [OPTIONS]
+
+		Options:
+			-t TIME        time to convert (default: now)
+			-z TIMEZONE    timezone to convert to
+			-i             invert conversion (default: convert to chosen timezone from provided time)
+			-l             use a launcher to pick and display the timezone
+			-h             display this help and exit
+
+		Examples:
+		  $cmd -l -i -t 1pm
+		  $cmd -t now+1hour
+	EOF
+}
+
+# dependency checks
+dependencies=(fzf fuzzel)
+for cmd in "${dependencies[@]}"; do
+	if ! command -v "$cmd" >/dev/null 2>&1; then
+		printf "error: '%s' command does not exist\n" "$cmd" >&2
+		exit 1
+	fi
+done
+
+launcher=false
+invert=false
+time='now'
+selected_timezone=""
+
+# handle arguments
+while getopts ilht:z: flag; do
+	case "${flag}" in
+	i) invert=true ;;
+	l) launcher=true ;;
+	t) time="$OPTARG" ;;
+	z) selected_timezone="$OPTARG" ;;
+	h)
+		show_help
+		exit 0
+		;;
+	?)
+		exit 2
+		;;
+	esac
+done
+shift $((OPTIND - 1))
+
+pick_tz() {
+	if $launcher; then
+		timedatectl list-timezones | fuzzel --dmenu --search="$selected_timezone"
+	else
+		timedatectl list-timezones | fzf --reverse --height '~100%' --exact --select-1 --query="$selected_timezone"
+	fi
+}
+
+get_datetime() {
+	local tz time_input invert
+	tz="$1"
+	invert="$2"
+	time_input="$3"
+	if $invert; then
+		date '+%I:%M %p' --date="TZ=\"$tz\" $time_input"
+	else
+		TZ="$tz" date '+%I:%M %p' --date="$time_input"
+	fi
+}
+
+main() {
+	local converted_time=""
+	converted_time="$(get_datetime "$(pick_tz)" $invert "$time")"
+	printf "%s\n" "$converted_time"
+	wl-copy "$converted_time"
+	if $launcher; then
+		fuzzel --dmenu --width 9 --hide-prompt --minimal-lines <<<"$converted_time" >/dev/null
+	fi
+}
+
+main "$@"
+
+# vim: set ft=sh:
