@@ -1,0 +1,130 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# Script Name: launch
+# Description: wrapper for launchers like fuzzel, rofi, etc.
+# Author: Danny Harris
+# Dependencies: fuzzel
+# ==============================================================================
+
+# TODO: finish this script
+# add fuzzel config to stow
+# https://mark.stosberg.com/fuzzel-a-great-dmenu-and-rofi-altenrative-for-wayland/
+# https://github.com/thnikk/fuzzel-scripts
+show_help() {
+	local cmd="${0##*/}"
+	cat <<-EOF
+		$cmd - launcher for various programs and functions
+
+		Usage: $cmd <picker>
+
+		Pickers:
+			applications
+			password
+			powermenu
+
+		Examples:
+		  $cmd password
+	EOF
+}
+
+# dependency checks
+dependencies=(fuzzel)
+for cmd in "${dependencies[@]}"; do
+	if ! command -v "$cmd" >/dev/null 2>&1; then
+		printf "error: '%s' command does not exist\n" "$cmd" >&2
+		exit 1
+	fi
+done
+
+pickers=(
+	applications
+	# calculator
+	# emoji
+	password
+	powermenu
+	# run
+	# ssh
+)
+
+pick_picker() {
+	if (($#)); then
+		pick=$*
+	else
+		read -r pick
+	fi
+	case "$pick" in
+	applications) fuzzel ;;
+	password) launch_password ;;
+	powermenu) launch_powermenu ;;
+	*)
+		printf 'error: unknown command\n' >&2
+		exit 1
+		;;
+	esac
+}
+
+launch_picker() {
+	printf '%s\n' "${pickers[@]}" | fuzzel --dmenu | pick_picker
+}
+
+launch_powermenu() {
+	local power_options=(
+		lock
+		sleep
+		logout
+		reboot
+		shutdown
+	)
+	local selection
+	selection="$(printf '%s\n' "${power_options[@]}" | fuzzel --dmenu)"
+
+	case "$selection" in
+	lock) loginctl lock-session ;;
+	sleep) systemctl sleep ;;
+	restart) systemctl reboot ;;
+	shutdown) systemctl poweroff ;;
+	logout) qdbus org.kde.ksmserver /KSMServer logout 1 0 0 ;;
+	*)
+		printf 'error: unknown command\n' >&2
+		exit 1
+		;;
+	esac
+}
+
+launch_password() {
+	local query
+	if ! query="$(fuzzel --dmenu --prompt-only='search: ')"; then
+		printf 'selection cancelled\n' >&2
+		return 1
+	fi
+
+	if [[ "$(bw status | jq -r '.status')" == "locked" ]]; then
+		printf 'vault is locked\n'
+		bw unlock
+	elif [[ "$(bw status | jq -r '.status')" == "unauthenticated" ]]; then
+		printf 'you are not authenticated in\n'
+		bw login
+	elif [[ "$(bw status | jq -r '.status')" == "unlocked" ]]; then
+		account_info="$(bw list items --search "$query" --pretty | jq -r '.[] | "\(.name)|\(.login.username)|\(.login.password)"' | column -ts "|" | fuzzel --dmenu --width 80)"
+		if [ -z "$account_info" ]; then
+			printf "%s\n" "no account selected"
+			return 1
+		fi
+		wl-copy "$(printf "%s\n" "$account_info" | awk '{print $NF}')" && printf "%s\n" "copied password to clipboard"
+	else
+		printf 'error: unkown\n'
+		return 1
+	fi
+}
+
+main() {
+	if [ $# -lt 1 ]; then
+		launch_picker <<<"$*"
+		return
+	fi
+	pick_picker "$*"
+}
+
+main "$@"
+
+# vim: set ft=sh:
