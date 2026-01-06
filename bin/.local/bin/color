@@ -4,47 +4,48 @@
 # Description: A script to display the Catppuccin color palette and
 #              copy the hex code to the clipboard.
 # Author: Danny Harris
-# Dependencies: fzf/fzfc, colorize
+# Dependencies: fzf/fzfc
 # ==============================================================================
 
 # H1: Color Picker
 # H2: Catppuccin color palette
 catppuccin_colors=(
-    "Rosewater - #F5E0DC"
-    "Flamingo - #F2CDCD"
-    "Pink - #F5C2E7"
-    "Mauve - #CBA6F7"
-    "Red - #F38BA8"
-    "Maroon - #EBA0AC"
-    "Peach - #FAB387"
-    "Yellow - #F9E2AF"
-    "Green - #A6E3A1"
-    "Teal - #94E2D5"
-    "Sky - #89DEEB"
-    "Sapphire - #74C7EC"
-    "Blue - #89B4FA"
-    "Lavender - #B4BEFE"
-    "Text - #CDD6F4"
-    "Subtext1 - #BAC2DE"
-    "Subtext0 - #A6ADC8"
-    "Overlay2 - #9399B2"
-    "Overlay1 - #7F849C"
-    "Overlay0 - #6C7086"
-    "Surface2 - #585B70"
-    "Surface1 - #45475A"
-    "Surface0 - #313244"
-    "Base - #1E1E2E"
-    "Mantle - #181825"
-    "Crust - #11111B"
+    "$(pastel --force-color paint '#F5E0DC' ██) - Rosewater - #F5E0DC"
+    "$(pastel --force-color paint '#F2CDCD' ██) - Flamingo - #F2CDCD"
+    "$(pastel --force-color paint '#F5C2E7' ██) - Pink - #F5C2E7"
+    "$(pastel --force-color paint '#CBA6F7' ██) - Mauve - #CBA6F7"
+    "$(pastel --force-color paint '#F38BA8' ██) - Red - #F38BA8"
+    "$(pastel --force-color paint '#EBA0AC' ██) - Maroon - #EBA0AC"
+    "$(pastel --force-color paint '#FAB387' ██) - Peach - #FAB387"
+    "$(pastel --force-color paint '#F9E2AF' ██) - Yellow - #F9E2AF"
+    "$(pastel --force-color paint '#A6E3A1' ██) - Green - #A6E3A1"
+    "$(pastel --force-color paint '#94E2D5' ██) - Teal - #94E2D5"
+    "$(pastel --force-color paint '#89DEEB' ██) - Sky - #89DEEB"
+    "$(pastel --force-color paint '#74C7EC' ██) - Sapphire - #74C7EC"
+    "$(pastel --force-color paint '#89B4FA' ██) - Blue - #89B4FA"
+    "$(pastel --force-color paint '#B4BEFE' ██) - Lavender - #B4BEFE"
+    "$(pastel --force-color paint '#CDD6F4' ██) - Text - #CDD6F4"
+    "$(pastel --force-color paint '#BAC2DE' ██) - Subtext0 - #BAC2DE"
+    "$(pastel --force-color paint '#A6ADC8' ██) - Subtext1 - #A6ADC8"
+    "$(pastel --force-color paint '#9399B2' ██) - Overlay2 - #9399B2"
+    "$(pastel --force-color paint '#7F849C' ██) - Overlay1 - #7F849C"
+    "$(pastel --force-color paint '#6C7086' ██) - Overlay0 - #6C7086"
+    "$(pastel --force-color paint '#585B70' ██) - Surface2 - #585B70"
+    "$(pastel --force-color paint '#45475A' ██) - Surface1 - #45475A"
+    "$(pastel --force-color paint '#313244' ██) - Surface0 - #313244"
+    "$(pastel --force-color paint '#1E1E2E' ██) - Base - #1E1E2E"
+    "$(pastel --force-color paint '#181825' ██) - Mantle - #181825"
+    "$(pastel --force-color paint '#11111B' ██) - Crust - #11111B"
 )
 
 # predefined fzf options
 fzf_opts=(
     --prompt "Select a color: "
-    --preview='echo {} | awk "{print \$3}" | xargs -I _ colorize "_" ██ {}'
     --header "Catppuccin Color Palette"
+    --no-preview
     -1
     -0
+    --ansi
     --exact
 )
 
@@ -60,34 +61,36 @@ color() {
     fi
 
     # print out terminal colors
-    echo -e "Terminal Colors:"
+    printf 'Terminal Colors:\n'
     count=0
     for i in {0..15}; do
         print -Pn "%-10s" "%K{$i}  %k%F{$i} ${(l:3::0:)i}%f "
         ((count++))
         if (( count == 4 )); then
-            echo
+            printf '\n'
             count=0
         fi
     done | column -t
 
-    echo -e "\nCatppuccin Color Palette:"
+    printf '\nCatppuccin Color Palette:\n'
     count=0
     for color in "${catppuccin_colors[@]}"; do
-        color_name="${color%% -*}"
-        hex_code="${color##*- }"
+        color_name="${color#*- }" # remove everthing before color name
+        color_name="${color_name% -*}" # remove everything after the color name
+        hex_code="${color##*- }" # remove the color name and everything before it
         print -Pn "%-20s" "%K{$hex_code}  %k $color_name"
         ((count++))
         if (( count == 4 )); then
-            echo "\n"
+            printf '\n'
             count=0
         fi
     done | column -t
 
     if [[ -n "$selected_color" ]]; then
-        color_name="${selected_color%% -*}"
+        color_name="${selected_color#*- }" # remove everthing before color name
+        color_name="${color_name% -*}" # remove everything after the color name
         hex_code="${selected_color##*- }"
-        echo -n "$hex_code" | wl-copy
+        wl-copy "$hex_code"
         print -Pn "\n%K{$hex_code}  %k \033[1m$hex_code ($color_name)\033[0m copied to clipboard\n"
     fi
 }
