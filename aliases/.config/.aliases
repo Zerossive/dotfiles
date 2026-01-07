@@ -85,6 +85,7 @@ alias backup-elysium-pause='mega-sync /home/danny/Elysium -p'
 alias backup-elysium-enable='mega-sync /home/danny/Elysium -e'
 alias backup-music='rsyncc --update danny@olympus:/home/danny/media/music/ /mnt/1TB\ SSD/Backup/Music'
 alias backup-immich='rsyncc --update danny@olympus:/home/danny/media/photos danny@olympus:/home/danny/media/videos danny@olympus:/home/danny/media/immich/library /mnt/1TB\ SSD/Backup/Immich'
+alias backup-documents="ssh olympus -t 'sudo rsync -haviP --update /var/lib/docker/volumes/paperless-ngx_media/_data/documents/originals/ danny@atlas:/mnt/1TB\ SSD/Backup/Documents'"
 # other
 alias re='source ~/.zshrc'
 alias lsblkc='lsblk -Mpo LABEL,NAME,FSTYPE,SIZE,FSAVAIL,FSUSE%,MOUNTPOINT -e7'
@@ -92,8 +93,8 @@ alias weather="curl -s -m 10 'https://wttr.in/mesquite?Q'"
 alias temp='curl -sm 3 wttr.in/mesquite\?format="%c%20%t%20(%f)\n" | sed "s/ \?+//g"'
 alias daily='flatpak run com.vivaldi.Vivaldi --new-window https://monkeytype.com https://timeguessr.com https://vim-racer.com/game-mode/randomized/ https://www.geoguessr.com/vgp/3224 https://www.geoguessr.com/vgp/3003 https://www.geoguessr.com/vgp/3007 https://www.mathmammoth.com/practice/multiplication'
 alias afk='cmatrix -s -C blue'
-alias hermes='scrcpy --window-title=HERMES --tcpip --disable-screensaver'
-alias hermes-camera='scrcpy --window-title=HERMES-CAMERA --tcpip --disable-screensaver --video-source=camera'
+alias hermes='scrcpy --window-title=HERMES --tcpip="192.168.1.144:5555" --disable-screensaver'
+alias hermes-camera='scrcpy --window-title=HERMES-CAMERA --tcpip="192.168.1.144:5555" --disable-screensaver --video-source=camera'
 
 # H1: Functions
 
