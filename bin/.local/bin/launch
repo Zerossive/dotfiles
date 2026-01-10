@@ -3,7 +3,7 @@
 # Script Name: launch
 # Description: wrapper for launchers like fuzzel, rofi, etc.
 # Author: Danny Harris
-# Dependencies: fuzzel
+# Dependencies: fuzzel, wezterm, qalc, zsh, jq, bw
 # ==============================================================================
 
 # TODO: finish this script
@@ -18,9 +18,21 @@ show_help() {
 		Usage: $cmd <picker>
 
 		Pickers:
-			applications
+			apps
+			calc
+			colors
+			containers
+			downloads
+			emoji
+			git
+			kill
+			man
+			notes
 			password
-			powermenu
+			power
+			remind
+			run
+			ssh
 
 		Examples:
 		  $cmd password
@@ -28,7 +40,7 @@ show_help() {
 }
 
 # dependency checks
-dependencies=(fuzzel)
+dependencies=(fuzzel wezterm qalc zsh jq bw)
 for cmd in "${dependencies[@]}"; do
 	if ! command -v "$cmd" >/dev/null 2>&1; then
 		printf "error: '%s' command does not exist\n" "$cmd" >&2
@@ -37,25 +49,41 @@ for cmd in "${dependencies[@]}"; do
 done
 
 pickers=(
-	applications
-	# calculator
-	# emoji
+	apps
+	calc
+	colors
+	containers
+	downloads
+	emoji
+	git
+	kill
+	man
+	notes
 	password
-	powermenu
-	# run
-	# ssh
+	power
+	remind
+	run
+	ssh
 )
 
 pick_picker() {
-	if (($#)); then
-		pick=$*
-	else
-		read -r pick
-	fi
+	pick="$*"
 	case "$pick" in
-	applications) fuzzel ;;
+	apps) fuzzel --prompt 'apps: ' ;;
+	calc) launch_calc ;;
+	colors) launch_colors ;;
+	containers) launch_containers ;;
+	downloads) launch_downloads ;;
+	emoji) launch_emoji ;;
+	git) launch_git ;;
+	kill) launch_kill ;;
+	man) launch_man ;;
+	notes) launch_notes ;;
 	password) launch_password ;;
-	powermenu) launch_powermenu ;;
+	power) launch_power ;;
+	remind) launch_remind ;;
+	run) launch_run ;;
+	ssh) launch_ssh ;;
 	*)
 		printf 'error: unknown command\n' >&2
 		exit 1
@@ -63,22 +91,172 @@ pick_picker() {
 	esac
 }
 
-launch_picker() {
-	printf '%s\n' "${pickers[@]}" | fuzzel --dmenu | pick_picker
+launch_kill() {
+	local process_list
+	if [[ $UID -ne 0 ]]; then
+		process_list=$(ps -u "$UID" -o pid,fname,cmd --no-headers)
+	else
+		process_list=$(ps -eo pid,fname,cmd --no-headers)
+	fi
+	local selected_process
+	selected_process="$(printf '%s\n' "$process_list" | fuzzel --dmenu --minimal-lines --prompt 'kill: ' --width 160)"
+	[[ -z "$selected_process" ]] && return
+	local pid
+	pid=$(awk '{print $1}' <<<"$selected_process")
+	[[ -n "$pid" ]] && kill -9 "$pid"
 }
 
-launch_powermenu() {
+launch_colors() {
+	wezterm start zsh -ic color
+}
+
+launch_downloads() {
+	local download_list
+	download_list=("$HOME/Downloads"/*)
+	download_list=("${download_list[@]##*/}")
+	local selected_download
+	selected_download="$(printf '%s\n' "${download_list[@]}" | fuzzel --dmenu --minimal-lines --prompt 'downloads: ')"
+	[[ -n "$selected_download" ]] && xdg-open "$HOME/Downloads/$selected_download"
+}
+
+launch_containers() {
+	local container_list
+	container_list=$(
+		cat <<-EOF
+			======== ATLAS ========
+			$(zsh -ic 'dockerl -a')
+
+			======== OLYMPUS ========
+			$(ssh olympus bash -ic 'dockerl -a')
+		EOF
+	)
+	printf '%s\n' "$container_list" | fuzzel -d --width 80 --minimal-lines --lines 40 --hide-prompt | awk '{print $2}' | tr -d '\n' | wl-copy
+}
+
+launch_git() {
+	local commits
+	commits="$(gh search commits --committer Zerossive --sort committer-date | awk '{print $1, $3, $NF}' | column -t)"
+	local last_commit
+	last_commit="$(gh search commits --committer Zerossive --sort committer-date --json commit --jq '.[0].commit.committer.date' --limit 1 | xargs date '+%Y-%m-%d %-I:%M %p' -d)"
+	printf 'Last Commit: %s\n\n%s' "$last_commit" "$commits" | fuzzel --dmenu --width=80 --hide-prompt --minimal-lines
+}
+
+launch_emoji() {
+	local emoji_list_file="$HOME/Documents/emoji-list"
+	wezterm start zsh -c "
+	fzf --layout=reverse <$emoji_list_file | cut -c1 | tr -d '\n' | wl-copy
+	"
+}
+
+launch_remind() {
+	local reminders
+	mapfile -t reminders < <(remind ls | awk '{$1=$2=""; sub(/^ +/, ""); if (length) print}')
+	reminders=("new reminder" "${reminders[@]}")
+	local selected_reminder
+	selected_reminder="$(printf '%s\n' "${reminders[@]}" | fuzzel --dmenu --minimal-lines --prompt 'remind: ' --placeholder 'alt+x to remove, alt+a to add')"
+	local custom_exit_code=$?
+	[[ -z "$selected_reminder" ]] && return
+	if [[ "$selected_reminder" == "new reminder" || "$custom_exit_code" == 11 ]]; then
+		local new_reminder
+		new_reminder="$(fuzzel --dmenu --prompt-only='new reminder: ')"
+		[[ -z "$new_reminder" ]] && return
+		remind $new_reminder
+		launch_remind
+		return
+	fi
+	local selected_id
+	selected_id="$(sed 's|.*\[||;s|\].*||' <<<"$selected_reminder")"
+	if [[ "$custom_exit_code" -eq 10 ]]; then
+		remind rm "$selected_id"
+		launch_remind
+	fi
+}
+
+launch_notes() {
+	local vault_path="$HOME/Elysium/Obsidian Vault"
+	local files
+	files="$(fd --type f --extension md . "$vault_path" | sed "s|$vault_path/||")"
+	local selected_file
+	selected_file="$(fuzzel --dmenu --width=60 --minimal-lines --prompt 'notes: ' --placeholder 'alt+a to add' <<<"$files")"
+	local custom_exit_code=$?
+	if [[ "$custom_exit_code" -eq 11 ]]; then
+		local new_note
+		new_note="$(fuzzel --dmenu --prompt-only='new note: ')"
+		[[ -n "$new_note" ]] && wezterm start zsh -ic "nvim \"$vault_path/Notes/$new_note\""
+		return
+	fi
+	if [[ -n "$selected_file" ]]; then
+		wezterm start zsh -ic "nvim \"$HOME/Elysium/Obsidian Vault/$selected_file\""
+	fi
+}
+
+launch_run() {
+	local command
+	command="$(fuzzel --dmenu --prompt-only='run: ')"
+	[[ -z "$command" ]] && return
+	local result
+	result="$(zsh -c "$command" 2>&1)"
+	[[ -n "$result" ]] && fuzzel --dmenu --hide-prompt --minimal-lines --width 80 --lines 40 <<<"$result"
+	launch_run
+}
+
+launch_ssh() {
+	local machines=(
+		olympus
+		boyce-pc
+		hermes
+	)
+	local options=(
+		"${machines[@]}"
+		other
+	)
+	local selected_machine
+	selected_machine="$(printf '%s\n' "${options[@]}" | fuzzel --dmenu --minimal-lines --prompt 'ssh: ')"
+	[[ -z "$selected_machine" ]] && return
+	if [[ "$selected_machine" == "other" ]]; then
+		wezterm start zsh -ic "ssh $(fuzzel --dmenu --prompt-only='host: ')"
+	else
+		wezterm start zsh -ic "ssh $selected_machine"
+	fi
+}
+
+launch_calc() {
+	local problem
+	problem="$(fuzzel --dmenu --prompt-only='calc: ')"
+	[[ -z "$problem" ]] && return
+	local solution
+	solution="$(qalc "$problem")"
+	fuzzel --dmenu --hide-prompt --minimal-lines <<<"$solution" && wl-copy "$(qalc --terse "$problem")"
+	launch_calc
+}
+
+launch_man() {
+	local manuals
+	mapfile manuals < <(apropos .)
+	local selected_man
+	selected_man=$(fuzzel --dmenu --width=80 --prompt 'man: ' <<<"${manuals[@]}" | awk '{print $1}')
+	[[ -n "$selected_man" ]] && wezterm start zsh -ic "man $selected_man"
+}
+
+launch_picker() {
+	local selected_picker
+	selected_picker="$(printf '%s\n' "${pickers[@]}" | fuzzel --dmenu --minimal-lines --placeholder 'alt+# to quick launch')"
+	local custom_exit_code=$?
+	((custom_exit_code >= 10 && custom_exit_code <= 28)) && selected_picker=${pickers[$custom_exit_code - 10]}
+	[[ -n "$selected_picker" ]] && pick_picker "$selected_picker"
+}
+
+launch_power() {
 	local power_options=(
 		lock
-		sleep
 		logout
 		reboot
 		shutdown
+		sleep
 	)
 	local selection
-	selection="$(printf '%s\n' "${power_options[@]}" | fuzzel --dmenu)"
-
-	case "$selection" in
+	selection="$(printf '%s\n' "${power_options[@]}" | fuzzel --dmenu --minimal-lines --prompt 'power: ')"
+	[[ -n "$selection" ]] && case "$selection" in
 	lock) loginctl lock-session ;;
 	sleep) systemctl sleep ;;
 	restart) systemctl reboot ;;
@@ -93,36 +271,36 @@ launch_powermenu() {
 
 launch_password() {
 	local query
-	if ! query="$(fuzzel --dmenu --prompt-only='search: ')"; then
-		printf 'selection cancelled\n' >&2
-		return 1
-	fi
+	query="$(fuzzel --dmenu --prompt-only='password: ' --placeholder '"all" to view all')"
+	[[ -z "$query" ]] && return
+	[[ "$query" == "all" ]] && query=""
 
-	if [[ "$(bw status | jq -r '.status')" == "locked" ]]; then
-		printf 'vault is locked\n'
+	local bw_status
+	bw_status="$(zsh -ic "bw status" | jq -r '.status')"
+	if [[ "$bw_status" == "locked" ]]; then
+		printf 'vault is locked\n' >&2
 		bw unlock
-	elif [[ "$(bw status | jq -r '.status')" == "unauthenticated" ]]; then
-		printf 'you are not authenticated in\n'
+	elif [[ "$bw_status" == "unauthenticated" ]]; then
+		printf 'you are not authenticated in\n' >&2
 		bw login
-	elif [[ "$(bw status | jq -r '.status')" == "unlocked" ]]; then
-		account_info="$(bw list items --search "$query" --pretty | jq -r '.[] | "\(.name)|\(.login.username)|\(.login.password)"' | column -ts "|" | fuzzel --dmenu --width 80)"
-		if [ -z "$account_info" ]; then
-			printf "%s\n" "no account selected"
-			return 1
-		fi
-		wl-copy "$(printf "%s\n" "$account_info" | awk '{print $NF}')" && printf "%s\n" "copied password to clipboard"
+	elif [[ "$bw_status" == "unlocked" ]]; then
+		account_info="$(zsh -ic "bw list items --search '$query' --pretty" | jq -r '.[] | "\(.name)|\(.login.username)|\(.login.password)"' | column -ts "|" | fuzzel --dmenu --prompt 'account: ' --minimal-lines --width 80)"
+		[[ -n "$account_info" ]] &&
+			wl-copy "$(printf "%s\n" "$account_info" | awk '{print $NF}')"
 	else
-		printf 'error: unkown\n'
+		printf 'error: unkown bitwarden status\n'
 		return 1
 	fi
 }
 
 main() {
-	if [ $# -lt 1 ]; then
-		launch_picker <<<"$*"
-		return
+	if (($# > 0)); then
+		pick_picker "$*"
+	elif [[ ! -t 0 ]] && read -r input; then
+		pick_picker "$input"
+	else
+		launch_picker
 	fi
-	pick_picker "$*"
 }
 
 main "$@"
