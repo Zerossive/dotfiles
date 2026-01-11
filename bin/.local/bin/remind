@@ -42,11 +42,11 @@ notify() {
 	# check for `notify-all` command
 	if ! command -v notify-all >/dev/null 2>&1; then
 		printf 'error: notify-all does not exist, running notify-send instead\n' >&2
-		at "$time" <<<"notify-send --app-name='notify-all' --icon='clock' -t 5000 --urgency='urgent' '$message'"
+		at "$time" <<<"notify-send --app-name='notify-all' --icon='clock' -t 5000 --urgency='urgent' '$message'; curl -sd '$message' -H 'Title: ⌛ REMIND' -H 'Priority: high' olympus:8234/alerts >/dev/null"
 		exit 0
 	fi
 
-	at "$time" <<<"notify-all -i '$message'"
+	at "$time" <<<"notify-all -u 2 -t '⌛ REMIND' $message"
 }
 
 # delete everything after the first tab (keep id)
@@ -62,7 +62,7 @@ parse_date() {
 }
 
 parse_script() {
-	printf "%s\n" "$(at -c "$*" | sed -e '1,/SHELL:-/d' -e '$d' -e "s/^[^']*'//; s/'[^']*\$//")"
+	printf "%s\n" "$(at -c "$*" | sed -e '1,/SHELL:-/d' -e '$d' -e "s/^.*REMIND' //")"
 }
 
 main() {
@@ -82,6 +82,7 @@ main() {
 		exit 0
 	fi
 
+	# delete specific reminders
 	if [[ "$1" == "rm" || "$1" == "-r" ]]; then
 		shift
 		local ids_to_remove=("$@")
