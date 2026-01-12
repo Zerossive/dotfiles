@@ -15,10 +15,6 @@ alias open='xdg-open'
 alias install='sudo dnf install'
 alias remove='sudo dnf remove'
 alias search='sudo dnf search'
-# datetime
-alias datec="date '+%Y-%m-%d' -d"
-alias timec="date '+%-I:%M %p' -d"
-alias datetimec="date '+%Y-%m-%d %-I:%M %p' -d"
 # ai
 alias ail='aichat -r linux'
 alias aig='aichat -r grammar --no-stream'
@@ -28,19 +24,26 @@ alias aic='aichat -c'
 alias ain='aichat --rag notes'
 alias ainr='ain --rebuild-rag'
 # other
-alias ll='eza -hlF --icons --no-permissions --no-user --group-directories-first --time-style relative'
-alias lla='eza -halF --icons --no-user --group-directories-first --time-style relative'
-alias lt='eza -T --icons --group-directories-first'
+if ! command -v eza &>/dev/null; then
+    alias ll='eza -hlF --icons --no-permissions --no-user --group-directories-first --time-style relative'
+    alias lla='eza -halF --icons --no-user --group-directories-first --time-style relative'
+    alias lt='eza -T --icons --group-directories-first'
+else
+    alias ll='ls -gohF --group-directories-first'
+    alias lla='ls -gohFA --group-directories-first --no-group'
+    alias lt='tree --dirsfirst --gitignore --noreport -F'
+fi
 alias rsyncc='rsync -haviP'
 alias tws='timew summary :id :annotation'
 alias qc='qalc --terse'
-alias browser="flatpak run com.vivaldi.Vivaldi $* 1>/dev/null 2>&1"
+alias browser="flatpak run com.vivaldi.Vivaldi 1>/dev/null 2>&1"
 
 # H1: Preset Commands w/ Parameters
 
 # editing shortcuts
-alias ea='nvim ~/.config/.aliases'
-alias ei='nvim ~/dotfiles/install-script.sh'
+alias ea='nvim $HOME/.config/.aliases'
+alias ei='nvim $HOME/dotfiles/install-script.sh'
+alias einfo='nvim $HOME/.local/bin/info'
 alias ep='nvim /mnt/autofs/OLYMPUS/data/stacks/caddy/conf/Caddyfile' # edit Caddyfile reverse proxy
 # software management
 alias update-other='brew update && brew upgrade && sudo npm update -g && rustup update && cargo install-update -a'
@@ -56,9 +59,9 @@ alias unlock='loginctl unlock-session'
 alias playpause='playerctl play-pause'
 # notes
 alias dn='nvim -c "DailyNote"'
-alias q="nvim -c 'e ~/Elysium/Obsidian\\ Vault/Quick\\ Note.md'"
-alias oo='cd ~/Elysium/Obsidian\ Vault && nvim && cd -'
-alias todo='n ~/Elysium/Obsidian\ Vault/To-Do.md'
+alias q="nvim -c 'e \$HOME/Elysium/Obsidian\\ Vault/Quick\\ Note.md'"
+alias oo='cd $HOME/Elysium/Obsidian\ Vault && nvim && cd -'
+alias todo='n $HOME/Elysium/Obsidian\ Vault/To-Do.md'
 # containers
 alias dockerl='docker ps --format "table {{.Names}}\t{{.ID}}\t{{.Status}}"'
 alias docker-prune="ssh olympus 'docker image prune -fa'"
@@ -87,7 +90,7 @@ alias backup-music='rsyncc --update danny@olympus:/home/danny/media/music/ /mnt/
 alias backup-immich='rsyncc --update danny@olympus:/home/danny/media/photos danny@olympus:/home/danny/media/videos danny@olympus:/home/danny/media/immich/library /mnt/1TB\ SSD/Backup/Immich'
 alias backup-documents="ssh olympus -t 'sudo rsync -haviP --update /var/lib/docker/volumes/paperless-ngx_media/_data/documents/originals/ danny@atlas:/mnt/1TB\ SSD/Backup/Documents'"
 # other
-alias re='source ~/.zshrc'
+alias re='source $HOME/.zshrc'
 alias lsblkc='lsblk -Mpo LABEL,NAME,FSTYPE,SIZE,FSAVAIL,FSUSE%,MOUNTPOINT -e7'
 alias weather="curl -s -m 10 'https://wttr.in/mesquite?Q'"
 alias temp='curl -sm 3 wttr.in/mesquite\?format="%c%20%t%20(%f)\n" | sed "s/ \?+//g"'
@@ -99,7 +102,7 @@ alias hermes-camera='scrcpy --window-title=HERMES-CAMERA --tcpip="192.168.1.144:
 # H1: Functions
 
 # Print various error logs
-function wtf() {
+wtf() {
     printf '\njournalctl:\n'
     journalctl -p 3 -xb
     printf '\ndmesg:\n'
@@ -107,7 +110,7 @@ function wtf() {
 }
 
 # Yazi shortcut to allow for the changing of directories after quitting
-function e() {
+e() {
     local tmp
     tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
     yazi "$@" --cwd-file="$tmp"
@@ -202,34 +205,37 @@ fa() {
 
 # Fuzzy search for processes to kill
 fkill() {
-    local pid
-    if [ "$UID" != "0" ]; then
-        pid=$(ps -f -u $UID | sed 1d | fzfc --no-preview | awk '{print $2}')
+    local process_list
+    if [[ $UID -ne 0 ]]; then
+        process_list=$(ps -u "$UID" -o pid,fname,cmd --no-headers)
     else
-        pid=$(ps -ef | sed 1d | fzfc --no-preview | awk '{print $2}')
+        process_list=$(ps -eo pid,fname,cmd --no-headers)
     fi
-    if [ "x$pid" != "x" ]; then
-        printf "%s\n" "$pid" | xargs kill -"${1:-9}"
-    fi
+    local selected_process
+    selected_process="$(printf '%s\n' "$process_list" | fzfc --no-preview)"
+    [[ -z "$selected_process" ]] && return
+    local pid
+    pid=$(awk '{print $1}' <<<"$selected_process")
+    [[ -n "$pid" ]] && kill -9 "$pid"
 }
 
 # Fuzzy find a password & copy to clipboard
 fpw() {
-    if [[ "$(bw status | jq -r '.status')" == "locked" ]]; then
+    local query="$*"
+    local bw_status
+    bw_status="$(bw status | jq -r '.status')"
+    if [[ "$bw_status" == "locked" ]]; then
         printf 'vault is locked\n'
         bw unlock
-    elif [[ "$(bw status | jq -r '.status')" == "unauthenticated" ]]; then
+    elif [[ "$bw_status" == "unauthenticated" ]]; then
         printf 'you are not authenticated in\n'
         bw login
-    elif [[ "$(bw status | jq -r '.status')" == "unlocked" ]]; then
-        account_info="$(bw list items --search "$*" --pretty | jq -r '.[] | "\(.name)|\(.login.username)|\(.login.password)"' | column -ts "|" | fzfc --no-preview)"
-        if [ -z "$account_info" ]; then
-            printf "%s\n" "no account selected"
-            return 1
-        fi
-        wl-copy "$(printf "%s\n" "$account_info" | awk '{print $NF}')" && printf "%s\n" "copied password to clipboard"
+    elif [[ "$bw_status" == "unlocked" ]]; then
+        account_info="$(bw list items --search "$query" --pretty | jq -r '.[] | "\(.name)|\(.login.username)|\(.login.password)"' | column -ts "|" | fzfc --no-preview)"
+        [[ -n "$account_info" ]] &&
+            wl-copy "$(printf "%s\n" "$account_info" | awk '{print $NF}')" && printf "%s\n" "copied password to clipboard"
     else
-        printf 'error: unkown\n'
+        printf 'error: unkown bitwarden status\n'
         return 1
     fi
 }
@@ -271,7 +277,7 @@ ft() {
     trashed_file=$(list-trash | fzfc | sed 's|.*/||')
     if [ -n "$trashed_file" ]; then
         wl-copy "$HOME/.local/share/Trash/files/$trashed_file" &&
-            echo "$HOME/.local/share/Trash/files/$trashed_file"
+            printf '%s/.local/share/Trash/files/%s\n' "$HOME" "$trashed_file"
     fi
 }
 
