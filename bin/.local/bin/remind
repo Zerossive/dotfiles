@@ -115,6 +115,13 @@ main() {
 		exit 0
 	fi
 
+	# check for ssh flag
+	local is_ssh=false
+	if [[ "$1" == "ssh" || "$1" == "-s" ]]; then
+		shift
+		is_ssh=true
+	fi
+
 	# Initialize arguments
 	local time="$1"
 	shift
@@ -124,6 +131,11 @@ main() {
 	if [[ -z "$message" ]]; then
 		show_help
 		return 1
+	fi
+
+	if $is_ssh; then
+		ssh olympus at "$time" <<<"curl -sd '$message' -H 'Title: ⌛ REMIND' -H 'Priority: high' olympus:8234/alerts >/dev/null"
+		return
 	fi
 
 	# send notifications
