@@ -18,7 +18,7 @@ output=$(
 **DE:**        KDE Plasma 6
 **IP:**        *ATLAS:* 192.168.1.89
                *OLYMPUS:* 192.168.1.231
-               *ATLANTIS:* 192.168.1.230
+               *BOYCE-PC:* 192.168.1.230
                *HERMES:* 192.168.1.144
 
 # TERMINAL TOOLS
@@ -45,7 +45,7 @@ output=$(
 `fkill`, `dysk`, `f`, `ff`, `fu`, `fa`, `dnfc`, `color`, `sshs`,
 `re/source ~/.zshrc`, `ip -4 -brief a`, `timew/tw`, `pt` (pomodoro timer),
 `ghc/ghcl`, `fm` (manpages), `pastel`, `cargo install-update -a`,
-`bacon`, `compgen -c`, `fpw`, `hermes/hermes-camera/scrcpy`
+`bacon`, `compgen -c`, `fpw`, `hermes/hermes-camera/scrcpy`, `launch`
 
 ## FUN COMMANDS
 `cmatrix/afk`, `cava`, `figlet`, `showfigfonts`
