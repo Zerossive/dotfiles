@@ -24,7 +24,7 @@ alias aic='aichat -c'
 alias ain='aichat --rag notes'
 alias ainr='ain --rebuild-rag'
 # other
-if ! command -v eza &>/dev/null; then
+if command -v eza &>/dev/null; then
     alias ll='eza -hlF --icons --no-permissions --no-user --group-directories-first --time-style relative'
     alias lla='eza -halF --icons --no-user --group-directories-first --time-style relative'
     alias lt='eza -T --icons --group-directories-first'
