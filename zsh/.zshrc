@@ -38,11 +38,13 @@ COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="yyyy-mm-dd"
 
 # Plugins
-plugins=(vi-mode colored-man-pages zsh-completions zsh-autosuggestions zsh-syntax-highlighting zsh-fzf-history-search)
+plugins=(zsh-vi-mode colored-man-pages zsh-completions zsh-autosuggestions zsh-syntax-highlighting zsh-fzf-history-search)
 
 # vi-mode settings
-VI_MODE_SET_CURSOR=true
-VI_MODE_RESET_PROMPT_ON_MODE_CHANGE=true
+ZVM_SYSTEM_CLIPBOARD_ENABLED=true
+ZVM_LINE_INIT_MODE=i
+ZVM_LAZY_KEYBINDINGS=true
+ZVM_INIT_MODE=sourcing # fix keybindings being overwritten
 
 # Homebrew (keep before omzsh)
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
@@ -73,6 +75,13 @@ bindkey "^[r" redo
 
 # Zoxide
 eval "$(zoxide init --cmd cd zsh)"
+
+# auto ls after cd
+autoload -Uz add-zsh-hook
+ls_after_cd() {
+    eza --icons --group-directories-first
+}
+add-zsh-hook chpwd ls_after_cd
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
