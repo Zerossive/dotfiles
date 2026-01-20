@@ -45,6 +45,8 @@ package_list=(
 	thefuck
 	timew
 	trash-cli
+	scrcpy # mirror android screen and camera
+	fuzzel # application launcher
 
 	# OTHER
 	cava
