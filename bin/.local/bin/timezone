@@ -58,6 +58,9 @@ while getopts ilht:z: flag; do
 	esac
 done
 shift $((OPTIND - 1))
+if [[ $# -gt 0 ]]; then
+	printf 'ignoring extra arguments: %s\nuse tags like -t or -z to specify arguments\n' "$*" >&2
+fi
 
 pick_tz() {
 	if $launcher; then
@@ -89,6 +92,6 @@ main() {
 	fi
 }
 
-main "$@"
+main
 
 # vim: set ft=sh:
