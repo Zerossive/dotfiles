@@ -14,12 +14,12 @@ set -euo pipefail
 message="$*"
 summary=''
 urgency=1
-title='notify-all'
+title='🧿 notify-all'
 # TODO: experiment with action buttons
 
 usage() {
-    local cmd="${0##*/}"
-    cat <<-EOF
+	local cmd="${0##*/}"
+	cat <<-EOF
 		Notify all connected devices
 
 		Usage: $cmd [options] <message>
@@ -27,11 +27,11 @@ usage() {
 		Options:
 		  -t TITLE          title of notification
 		  -s SUMMARY        summary of message
-		  -u [0-3]          change urgency of notification 
+		  -u [0-3]          change urgency of notification (default: 1)
 		  -h                show this help message
 
 		Useful Icons:
-		   ⏳🍬📦🏛🔔📜🧿😈🍬🔷💀🫆🪳🍖🧊🌐🧭🛑⚓🌜🕹🎲🃏💻💾📚💼📅📋🔒🛠🛡⚠⚡
+		  ⏳🍬📦🏛🔔📜🧿😈🍬🔷💀🫆🪳🍖🧊🌐🧭🛑⚓🌜🕹🎲🃏💻💾📚💼📅📋🔒🛠🛡⚠⚡
 
 		Examples:
 		  $cmd -t 'Urgent Message:' -u 2 there was an error
@@ -40,29 +40,33 @@ usage() {
 }
 
 error() {
-    printf 'error: %s\n' "$*" >&2
-    exit 1
+	printf 'error: %s\n' "$*" >&2
+}
+
+error_out() {
+	error "$*"
+	exit 1
 }
 
 # handle arguments
 while getopts s:u:t:h flag; do
-    case "${flag}" in
-    u) urgency="$OPTARG" ;;
-    t) title="$OPTARG" ;;
-    s) summary="$OPTARG" ;;
-    h)
-        usage
-        exit 0
-        ;;
-    ?)
-        exit 2
-        ;;
-    esac
+	case "${flag}" in
+	u) urgency="$OPTARG" ;;
+	t) title="$OPTARG" ;;
+	s) summary="$OPTARG" ;;
+	h)
+		usage
+		exit 0
+		;;
+	?)
+		exit 2
+		;;
+	esac
 done
 shift $((OPTIND - 1))
 message="$*"
 if [[ -z "$message" ]]; then
-    error "no message provided"
+	error_out "no message provided"
 fi
 
 case "$urgency" in
@@ -70,46 +74,47 @@ case "$urgency" in
 1) urgency_notify_send="normal" urgency_ntfy="default" ;;
 2) urgency_notify_send="critical" urgency_ntfy="high" ;;
 3) urgency_notify_send="critical" urgency_ntfy="max" ;;
-*) error "invalid argument for -i: $urgency" ;;
+*) error_out "invalid argument for -i: $urgency" ;;
 esac
 
 # notify all devices
 notify-devices() {
-    printf 'notifying devices\n'
-    local summary_modified=''
-    [[ -n "$summary" ]] && summary_modified="[$summary]"
-    curl -sd "$summary_modified$message" -H "Title: $title" -H "Priority: $urgency_ntfy" -H "Markdown: yes" olympus:8234/alerts >/dev/null || error "failed to notify devices"
+	printf 'notifying devices\n'
+	local summary_modified=''
+	[[ -n "$summary" ]] && summary_modified="[$summary]
+"
+	curl -sd "$summary_modified$message" -H "Title: $title" -H "Priority: $urgency_ntfy" -H "Markdown: yes" olympus:8234/alerts >/dev/null || error "failed to notify devices"
 }
 
 # play desktop notification sound
 play-desktop-sound() {
-    # check for paplay
-    if command -v paplay &>/dev/null; then
-        # check for oga file
-        local audio_file="/usr/share/sounds/freedesktop/stereo/complete.oga"
-        if [ -f "$audio_file" ]; then
-            paplay "$audio_file"
-        else
-            error "no oga file found for paplay"
-        fi
-    else
-        error "paplay is not installed"
-    fi
+	# check for paplay
+	if command -v paplay &>/dev/null; then
+		# check for oga file
+		local audio_file="/usr/share/sounds/freedesktop/stereo/complete.oga"
+		if [ -f "$audio_file" ]; then
+			paplay "$audio_file"
+		else
+			error "no oga file found for paplay"
+		fi
+	else
+		error "paplay is not installed"
+	fi
 }
 
 # notify desktop
 notify-desktop() {
-    printf 'notifying desktop\n'
-    notify-send --app-name="$title" --icon="clock" -t 5000 --urgency="$urgency_notify_send" "$summary" "$message"
+	printf 'notifying desktop\n'
+	notify-send --app-name="$title" --icon="clock" -t 5000 --urgency="$urgency_notify_send" "$summary" "$message"
 }
 
 # check if notify-send is installed and notify desktop
 if command -v notify-send &>/dev/null; then
-    notify-desktop
-    ((urgency > 0)) && play-desktop-sound
-    ((urgency >= 3)) && play-desktop-sound
+	notify-desktop
+	((urgency > 0)) && play-desktop-sound
+	((urgency >= 3)) && play-desktop-sound
 else
-    error "notify-send is not installed"
+	printf 'notify-send is not installed' >&2
 fi
 
 # notify all devices
