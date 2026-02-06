@@ -40,6 +40,7 @@ launcher=false
 invert=false
 time='now'
 selected_timezone=""
+local_timezone="$(timedatectl show -p Timezone --value)"
 
 # handle arguments
 while getopts ilht:z: flag; do
@@ -64,7 +65,7 @@ fi
 
 pick_tz() {
 	if $launcher; then
-		timedatectl list-timezones | fuzzel --dmenu --search="$selected_timezone"
+		timedatectl list-timezones | fuzzel --dmenu --prompt='timezone: ' --search="$selected_timezone"
 	else
 		timedatectl list-timezones | fzf --reverse --height '~100%' --exact --select-1 --query="$selected_timezone"
 	fi
@@ -78,7 +79,7 @@ get_datetime() {
 	if $invert; then
 		date '+%I:%M %p' --date="TZ=\"$tz\" $time_input"
 	else
-		TZ="$tz" date '+%I:%M %p' --date="$time_input"
+		TZ="$tz" date '+%I:%M %p' --date="TZ=\"$local_timezone\" $time_input"
 	fi
 }
 
