@@ -33,6 +33,7 @@ show_help() {
 			remind
 			run
 			ssh
+			timezone
 
 		Examples:
 		  $cmd password
@@ -64,6 +65,7 @@ pickers=(
 	remind
 	run
 	ssh
+	timezone
 )
 
 pick_picker() {
@@ -84,11 +86,25 @@ pick_picker() {
 	remind) launch_remind ;;
 	run) launch_run ;;
 	ssh) launch_ssh ;;
+	timezone) launch_timezone ;;
 	*)
 		printf 'error: unknown command\n' >&2
 		exit 1
 		;;
 	esac
+}
+
+launch_timezone() {
+	local selected_invert selected_time
+	selected_invert="$(printf 'TO another timezone\nFROM another timezone\n' | fuzzel --dmenu --prompt='convert: ' --minimal-lines)"
+	[[ -z "$selected_invert" ]] && return
+	selected_time="$(printf 'now' | fuzzel --dmenu --prompt='time: ' --minimal-lines)"
+	[[ -z "$selected_time" ]] && return
+	if [[ "$selected_invert" == "TO another timezone" ]]; then
+		timezone -l -t "$selected_time"
+	else
+		timezone -l -t "$selected_time" -i
+	fi
 }
 
 launch_kill() {
@@ -127,7 +143,7 @@ launch_containers() {
 			$(zsh -ic 'dockerl -a')
 
 			======== OLYMPUS ========
-			$(ssh olympus bash -ic 'dockerl -a')
+			$(ssh olympus 'bash -ic "dockerl -a"')
 		EOF
 	)
 	printf '%s\n' "$container_list" | fuzzel -d --width 80 --minimal-lines --lines 40 --hide-prompt | awk '{print $2}' | tr -d '\n' | wl-copy
