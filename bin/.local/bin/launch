@@ -174,7 +174,7 @@ launch_remind() {
 	[[ -z "$selected_reminder" ]] && return
 	if [[ "$selected_reminder" == "new reminder" || "$custom_exit_code" == 11 ]]; then
 		local new_reminder
-		new_reminder="$(fuzzel --dmenu --prompt-only='new reminder: ')"
+		new_reminder="$(fuzzel --dmenu --prompt-only='new reminder: ' --placeholder 'now+1h do this task')"
 		[[ -z "$new_reminder" ]] && return
 		remind $new_reminder
 		launch_remind
