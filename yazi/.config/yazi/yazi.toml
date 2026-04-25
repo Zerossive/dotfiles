@@ -1,21 +1,35 @@
 [mgr]
 show_hidden = true
 ratio = [1, 2, 3]
-linemode = "size"
-sort_by = "natural"
+linemode = 'size'
+sort_by = 'natural'
 image_delay = 200
 
 [opener]
 edit = [
-	{ run = 'nvim "%s"', desc = "Neovim", block = true },
-	{ run = 'flatpak run com.vivaldi.Vivaldi "%s"', desc = "Browser", orphan = true },
+	{ run = 'nvim ""%s""', desc = 'Neovim', block = true },
 ]
 play = [
-	{ run = 'xdg-open "%s"', desc = "Play", orphan = true },
+	{ run = 'xdg-open ""%s""', desc = 'Play', orphan = true },
 ]
 open = [
-	{ run = 'xdg-open "%s"', desc = "Open", orphan = true },
-	{ run = 'flatpak run com.vivaldi.Vivaldi "%s"', desc = "Browser", orphan = true },
+	{ run = 'xdg-open ""%s""', desc = 'Open', orphan = true },
+]
+browser = [
+  { run = 'flatpak run com.vivaldi.Vivaldi "%s"', desc = 'Browser', orphan = true },
+]
+svg = [
+  { run = 'flatpak run org.inkscape.Inkscape "%s"', desc = 'Inkscape', orphan = true },
+]
+pdf = [
+  { run = 'flatpak run com.github.jeromerobert.pdfarranger "%s"', desc = 'PDF Arranger', orphan = true },
+]
+
+[open]
+prepend_rules = [
+  { mime = 'image/svg+xml', use = [ 'open', 'reveal', 'svg' ] },
+  { mime = 'text/*', use = [ 'edit', 'reveal', 'browser' ] },
+  { mime = 'application/pdf', use = [ 'open', 'reveal', 'pdf' ] },
 ]
 
 [preview]
