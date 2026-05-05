@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# Script Name: med
+# Description: edit or append to the medical journal
+# Usage: med [<note content>]
+# Author: Danny Harris
+# Dependencies: neovim
+# ==============================================================================
+
+# -e: exit on error, -u: treat unset variables as errors, -o pipefail: pipe will fail if any command fails
+set -euo pipefail
+
+show_help() {
+	local cmd="${0##*/}"
+	cat <<-EOF
+		Edit or append to the medical journal.
+
+		Usage: $cmd [<note content>]
+
+		Examples:
+		  $cmd "Felt better today"
+		  $cmd
+	EOF
+}
+
+# dependency checks
+dependencies=(nvim)
+for cmd in "${dependencies[@]}"; do
+	if ! command -v "$cmd" >/dev/null 2>&1; then
+		printf "error: '%s' command does not exist\n" "$cmd" >&2
+		exit 1
+	fi
+done
+
+main() {
+	if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+		show_help
+		exit 0
+	fi
+
+	local file="$HOME/Elysium/Obsidian Vault/Notes/Medical Journal.md"
+	local current_time
+	current_time=$(date +'%Y-%m-%d')
+
+	if [ $# -gt 0 ]; then
+		printf -- "- %s\n\t* %s\n" "$current_time" "$*" >>"$file"
+	else
+		nvim "$file" -c "norm Go- $current_time" -c "startinsert!"
+	fi
+}
+
+main "$@"
+
+# vim: set ft=sh:
