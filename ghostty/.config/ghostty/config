@@ -1,0 +1,44 @@
+font-family = JetBrains Mono
+font-family = Symbols Nerd Font Mono
+
+theme = Catppuccin Mocha
+cursor-color = #74C7EC
+selection-invert-fg-bg = true
+cursor-invert-fg-bg = true
+# background-opacity = 0.50
+# background-blur-radius = 20
+
+mouse-hide-while-typing = true
+background-image = /home/danny/Elysium/Images/Catppuccin/smoke-dark.png
+background-image-fit = cover
+adjust-cell-height = -2
+
+window-padding-x = 5
+window-padding-y = 5
+window-padding-balance = true
+window-decoration = false
+
+window-theme = ghostty
+gtk-titlebar = false
+adw-toolbar-style = flat
+gtk-wide-tabs = false
+bold-is-bright = true
+
+keybind = ctrl+shift+\=toggle_quick_terminal
+keybind = alt+shift+u=scroll_page_fractional:-0.5
+keybind = alt+shift+d=scroll_page_fractional:0.5
+keybind = alt+shift+l=next_tab
+keybind = alt+shift+h=previous_tab
+keybind = alt+shift+k=jump_to_prompt:-1
+keybind = alt+shift+j=jump_to_prompt:1
+keybind = ctrl+alt+h=goto_split:left
+keybind = ctrl+alt+l=goto_split:right
+keybind = ctrl+alt+k=goto_split:up
+keybind = ctrl+alt+j=goto_split:down
+keybind = ctrl+alt+shift+k=resize_split:up,100
+keybind = ctrl+alt+shift+j=resize_split:down,100
+keybind = ctrl+alt+shift+h=resize_split:left,100
+keybind = ctrl+alt+shift+l=resize_split:right,100
+keybind = ctrl+alt+shift+==equalize_splits
+
+# vim: set ft=conf:
