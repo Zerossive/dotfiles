@@ -46,7 +46,7 @@ alias ei='nvim $HOME/dotfiles/install-script.sh'
 alias einfo='nvim $HOME/.local/bin/info'
 alias ep='nvim /mnt/autofs/OLYMPUS/data/stacks/caddy/conf/Caddyfile' # edit Caddyfile reverse proxy
 # software management
-alias update-other='brew update && brew upgrade && sudo npm update -g && rustup update && cargo install-update -a'
+alias update-other='brew update && brew upgrade && npm update -g && rustup update && cargo install-update -a'
 alias fl="flatpak list --app --columns=size,application,version,name | tr -d ' ' | sort -hr | column -t | bat --style plain" # list flatpaks installed sorted by size
 alias dnfl='dnf list --installed | fzfc --no-preview'
 # datetime
