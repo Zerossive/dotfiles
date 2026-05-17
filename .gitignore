@@ -7,3 +7,7 @@ docker/dockge/data/
 btop/.config/btop/btop.log
 aichat/.config/aichat/rags
 bin/.local/bin/naviterm
+bin/.local/bin/numba
+bin/.local/bin/beet
+bin/.local/bin/unidecode
+bin/.local/bin/filetype
