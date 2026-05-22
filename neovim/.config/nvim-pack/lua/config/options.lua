@@ -67,3 +67,4 @@ vim.opt.smartindent = true
 vim.opt.spelllang = 'en_us'
 vim.opt.cmdheight = 0
 vim.opt.winborder = 'rounded'
+vim.opt.termguicolors = true
