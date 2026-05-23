@@ -88,3 +88,17 @@ end, { desc = 'delete unused plugins' })
 vim.keymap.set('n', '<leader>bo', ':BufOnly<CR>', { desc = 'close other buffers' })
 vim.keymap.set('v', '<C-r>', ':RC ', { desc = 'run command on selected text' })
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'exit terminal mode' })
+
+-- add class attribute in relevant filetypes
+vim.api.nvim_create_autocmd('FileType', {
+	pattern = { 'html', 'svelte', 'javascriptreact', 'typescriptreact' },
+	callback = function()
+		vim.keymap.set('n', '<leader><leader>c', function()
+			vim.cmd.normal "vatoEa class=''"
+			vim.cmd 'startinsert'
+		end, {
+			buffer = 0,
+			desc = 'add class attribute',
+		})
+	end,
+})

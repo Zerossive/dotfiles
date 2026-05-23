@@ -1,6 +1,6 @@
 -- [[ Rust ]]
 
--- [[ Keymaps]]
+-- [[ Keymaps ]]
 
 -- continually run
 vim.keymap.set('n', '<leader><leader>w', function()

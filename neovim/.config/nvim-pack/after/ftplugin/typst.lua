@@ -1,4 +1,4 @@
--- [[ JavaScript]]
+-- [[ JavaScript ]]
 
 -- [[ Keymaps ]]
 vim.keymap.set('n', '<leader><leader>p', '<cmd>TypstPreviewToggle<cr>', { desc = 'typst preview' })

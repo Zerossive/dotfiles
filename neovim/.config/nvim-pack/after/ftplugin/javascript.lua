@@ -1,4 +1,4 @@
--- [[ JavaScript]]
+-- [[ JavaScript ]]
 -- INCLUDES: .js, .ts, .jsx, .tsx
 
 -- [[ Keymaps ]]

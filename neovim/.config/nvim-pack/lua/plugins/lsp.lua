@@ -1,5 +1,5 @@
 -- Useful status updates for LSP.
-vim.pack.add { 'https://github.com/j-hui/fidget.nvim' }
+vim.pack.add { { src = 'https://github.com/j-hui/fidget.nvim', version = vim.version.range '*' } }
 require('fidget').setup { notification = { window = { winblend = 0 } } }
 
 --  This function gets run when an LSP attaches to a particular buffer.
@@ -66,47 +66,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
 	end,
 })
 
--- Enable the following language servers
----@type table<string, vim.lsp.Config>
-local servers = {
-	svelte = {},
-	stylua = {}, -- Used to format Lua code
-	lua_ls = {
-		on_init = function(client)
-			client.server_capabilities.documentFormattingProvider = false -- Disable formatting (formatting is done by stylua)
-
-			if client.workspace_folders then
-				local path = client.workspace_folders[1].name
-				if path ~= vim.fn.stdpath 'config' and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then
-					return
-				end
-			end
-
-			client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
-				runtime = {
-					version = 'LuaJIT',
-					path = { 'lua/?.lua', 'lua/?/init.lua' },
-				},
-				workspace = {
-					checkThirdParty = false,
-					-- NOTE: this is a lot slower and will cause issues when working on your own configuration.
-					--  See https://github.com/neovim/nvim-lspconfig/issues/3189
-					library = vim.tbl_extend('force', vim.api.nvim_get_runtime_file('', true), {
-						'${3rd}/luv/library',
-						'${3rd}/busted/library',
-					}),
-				},
-			})
-		end,
-		---@type lspconfig.settings.lua_ls
-		settings = {
-			Lua = {
-				format = { enable = false }, -- Disable formatting (formatting is done by stylua)
-			},
-		},
-	},
-}
-
 vim.pack.add {
 	'https://github.com/neovim/nvim-lspconfig',
 	'https://github.com/mason-org/mason.nvim',
@@ -114,13 +73,8 @@ vim.pack.add {
 	'https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim',
 }
 
--- Automatically install LSPs and related tools to stdpath for Neovim
-require('mason').setup {}
-
--- Ensure the servers and tools above are installed
-local ensure_installed = vim.tbl_keys(servers or {})
-vim.list_extend(ensure_installed, {
-	-- You can add other tools here that you want Mason to install
+local ensure_installed = {
+	-- 'lua_ls',
 	'tailwindcss',
 	'stylua',
 	'prettierd',
@@ -135,19 +89,26 @@ vim.list_extend(ensure_installed, {
 	'docker-compose-language-service',
 	'svelte-language-server',
 	'tinymist', -- typst
-})
+}
 
+require('mason').setup()
+require('mason-lspconfig').setup()
 require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-require('mason-lspconfig').setup {
-	handlers = {
-		function(server_name)
-			local server = servers[server_name] or {}
-			-- This handles overriding only values explicitly passed
-			-- by the server configuration above. Useful when disabling
-			-- certain features of an LSP (for example, turning off formatting for tsserver)
-			server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-			require('lspconfig')[server_name].setup(server)
-		end,
+vim.pack.add { 'https://github.com/folke/lazydev.nvim' }
+require('lazydev').setup {
+	library = {
+		-- Load luvit types when the `vim.uv` word is found
+		{ path = '${3rd}/luv/library', words = { 'vim%.uv' } },
 	},
 }
+-- {
+-- 	'folke/lazydev.nvim',
+-- 	ft = 'lua',
+-- 	opts = {
+-- 		library = {
+-- 			-- Load luvit types when the `vim.uv` word is found
+-- 			{ path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+-- 		},
+-- 	},
+-- },
