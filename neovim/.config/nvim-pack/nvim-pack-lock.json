@@ -17,6 +17,10 @@
       "rev": "3e145ee9af42eb6764908a1a481f53fe7f0bdbe5",
       "src": "https://github.com/rmagatti/auto-session"
     },
+    "blink-cmp-git": {
+      "rev": "302b9dabec3284de29665e2311118a3202cb192a",
+      "src": "https://github.com/Kaiser-Yang/blink-cmp-git"
+    },
     "blink.cmp": {
       "rev": "78336bc89ee5365633bcf754d93df01678b5c08f",
       "src": "https://github.com/saghen/blink.cmp",
@@ -31,7 +35,7 @@
       "src": "https://github.com/catppuccin/nvim"
     },
     "conform.nvim": {
-      "rev": "18aeab3d63d350dcf44d64c462cc489a3412af40",
+      "rev": "619363c30309d29ffa631e67c8183f2a72caa373",
       "src": "https://github.com/stevearc/conform.nvim"
     },
     "fidget.nvim": {
@@ -110,7 +114,7 @@
       "version": ">=0.0.0"
     },
     "oil.nvim": {
-      "rev": "0fcc83805ad11cf714a949c98c605ed717e0b83e",
+      "rev": "b91ee5a77a6a9605d9c1aaf4fda74b66082c8297",
       "src": "https://github.com/stevearc/oil.nvim"
     },
     "plenary.nvim": {
@@ -122,11 +126,11 @@
       "src": "https://github.com/kevinhwang91/promise-async"
     },
     "quicker.nvim": {
-      "rev": "1c9322b7e2967472548ba9bccd1ccd40e49d0a49",
+      "rev": "4a6883cb13fe097a20a046eb55f6dffd239276e3",
       "src": "https://github.com/stevearc/quicker.nvim"
     },
     "render-markdown.nvim": {
-      "rev": "629eb9533ec989d9d5c6cab8f3ad5372422c24e0",
+      "rev": "dcb77511efb1665b5073d8396a0033b3e4d680f6",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
     "sidekick.nvim": {
@@ -164,7 +168,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "81097571080ce0c5ab9e0311ed8ad03ff080ef47",
+      "rev": "74cbb8829cc695ea84ffaf1544efa9a3b11addf5",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }

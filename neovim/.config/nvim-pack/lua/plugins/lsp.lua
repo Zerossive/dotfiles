@@ -7,7 +7,7 @@ require('fidget').setup { notification = { window = { winblend = 0 } } }
 --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
 --    function will be executed to configure the current buffer
 vim.api.nvim_create_autocmd('LspAttach', {
-	group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
+	group = vim.api.nvim_create_augroup('lsp-attach', { clear = true }),
 	callback = function(event)
 		-- In this case, we create a function that lets us more easily define mappings specific
 		-- for LSP related items. It sets the mode, buffer and description for us each time.
@@ -18,15 +18,15 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
 		-- Rename the variable under your cursor.
 		--  Most Language Servers support renaming across files, etc.
-		map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
+		map('grn', vim.lsp.buf.rename, 'rename')
 
 		-- Execute a code action, usually your cursor needs to be on top of an error
 		-- or a suggestion from your LSP for this to activate.
-		map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
+		map('gra', vim.lsp.buf.code_action, 'goto code action', { 'n', 'x' })
 
 		-- This is not Goto Definition, this is Goto Declaration.
 		--  For example, in C this would take you to the header.
-		map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+		map('grd', vim.lsp.buf.declaration, 'goto declaration')
 
 		-- The following two autocommands are used to highlight references of the
 		-- word under your cursor when your cursor rests there for a little while.
@@ -34,7 +34,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		-- When you move your cursor, the highlights will be cleared (the second autocommand).
 		local client = vim.lsp.get_client_by_id(event.data.client_id)
 		if client and client:supports_method('textDocument/documentHighlight', event.buf) then
-			local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
+			local highlight_augroup = vim.api.nvim_create_augroup('lsp-highlight', { clear = false })
 			vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
 				buffer = event.buf,
 				group = highlight_augroup,
@@ -48,10 +48,10 @@ vim.api.nvim_create_autocmd('LspAttach', {
 			})
 
 			vim.api.nvim_create_autocmd('LspDetach', {
-				group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
+				group = vim.api.nvim_create_augroup('lsp-detach', { clear = true }),
 				callback = function(event2)
 					vim.lsp.buf.clear_references()
-					vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
+					vim.api.nvim_clear_autocmds { group = 'lsp-highlight', buffer = event2.buf }
 				end,
 			})
 		end
@@ -61,7 +61,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		if client and client:supports_method('textDocument/inlayHint', event.buf) then
 			map('<leader>th', function()
 				vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
-			end, '[T]oggle Inlay [H]ints')
+			end, 'toggle inlay hints')
 		end
 	end,
 })
@@ -73,42 +73,42 @@ vim.pack.add {
 	'https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim',
 }
 
-local ensure_installed = {
-	-- 'lua_ls',
-	'tailwindcss',
+-- add lsp servers here (use short names)
+local servers = {
+	'bashls',
+	'cssls',
+	'docker_compose_language_service',
+	-- 'lua_ls', -- handled by lazydev
+	-- 'ts_ls', -- handled by typescript-tools
+	'marksman',
+	'rust_analyzer',
 	'stylua',
+	'svelte',
+	'tailwindcss',
+	'tinymist',
+	'yamlls',
+}
+
+local ensure_installed = vim.deepcopy(servers)
+
+-- add non-lsp server packages to install here
+vim.list_extend(ensure_installed, {
 	'prettierd',
 	'prettier',
-	'css-lsp',
-	'bash-language-server',
 	'shfmt',
 	'shellcheck',
-	'yaml-language-server',
-	'rust-analyzer',
-	'marksman', -- markdown
-	'docker-compose-language-service',
-	'svelte-language-server',
-	'tinymist', -- typst
-}
+})
 
 require('mason').setup()
-require('mason-lspconfig').setup()
+require('mason-lspconfig').setup() -- or alternatives below
 require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-vim.pack.add { 'https://github.com/folke/lazydev.nvim' }
-require('lazydev').setup {
-	library = {
-		-- Load luvit types when the `vim.uv` word is found
-		{ path = '${3rd}/luv/library', words = { 'vim%.uv' } },
-	},
-}
--- {
--- 	'folke/lazydev.nvim',
--- 	ft = 'lua',
--- 	opts = {
--- 		library = {
--- 			-- Load luvit types when the `vim.uv` word is found
--- 			{ path = '${3rd}/luv/library', words = { 'vim%.uv' } },
--- 		},
--- 	},
--- },
+-- -- alternative 1
+-- vim.lsp.config('*', {})
+-- vim.lsp.enable(servers)
+
+-- -- alternative 2
+-- for _, name in ipairs(servers) do
+-- 	vim.lsp.config(name, {})
+-- 	vim.lsp.enable(name)
+-- end

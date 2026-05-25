@@ -1,6 +1,6 @@
+-- TODO: lazy load
 vim.pack.add { 'https://github.com/folke/which-key.nvim' }
 
--- TODO: lazy load
 require('which-key').setup { -- delay = 0,
 	icons = {
 		-- set icon mappings to true if you have a Nerd Font

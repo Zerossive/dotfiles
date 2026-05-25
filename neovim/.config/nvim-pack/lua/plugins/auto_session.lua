@@ -5,7 +5,12 @@ vim.pack.add {
 }
 
 require('auto-session').setup {
-	allowed_dirs = { '~/Elysium/Projects/*', '~/Elysium/Projects/*/*', '~/.config/nvim*', '~/Elysium/Obsidian Vault/' },
+	allowed_dirs = {
+		'~/Elysium/Projects/*',
+		'~/Elysium/Projects/*/*',
+		'~/.config/nvim*',
+		'~/Elysium/Obsidian Vault/',
+	},
 }
 
 vim.keymap.set('n', '<leader>os', '<cmd>AutoSession restore<cr>', { desc = 'open session of current directory' })

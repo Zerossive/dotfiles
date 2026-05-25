@@ -2,7 +2,16 @@ vim.pack.add { 'https://github.com/folke/snacks.nvim' }
 
 require('snacks').setup {
 	notifier = { enabled = true },
-	image = { enable = true },
+	image = {
+		enable = true,
+		-- fix image rendering for obsidian paths
+		resolve = function(path, src)
+			local api = require 'obsidian.api'
+			if api.path_is_note(path) then
+				return api.resolve_attachment_path(src)
+			end
+		end,
+	},
 	picker = { enable = true },
 	scroll = { enable = true, animate_repeat = { delay = 1000 } },
 	gh = { enable = true },

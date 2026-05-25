@@ -70,6 +70,9 @@ vim.diagnostic.config {
 	},
 }
 
+-- [[ Enable Experimental UI2 ]]
+require('vim._core.ui2').enable { enable = true }
+
 -- [[ Pack Plugin Manager ]]
 
 do

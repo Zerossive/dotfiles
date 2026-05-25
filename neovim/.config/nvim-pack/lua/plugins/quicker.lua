@@ -1,6 +1,6 @@
+-- TODO: lazy load in qf filetypes
 vim.pack.add { 'https://github.com/stevearc/quicker.nvim' }
 
--- TODO: lazy load in qf filetypes
 require('quicker').setup {
 	keys = {
 		{

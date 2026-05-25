@@ -1,5 +1,6 @@
 vim.pack.add { 'https://github.com/stevearc/conform.nvim' }
 
+-- TODO: lazy load on: bufwritepre?
 require('conform').setup {
 	notify_on_error = false,
 	format_on_save = {

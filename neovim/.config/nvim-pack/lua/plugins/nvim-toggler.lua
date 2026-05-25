@@ -1,3 +1,4 @@
+-- TODO: lazy load
 vim.pack.add { 'https://github.com/nguyenvukhang/nvim-toggler' }
 
 require('nvim-toggler').setup {
@@ -11,7 +12,6 @@ require('nvim-toggler').setup {
 	autoselect_longest_match = true,
 }
 
--- TODO: lazy load
 vim.keymap.set('n', '<leader>tt', function()
 	require('nvim-toggler').toggle()
 end, { desc = 'toggle/invert selection' })

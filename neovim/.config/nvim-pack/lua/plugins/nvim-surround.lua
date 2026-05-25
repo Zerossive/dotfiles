@@ -1,3 +1,4 @@
+-- TODO: lazy load
 vim.pack.add {
 	{
 		src = 'https://github.com/kylechui/nvim-surround',
@@ -5,5 +6,4 @@ vim.pack.add {
 	},
 }
 
--- TODO: lazy load
 require('nvim-surround').setup {}

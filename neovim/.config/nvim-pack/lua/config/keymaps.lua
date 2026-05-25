@@ -49,8 +49,8 @@ vim.keymap.set('n', '<leader>o.', ':cd %:p:h<CR>', { desc = 'open . as root dire
 vim.keymap.set('n', '<leader>od', ':!dolphin . &<CR>', { desc = 'open directory' })
 
 -- text manipulation
-vim.keymap.set('n', '<C-8>', 'viW*Ncgn', { desc = 'replace current word' })
-vim.keymap.set('i', '<C-8>', 'viW*Ncgn', { desc = 'replace current word' })
+vim.keymap.set('n', '<C-8>', 'viW*N', { desc = 'set current word as search pattern', remap = true })
+vim.keymap.set('v', '<C-8>', '*N', { desc = 'set current word as search pattern', remap = true })
 vim.keymap.set('i', '<C-e>', '<ESC>A', { desc = 'go to end of line' })
 vim.keymap.set('i', 'jj', '<Escape>', { desc = 'normal mode' })
 vim.keymap.set('n', '<leader>by', function()
@@ -102,3 +102,16 @@ vim.api.nvim_create_autocmd('FileType', {
 		})
 	end,
 })
+
+--[[ REMINDERS / TIPS / GUIDE
+g<			open previous message
+gq			break selected text into shorter lines
+gS			break apart or combine arguments on separate lines
+*			search for word under cursor
+<c-8>		set current word as search pattern
+cgn			find and replace next search match
+<c-f>		cmdline: switch to command history
+q:			open command history
+q/			open search history
+ZR			restart
+--]]

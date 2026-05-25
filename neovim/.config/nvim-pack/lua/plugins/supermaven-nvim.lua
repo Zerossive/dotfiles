@@ -1,5 +1,6 @@
 vim.pack.add { 'https://github.com/supermaven-inc/supermaven-nvim' }
 
+-- TODO: change keybinds again -_-
 require('supermaven-nvim').setup {
 	keymaps = {
 		accept_suggestion = '<C-j>',

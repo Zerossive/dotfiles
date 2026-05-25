@@ -1,3 +1,4 @@
+-- TODO: lazy load in markdown files
 vim.pack.add {
 	'https://github.com/MeanderingProgrammer/render-markdown.nvim',
 	-- dependencies
@@ -5,7 +6,6 @@ vim.pack.add {
 	'https://github.com/echasnovski/mini.nvim',
 }
 
--- TODO: lazy load in markdown files
 require('render-markdown').setup {
 	render_modes = { 'n', 'i', 'c' },
 	-- anti_conceal = { enabled = false },

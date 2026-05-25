@@ -1,13 +1,13 @@
 ---@diagnostic disable: missing-fields
 -- [[ Forked Obsidian Config ]]
 
+-- TODO: lazy load in markdown files
 vim.pack.add {
 	{ src = 'https://github.com/obsidian-nvim/obsidian.nvim', version = vim.version.range '*' },
 	-- dependencies
 	'https://github.com/nvim-lua/plenary.nvim',
 }
 
--- TODO: lazy load in markdown files
 require('obsidian').setup {
 	legacy_commands = false, -- this will be removed in 4.0.0
 	picker = {
