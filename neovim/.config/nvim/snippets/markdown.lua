@@ -1,7 +1,7 @@
 ---@diagnostic disable: undefined-global
 -- Markdown Snippets
 --
--- NOTE: to start a snippet:
+-- to start a snippet:
 --  1. add s(info, code) to returned list
 --  2. define trigger, name, and description
 --  3. define code

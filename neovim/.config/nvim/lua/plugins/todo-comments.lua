@@ -29,3 +29,5 @@ require('todo-comments').setup {
 		},
 	},
 }
+
+vim.keymap.set('n', '<leader>lt', '<cmd>TodoQuickFix<cr>', { desc = 'todo to quickfix' })

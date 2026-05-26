@@ -17,11 +17,11 @@ require('sidekick').setup {
 
 vim.keymap.set({ 'n', 't', 'i', 'x' }, '<c-.>', function()
 	require('sidekick.cli').focus()
-end, { desc = 'Sidekick Focus' })
+end, { desc = 'sidekick focus' })
 
 vim.keymap.set('n', '<leader>aa', function()
 	require('sidekick.cli').toggle()
-end, { desc = 'Sidekick Toggle CLI' })
+end, { desc = 'sidekick toggle cli' })
 
 vim.keymap.set(
 	'n',
@@ -31,30 +31,30 @@ vim.keymap.set(
 	end,
 	-- Or to select only installed tools:
 	-- require("sidekick.cli").select({ filter = { installed = true } })
-	{ desc = 'Select CLI' }
+	{ desc = 'select cli' }
 )
 
 vim.keymap.set('n', '<leader>ad', function()
 	require('sidekick.cli').close()
-end, { desc = 'Detach a CLI Session' })
+end, { desc = 'detach a cli session' })
 
 vim.keymap.set({ 'x', 'n' }, '<leader>at', function()
 	require('sidekick.cli').send { msg = '{this}' }
-end, { desc = 'Send This' })
+end, { desc = 'send this' })
 
 vim.keymap.set('n', '<leader>af', function()
 	require('sidekick.cli').send { msg = '{file}' }
-end, { desc = 'Send File' })
+end, { desc = 'send file' })
 
 vim.keymap.set('x', '<leader>av', function()
 	require('sidekick.cli').send { msg = '{selection}' }
-end, { desc = 'Send Visual Selection' })
+end, { desc = 'send visual selection' })
 
 vim.keymap.set({ 'n', 'x' }, '<leader>ap', function()
 	require('sidekick.cli').prompt()
-end, { desc = 'Sidekick Select Prompt' })
+end, { desc = 'sidekick select prompt' })
 
 -- Example of a keybinding to open one directly
 -- vim.keymap.set('n', '<leader>ag', function()
 -- 	require('sidekick.cli').toggle { name = 'gemini', focus = true }
--- end, { desc = 'Sidekick Toggle Gemini' })
+-- end, { desc = 'sidekick toggle gemini' })

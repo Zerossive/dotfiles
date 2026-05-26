@@ -3,9 +3,9 @@ vim.pack.add { 'https://github.com/supermaven-inc/supermaven-nvim' }
 -- TODO: change keybinds again -_-
 require('supermaven-nvim').setup {
 	keymaps = {
-		accept_suggestion = '<C-j>',
-		clear_suggestion = '<C-h>',
-		accept_word = '<C-l>',
+		accept_suggestion = '<c-a>',
+		-- clear_suggestion = '<c-]>',
+		-- accept_word = '<c-j>',
 	},
 	-- ignore_filetypes = { cpp = true }, -- or { "cpp", }
 	-- color = {

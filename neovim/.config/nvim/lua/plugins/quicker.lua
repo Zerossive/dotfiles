@@ -19,3 +19,17 @@ require('quicker').setup {
 		},
 	},
 }
+
+local quicker = require 'quicker'
+
+vim.keymap.set('n', '<leader>lq', function()
+	quicker.toggle {
+		focus = true,
+	}
+end, { desc = 'toggle quickfix' })
+vim.keymap.set('n', '<leader>ll', function()
+	quicker.toggle {
+		focus = true,
+		loclist = true,
+	}
+end, { desc = 'toggle loclist' })

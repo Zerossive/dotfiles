@@ -112,3 +112,5 @@ require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 -- 	vim.lsp.config(name, {})
 -- 	vim.lsp.enable(name)
 -- end
+
+vim.keymap.set('n', '<leader>pm', '<cmd>Mason<cr>', { desc = 'mason' })
