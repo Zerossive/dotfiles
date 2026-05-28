@@ -78,7 +78,7 @@ local servers = {
 	'bashls',
 	'cssls',
 	'docker_compose_language_service',
-	-- 'lua_ls', -- handled by lazydev
+	'lua_ls', -- handled by lazydev
 	-- 'ts_ls', -- handled by typescript-tools
 	'marksman',
 	'rust_analyzer',

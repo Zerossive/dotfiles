@@ -1,9 +1,14 @@
--- TODO: lazy load in lua files
-vim.pack.add { 'https://github.com/folke/lazydev.nvim' }
+vim.api.nvim_create_autocmd('FileType', {
+	pattern = { 'lua' },
+	once = true,
+	callback = function()
+		vim.pack.add { 'https://github.com/folke/lazydev.nvim' }
 
-require('lazydev').setup {
-	library = {
-		-- Load luvit types when the `vim.uv` word is found
-		{ path = '${3rd}/luv/library', words = { 'vim%.uv' } },
-	},
-}
+		require('lazydev').setup {
+			library = {
+				-- Load luvit types when the `vim.uv` word is found
+				{ path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+			},
+		}
+	end,
+})

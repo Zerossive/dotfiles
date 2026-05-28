@@ -1,9 +1,9 @@
--- TODO: maybe lazy load on insertenter?
 -- TODO: try nvim-cmp from kickstart to see if bugs are fixed ($runes not showing up at first)
 vim.pack.add {
 	{ src = 'https://github.com/saghen/blink.cmp', version = vim.version.range '1.*' },
 	-- optional dependencies
 	'https://github.com/Kaiser-Yang/blink-cmp-git',
+	-- 'https://github.com/folke/lazydev.nvim',
 }
 
 require('blink.cmp').setup {
@@ -18,13 +18,9 @@ require('blink.cmp').setup {
 		},
 	},
 	sources = {
-		default = { 'git', 'lsp', 'path', 'snippets', 'buffer', 'lazydev' },
+		-- default = { 'lazydev', 'git', 'lsp', 'path', 'snippets', 'buffer' },
+		default = { 'git', 'lsp', 'path', 'snippets', 'buffer' },
 		providers = {
-			lazydev = {
-				name = 'LazyDev',
-				module = 'lazydev.integrations.blink',
-				score_offset = 100, -- make lazydev completions top priority (see `:h blink.cmp`)
-			},
 			git = {
 				module = 'blink-cmp-git',
 				name = 'Git',
@@ -33,6 +29,11 @@ require('blink.cmp').setup {
 					return vim.tbl_contains({ 'octo', 'gitcommit', 'markdown' }, vim.bo.filetype)
 				end,
 			},
+			-- lazydev = {
+			-- 	name = 'LazyDev',
+			-- 	module = 'lazydev.integrations.blink',
+			-- 	score_offset = 100, -- make lazydev completions top priority (see `:h blink.cmp`)
+			-- },
 		},
 	},
 	snippets = { preset = 'luasnip' },

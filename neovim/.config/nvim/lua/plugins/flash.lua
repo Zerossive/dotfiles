@@ -1,6 +1,7 @@
--- TODO: lazy load
-vim.pack.add { 'https://github.com/folke/flash.nvim' }
+vim.schedule(function()
+	vim.pack.add { 'https://github.com/folke/flash.nvim' }
 
-require('flash').setup {}
+	require('flash').setup {}
 
-vim.keymap.set({ 'n', 'x', 'o' }, 's', require('flash').jump, { desc = 'flash search' })
+	vim.keymap.set({ 'n', 'x', 'o' }, 's', require('flash').jump, { desc = 'flash search' })
+end)

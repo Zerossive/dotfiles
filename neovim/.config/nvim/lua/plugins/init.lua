@@ -28,6 +28,14 @@ vim.schedule(function()
 end)
 
 -- lazy load on some event
+vim.api.nvim_create_autocmd('FileType', {
+	pattern = { 'javascript', 'html' },
+	once = true,
+	callback = function()
+		vim.pack.add { 'url' }
+	end,
+})
+-- lazy load on some event
 vim.api.nvim_create_autocmd('CmdlineEnter', {
 	once = true,
 	callback = function()
