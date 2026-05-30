@@ -7,14 +7,14 @@ require('quicker').setup {
 			function()
 				require('quicker').expand { before = 2, after = 2, add_to_existing = true }
 			end,
-			desc = 'Expand quickfix context',
+			desc = 'expand qflist context',
 		},
 		{
 			'<',
 			function()
 				require('quicker').collapse()
 			end,
-			desc = 'Collapse quickfix context',
+			desc = 'collapse qflist context',
 		},
 	},
 }
@@ -25,7 +25,7 @@ vim.keymap.set('n', '<leader>lq', function()
 	quicker.toggle {
 		focus = true,
 	}
-end, { desc = 'toggle quickfix' })
+end, { desc = 'toggle qflist' })
 vim.keymap.set('n', '<leader>ll', function()
 	quicker.toggle {
 		focus = true,

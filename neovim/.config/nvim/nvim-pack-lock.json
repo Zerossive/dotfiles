@@ -18,7 +18,7 @@
       "src": "https://github.com/rmagatti/auto-session"
     },
     "blink-cmp-git": {
-      "rev": "302b9dabec3284de29665e2311118a3202cb192a",
+      "rev": "d3f2a9067ab028e779d08e61bf0b054939011316",
       "src": "https://github.com/Kaiser-Yang/blink-cmp-git"
     },
     "blink.cmp": {
@@ -31,7 +31,7 @@
       "src": "https://github.com/bullets-vim/bullets.vim"
     },
     "catppuccin": {
-      "rev": "8edd468af4d63212b84d69b2ddb5ffc9023ef5eb",
+      "rev": "0303a7208dba448c459767486a38a6ec05c4216b",
       "src": "https://github.com/catppuccin/nvim"
     },
     "conform.nvim": {
@@ -76,7 +76,7 @@
       "src": "https://github.com/mason-org/mason.nvim"
     },
     "mini.nvim": {
-      "rev": "44657837c7338e52727facc85c1d95bec1f6bd7c",
+      "rev": "9d0b9b7188d5c24b5a87f0d8b383ec8bda7a0de4",
       "src": "https://github.com/echasnovski/mini.nvim"
     },
     "nvim-autopairs": {
@@ -84,11 +84,11 @@
       "src": "https://github.com/windwp/nvim-autopairs"
     },
     "nvim-colorizer.lua": {
-      "rev": "5cfe7fffbd01e17b3c1e14af85d5febdef88bd8c",
+      "rev": "4a59a37498ef19e25946878f1ac1032ed947ac9a",
       "src": "https://github.com/catgoose/nvim-colorizer.lua"
     },
     "nvim-lspconfig": {
-      "rev": "a4ed4e761c400849e8c9f8bda33e5083f890268c",
+      "rev": "9573948c38bfabeec353ae7dd7d3ffec4c506a6b",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-surround": {
@@ -168,7 +168,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "c45cc195a871cd83eb2c901dd0269af3b2921bee",
+      "rev": "0ed11f5b5f1e741f41ea0e9d9b388f326d78129f",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }

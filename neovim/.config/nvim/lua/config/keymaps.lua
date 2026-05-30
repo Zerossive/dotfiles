@@ -2,8 +2,8 @@
 vim.keymap.set('n', '<esc>', '<cmd>nohlsearch<cr>')
 
 -- diagnostic keymaps
-vim.keymap.set('n', '<leader>lb', vim.diagnostic.setloclist, { desc = 'buffer diagnostics to location' })
-vim.keymap.set('n', '<leader>la', vim.diagnostic.setqflist, { desc = 'all diagnostics to quickfix' })
+vim.keymap.set('n', '<leader>lb', vim.diagnostic.setloclist, { desc = 'buffer diagnostics to loclist' })
+vim.keymap.set('n', '<leader>la', vim.diagnostic.setqflist, { desc = 'all diagnostics to qflist' })
 
 -- navigation
 -- vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
@@ -44,24 +44,24 @@ vim.keymap.set('n', '<leader>q', ':q<CR>', { desc = 'quit file' })
 vim.keymap.set('n', '<leader>Q', ':qall<CR>', { desc = 'quit all files' })
 
 -- directory operations
-vim.keymap.set('n', '<leader>o.', ':cd %:p:h<CR>', { desc = 'open . as root directory' })
-vim.keymap.set('n', '<leader>od', ':!dolphin . &<CR>', { desc = 'open directory' })
+vim.keymap.set('n', '<leader>o.', ':cd %:p:h<CR>', { desc = 'set current directory as root' })
+vim.keymap.set('n', '<leader>od', ':!dolphin . &<CR>', { desc = 'open directory in file explorer' })
 
 -- text manipulation
 vim.keymap.set('n', '<C-8>', 'viW*N', { desc = 'set current word as search pattern', remap = true })
 vim.keymap.set('v', '<C-8>', '*N', { desc = 'set current word as search pattern', remap = true })
-vim.keymap.set('i', '<C-e>', '<ESC>A', { desc = 'go to end of line' })
 vim.keymap.set('i', 'jj', '<Escape>', { desc = 'normal mode' })
 vim.keymap.set('n', '<leader>by', function()
 	local cursor_position = vim.api.nvim_win_get_cursor(0)
 	vim.cmd 'normal ggVGy'
 	vim.api.nvim_win_set_cursor(0, cursor_position)
-end, { desc = 'buffer yank' })
+end, { desc = 'copy buffer' })
 vim.keymap.set('n', '<leader>bc', function()
 	local cursor_position = vim.api.nvim_win_get_cursor(0)
 	vim.cmd 'normal ggVGgc'
 	vim.api.nvim_win_set_cursor(0, cursor_position)
-end, { desc = 'buffer comment' })
+end, { desc = 'comment buffer' })
+vim.keymap.set('n', '<leader>bd', '<cmd>normal ggVGd<cr>', { desc = 'delete buffer' })
 
 -- plugins
 vim.keymap.set('n', '<leader>pr', '<cmd>restart<cr>', { desc = 'restart' })
@@ -82,6 +82,8 @@ vim.keymap.set('n', '<leader>pd', function()
 		:totable()
 	vim.pack.del(inactivePlugins)
 end, { desc = 'delete unused plugins' })
+vim.keymap.set('n', '<leader>pc', '<cmd>checkhealth<cr>', { desc = 'checkhealth' })
+vim.keymap.set('n', '<leader>pl', '<cmd>checkhealth vim.lsp<cr>', { desc = 'checkhealth lsp' })
 
 -- other
 vim.keymap.set('n', '<leader>bo', ':BufOnly<CR>', { desc = 'close other buffers' })

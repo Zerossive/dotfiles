@@ -30,5 +30,5 @@ vim.schedule(function()
 		},
 	}
 
-	vim.keymap.set('n', '<leader>lt', '<cmd>TodoQuickFix<cr>', { desc = 'todo to quickfix' })
+	vim.keymap.set('n', '<leader>lt', '<cmd>TodoQuickFix<cr>', { desc = 'todo to qflist' })
 end)
