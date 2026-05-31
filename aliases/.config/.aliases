@@ -64,9 +64,10 @@ alias oo='cd $HOME/Elysium/Obsidian\ Vault && nvim && cd -'
 alias todo='n $HOME/Elysium/Obsidian\ Vault/To-Do.md'
 # containers
 alias dockerl='docker ps --format "table {{.Names}}\t{{.ID}}\t{{.Status}}"'
+alias dockerlo='ssh olympus -t bash -ic dockerl'
 alias docker-prune="ssh olympus 'docker image prune -fa'"
-alias sandbox='distrobox create --name sandbox --image archlinux:latest --yes --home ~/sandbox --additional-packages "gcc make git ripgrep fd unzip neovim fzf tldr eza zellij zoxide bat entr" --init-hooks "touch ~/.zshrc" && distrobox enter sandbox'
-alias sandbox-delete='distrobox rm sandbox --rm-home && podman image prune -af'
+alias sandbox='distrobox create --name sandbox --image archlinux:latest --yes --home ~/sandbox --additional-packages "gcc make git ripgrep fd unzip neovim fzf tldr eza zellij zoxide bat entr" --init-hooks "git clone https://github.com/Zerossive/dotfiles.git ~/dotfiles  && mkdir -p ~/.config/nvim && cp --recursive ~/dotfiles/neovim/.config/nvim ~/.config && printf \". ~/dotfiles/aliases/.config/.aliases\" > ~/.zshrc" && distrobox enter sandbox'
+alias sandbox-delete='distrobox rm sandbox --rm-home --force; sudo rm -rf ~/sandbox; podman image prune -af'
 # GitHub CLI
 alias ghs='gh status'
 alias ghila='gh search issues --assignee=@me'
