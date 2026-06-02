@@ -27,7 +27,7 @@
       "version": "1.0.0 - 2.0.0"
     },
     "bullets.vim": {
-      "rev": "28c22791153a90bb61a86fbeeae0f812e048ade7",
+      "rev": "c19ff40d436e3456923ef3a0c71d97cd71187b3f",
       "src": "https://github.com/bullets-vim/bullets.vim"
     },
     "catppuccin": {
@@ -64,7 +64,7 @@
       "src": "https://github.com/folke/lazydev.nvim"
     },
     "mason-lspconfig.nvim": {
-      "rev": "7b01e2974a47d489bb92f47a41e4c0088ea8f86e",
+      "rev": "0a695750d747db1e7e70bcf0267ef8951c95fc83",
       "src": "https://github.com/mason-org/mason-lspconfig.nvim"
     },
     "mason-tool-installer.nvim": {
@@ -72,11 +72,11 @@
       "src": "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim"
     },
     "mason.nvim": {
-      "rev": "bb639d4bf385a4d89f478b83af4d770be05ab7eb",
+      "rev": "16ba83bfc8a25f52bb545134f5bee082b195c460",
       "src": "https://github.com/mason-org/mason.nvim"
     },
     "mini.nvim": {
-      "rev": "9d0b9b7188d5c24b5a87f0d8b383ec8bda7a0de4",
+      "rev": "232ceeb14f7f7e849056309b85cb2fed712db46f",
       "src": "https://github.com/echasnovski/mini.nvim"
     },
     "nvim-autopairs": {
@@ -84,7 +84,7 @@
       "src": "https://github.com/windwp/nvim-autopairs"
     },
     "nvim-colorizer.lua": {
-      "rev": "4a59a37498ef19e25946878f1ac1032ed947ac9a",
+      "rev": "664c0b7cea1de71f8b65dfe951b7996fc3e6ccde",
       "src": "https://github.com/catgoose/nvim-colorizer.lua"
     },
     "nvim-lspconfig": {
@@ -168,7 +168,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "0ed11f5b5f1e741f41ea0e9d9b388f326d78129f",
+      "rev": "af52ba3a412b4cd63b789378370dd3b099782aaa",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }
