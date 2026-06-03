@@ -63,6 +63,7 @@ dev_list=(
 	docker-ce
 	distrobox
 	entr
+	atool
 	eza
 	fd-find
 	fzf
