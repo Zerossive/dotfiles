@@ -1,34 +1,35 @@
 [mgr]
 prepend_keymap = [
 	# directory shortcuts
-	{ on = [ "g", "y" ], run = "cd ~/.config/yazi", desc = "Go to the yazi config directory" },
-	{ on = [ "g", "e" ], run = "cd ~/Elysium/", desc = "Go to the Elysium directory" },
-	{ on = [ "g", "o" ], run = "cd /mnt/autofs/OLYMPUS/", desc = "Go to the OLYMPUS mounted directory" },
-	{ on = [ "g", "." ], run = "cd ~/dotfiles", desc = "Go to the dotfiles directory" },
-	{ on = [ "g", "p" ], run = "cd ~/Elysium/Projects", desc = "Go to the projects directory" },
-	{ on = [ "g", "n" ], run = "cd ~/.config/nvim", desc = "Go to the neovim config directory" },
-	{ on = [ "g", "m" ], run = "cd /mnt", desc = "Go to the mnt directory" },
-	{ on = [ "g", "M" ], run = "cd /run/media/danny", desc = "Go to the media device directory" },
-	{ on = [ "g", "b" ], run = "cd ~/.local/bin", desc = "Go to the local bin directory" },
-	{ on = [ "g", "t" ], run = "cd ~/.local/share/Trash/files", desc = "Go to the trash directory" },
-	{ on = [ "g", "s" ], run = "cd ~/Pictures/Screenshots", desc = "Go to the screenshots directory" },
-	{ on = [ "g", "S" ], run = "cd ~/Syncthing", desc = "Go to the syncthing directory" },
-	{ on = [ "g", "D" ], run = "cd ~/Documents/", desc = "Go to the documents directory" },
+	{ on = [ 'g', 'y' ], run = 'cd ~/.config/yazi', desc = 'go to the yazi config directory' },
+	{ on = [ 'g', 'e' ], run = 'cd ~/Elysium/', desc = 'go to the elysium directory' },
+	{ on = [ 'g', 'o' ], run = 'cd /mnt/autofs/OLYMPUS/', desc = 'go to the olympus mounted directory' },
+	{ on = [ 'g', '.' ], run = 'cd ~/dotfiles', desc = 'go to the dotfiles directory' },
+	{ on = [ 'g', 'p' ], run = 'cd ~/Elysium/Projects', desc = 'go to the projects directory' },
+	{ on = [ 'g', 'n' ], run = 'cd ~/.config/nvim', desc = 'go to the neovim config directory' },
+	{ on = [ 'g', 'm' ], run = 'cd /mnt', desc = 'go to the mnt directory' },
+	{ on = [ 'g', 'M' ], run = 'cd /run/media/danny', desc = 'go to the media device directory' },
+	{ on = [ 'g', 'b' ], run = 'cd ~/.local/bin', desc = 'go to the local bin directory' },
+	{ on = [ 'g', 't' ], run = 'cd ~/.local/share/Trash/files', desc = 'go to the trash directory' },
+	{ on = [ 'g', 's' ], run = 'cd ~/Pictures/Screenshots', desc = 'go to the screenshots directory' },
+	{ on = [ 'g', 'S' ], run = 'cd ~/Syncthing', desc = 'go to the syncthing directory' },
+	{ on = [ 'g', 'D' ], run = 'cd ~/Documents/', desc = 'go to the documents directory' },
+	{ on = [ 'g', 'j' ], run = 'cd ~/Elysium/Documents/Danny/Job\ Application/', desc = 'go to the job application directory' },
 
 	# toggle panes plugin
-	{ on = "<A-1>", run = "plugin toggle-pane min-parent", desc = "Toggle parent" },
-	{ on = "<A-2>", run = "plugin toggle-pane min-current", desc = "Toggle current" },
-	{ on = "<A-3>", run = "plugin toggle-pane min-preview", desc = "Toggle preview" },
+	{ on = '<A-1>', run = 'plugin toggle-pane min-parent', desc = 'toggle parent' },
+	{ on = '<A-2>', run = 'plugin toggle-pane min-current', desc = 'toggle current' },
+	{ on = '<A-3>', run = 'plugin toggle-pane min-preview', desc = 'toggle preview' },
 
 	# other
-	{ on =  "\\", run = 'shell "$SHELL" --block', desc = "Open shell here" },
-	{ on = "<A-->", run = "hardlink", desc = "Hardlink yanked files" },
-	{ on =  "?", run = "help", desc = "Open help" },
-	{ on =  "M", run = "plugin mount", desc = "Open mount menu"},
-	{ on =  "e", run = "shell 'atool --extract %s'", desc = "Extract archive file"},
-	# { on =  "E", run = "shell --interactive --cursor=12 'atool --add  %s'", desc = "Create archive file"},
-	{ on =  "E", run = '''shell --interactive --cursor=14 --
+	{ on =  '\\', run = 'shell "$SHELL" --block', desc = 'open shell here' },
+	{ on = '<A-->', run = 'hardlink', desc = 'hardlink yanked files' },
+	{ on =  '?', run = 'help', desc = 'open help' },
+	{ on =  'M', run = 'plugin mount', desc = 'open mount menu'},
+	{ on =  'e', run = "shell 'atool --extract %s'", desc = 'extract archive file'},
+	# { on =  'E', run = "shell --interactive --cursor=12 'atool --add  %s'", desc = 'Create archive file'},
+	{ on =  'E', run = '''shell --interactive --cursor=14 --
 		atool --add  $(printf "%s\n" | sed "s|$(pwd)/||g")
-	''', desc = "Create archive file"},
+	''', desc = 'create archive file'},
 
 ]
