@@ -35,6 +35,7 @@ vim.keymap.set({ 'n', 'i', 'v' }, '<m-<>', '<cmd>tabmove -1<cr>', {
 
 -- sessions
 vim.keymap.set('n', '<leader>oq', ':e ~/Elysium/Obsidian\\ Vault/Quick\\ Note.md<CR>', { desc = 'open quick note' })
+vim.keymap.set('n', '<leader>ot', ':e ~/Elysium/Obsidian\\ Vault/To-Do.md<CR>', { desc = 'open to-do note' })
 vim.keymap.set('n', '<leader>ol', ':!dolphin ~/.local/share/nvim/sessions &<CR>', { desc = 'open local session storage' })
 
 -- file operations
@@ -71,17 +72,18 @@ end, { desc = 'update plugins' })
 vim.keymap.set('n', '<leader>pi', function()
 	vim.pack.update(nil, { offline = true })
 end, { desc = 'explore installed plugins' })
-vim.keymap.set('n', '<leader>pd', function()
-	local inactivePlugins = vim.iter(vim.pack.get())
-		:filter(function(x)
-			return not x.active
-		end)
-		:map(function(x)
-			return x.spec.name
-		end)
-		:totable()
-	vim.pack.del(inactivePlugins)
-end, { desc = 'delete unused plugins' })
+-- TODO: replace with manual picker or other method that doesn't delete temporarily disabled plugins (issue #8)
+-- vim.keymap.set('n', '<leader>pd', function()
+-- 	local inactivePlugins = vim.iter(vim.pack.get())
+-- 		:filter(function(x)
+-- 			return not x.active
+-- 		end)
+-- 		:map(function(x)
+-- 			return x.spec.name
+-- 		end)
+-- 		:totable()
+-- 	vim.pack.del(inactivePlugins)
+-- end, { desc = 'delete unused plugins' })
 vim.keymap.set('n', '<leader>pc', '<cmd>checkhealth<cr>', { desc = 'checkhealth' })
 vim.keymap.set('n', '<leader>pl', '<cmd>checkhealth vim.lsp<cr>', { desc = 'checkhealth lsp' })
 
