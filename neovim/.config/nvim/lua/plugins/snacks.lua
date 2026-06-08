@@ -5,12 +5,12 @@ require('snacks').setup {
 	image = {
 		enable = true,
 		-- fix image rendering for obsidian paths
-		resolve = function(path, src)
-			local api = require 'obsidian.api'
-			if api.path_is_note(path) then
-				return api.resolve_attachment_path(src)
-			end
-		end,
+		-- resolve = function(path, src)
+		-- 	local api = require 'obsidian.api'
+		-- 	if api.path_is_note(path) then
+		-- 		return api.resolve_attachment_path(src)
+		-- 	end
+		-- end,
 	},
 	picker = { enable = true },
 	scroll = { enable = true, animate_repeat = { delay = 1000 } },

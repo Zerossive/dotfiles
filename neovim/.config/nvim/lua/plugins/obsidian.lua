@@ -1,14 +1,14 @@
+vim.pack.add {
+	{ src = 'https://github.com/obsidian-nvim/obsidian.nvim', version = vim.version.range '*' },
+	-- dependencies
+	'https://github.com/nvim-lua/plenary.nvim',
+}
+
 ---@diagnostic disable: missing-fields
 vim.api.nvim_create_autocmd('FileType', {
 	pattern = { 'markdown' },
 	once = true,
 	callback = function()
-		vim.pack.add {
-			{ src = 'https://github.com/obsidian-nvim/obsidian.nvim', version = vim.version.range '*' },
-			-- dependencies
-			'https://github.com/nvim-lua/plenary.nvim',
-		}
-
 		require('obsidian').setup {
 			legacy_commands = false, -- this will be removed in 4.0.0
 			picker = {
