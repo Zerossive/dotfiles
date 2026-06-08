@@ -285,6 +285,7 @@ launch_power() {
 	esac
 }
 
+# TODO: make the status failure popup in fuzzel, and work out how to unlock it using fuzzel
 launch_password() {
 	local query
 	query="$(fuzzel --dmenu --prompt-only='password: ' --placeholder '"all" to view all')"
