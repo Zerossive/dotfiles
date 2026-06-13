@@ -132,6 +132,7 @@ brew_list=(
 	xh     # easier curl
 	pastel # color manipulation
 	fx     # json viewer
+	resvg  # svg renderer (for yazi)
 )
 $testing && brew_list=("exiftool")
 
