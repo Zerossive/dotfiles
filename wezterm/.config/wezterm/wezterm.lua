@@ -31,7 +31,7 @@ config.tab_max_width = 30
 
 config.background = {
 	{
-		source = { File = "/home/danny/Elysium/Images/Catppuccin/smoke-dark.png" },
+		source = { File = "/home/danny/Elysium/images/catppuccin/smoke-dark.png" },
 		height = "Cover",
 		horizontal_align = "Center",
 	},
