@@ -14,7 +14,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - arcane-data:/app/data
       # Optional host project mount:
-      - /home/danny/dotfiles/docker:/app/data/projects
+      - /home/danny/dotfiles/containers:/app/data/projects
 
 volumes:
   arcane-data:
