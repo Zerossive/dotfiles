@@ -8,6 +8,7 @@ services:
       - EDGE_TRANSPORT=poll
       - AGENT_TOKEN=${AGENT_TOKEN}
       - MANAGER_API_URL=http://localhost:3552
+      - TZ=America/Chicago
     ports:
       - '3553:3553'
     volumes:
