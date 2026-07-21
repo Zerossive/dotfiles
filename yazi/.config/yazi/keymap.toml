@@ -5,6 +5,7 @@ prepend_keymap = [
 	{ on = [ 'g', 'e' ], run = 'cd ~/Elysium/', desc = 'go to the elysium directory' },
 	{ on = [ 'g', 'o' ], run = 'cd /mnt/autofs/OLYMPUS/', desc = 'go to the olympus mounted directory' },
 	{ on = [ 'g', '.' ], run = 'cd ~/dotfiles', desc = 'go to the dotfiles directory' },
+	{ on = [ 'g', '>' ], run = 'cd /mnt/autofs/OLYMPUS/dotfiles-olympus', desc = 'go to the dotfiles-olympus directory' },
 	{ on = [ 'g', 'p' ], run = 'cd ~/Elysium/Projects', desc = 'go to the projects directory' },
 	{ on = [ 'g', 'n' ], run = 'cd ~/.config/nvim', desc = 'go to the neovim config directory' },
 	{ on = [ 'g', 'm' ], run = 'cd /mnt', desc = 'go to the mnt directory' },
