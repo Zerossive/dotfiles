@@ -1,4 +1,5 @@
 .env
+.env.global
 beets/.config/beets/library.db
 beets/.config/beets/spotify_token.json
 beets/.config/beets/state.pickle
