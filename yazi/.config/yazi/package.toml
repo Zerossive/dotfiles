@@ -1,19 +1,19 @@
 [[plugin.deps]]
 use = "yazi-rs/plugins:mount"
-rev = "4ffa48f"
-hash = "77e20b071404f97c09d3f9afdb9482e0"
+rev = "4c63ed3"
+hash = "e3260d0b1feded8c8e3ae3afa1169e30"
 
 [[plugin.deps]]
 use = "boydaihungst/mediainfo"
-rev = "49f5ab7"
-hash = "6e3b5e58f985cc2d625e0030dc35b1b2"
+rev = "e079a00"
+hash = "f9ae479bdbce6d35ec7176ee2869808d"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:toggle-pane"
-rev = "4ffa48f"
-hash = "9c7987da2d2a2120dac33abb64132004"
+rev = "4c63ed3"
+hash = "15e5b67a241172cbb86b8fbf9e63692"
 
 [[flavor.deps]]
 use = "yazi-rs/flavors:catppuccin-mocha"
-rev = "0670801"
+rev = "4770a34"
 hash = "7dfe41c9c3d9be76da8a844263d0bbed"
