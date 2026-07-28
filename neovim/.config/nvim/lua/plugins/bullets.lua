@@ -1,4 +1,6 @@
-vim.pack.add { 'https://github.com/bullets-vim/bullets.vim' }
+vim.pack.add { 'https://github.com/bullets-vim/bullets.nvim' }
 
-vim.g.bullets_checkbox_markers = '                   x'
-vim.g.bullets_outline_levels = { 'ROM', 'ABC', 'num', 'abc', 'rom', 'std-' }
+require('bullets').setup {
+	checkbox_markers = '                   x',
+	outline_levels = { 'ROM', 'ABC', 'num', 'abc', 'rom', 'std-' },
+}
