@@ -70,6 +70,9 @@ config.keys = {
 	{ key = "l", mods = "ALT|SHIFT", action = wezterm.action.ActivateTabRelative(1) },
 	{ key = "h", mods = "CTRL|ALT|SHIFT", action = wezterm.action.MoveTabRelative(-1) },
 	{ key = "l", mods = "CTRL|ALT|SHIFT", action = wezterm.action.MoveTabRelative(1) },
+	-- splits
+	{ key = "v", mods = "ALT", action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+	{ key = "s", mods = "ALT", action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }) },
 }
 
 -- and finally, return the configuration to wezterm
