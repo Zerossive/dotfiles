@@ -73,6 +73,7 @@ config.keys = {
 	-- splits
 	{ key = "v", mods = "ALT", action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
 	{ key = "s", mods = "ALT", action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }) },
+	{ key = "z", mods = "ALT", action = wezterm.action.TogglePaneZoomState },
 }
 
 -- and finally, return the configuration to wezterm
