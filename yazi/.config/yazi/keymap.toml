@@ -15,7 +15,7 @@ prepend_keymap = [
 	{ on = [ 'g', 's' ], run = 'cd ~/Pictures/Screenshots', desc = 'go to the screenshots directory' },
 	{ on = [ 'g', 'S' ], run = 'cd ~/Syncthing', desc = 'go to the syncthing directory' },
 	{ on = [ 'g', 'D' ], run = 'cd ~/Documents/', desc = 'go to the documents directory' },
-	{ on = [ 'g', 'j' ], run = 'cd ~/Elysium/Documents/Danny/Job\ Application/', desc = 'go to the job application directory' },
+	{ on = [ 'g', 'j' ], run = 'cd ~/Elysium/documents/Danny/Job\ Application/', desc = 'go to the job application directory' },
 
 	# toggle panes plugin
 	{ on = '<A-1>', run = 'plugin toggle-pane min-parent', desc = 'toggle parent' },
