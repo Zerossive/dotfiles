@@ -37,6 +37,8 @@ alias rsyncc='rsync -haviP'
 alias tws='timew summary :id :annotation'
 alias qc='qalc --terse'
 alias browser="flatpak run com.vivaldi.Vivaldi 1>/dev/null 2>&1"
+alias slowcat='pv -l -L 5 -q'
+alias hl='rg --passthru'
 
 # H1: Preset Commands w/ Parameters
 
