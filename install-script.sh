@@ -47,6 +47,7 @@ package_list=(
 	trash-cli
 	scrcpy # mirror android screen and camera
 	fuzzel # application launcher
+	pv     # pipe viewer
 
 	# OTHER
 	cava
