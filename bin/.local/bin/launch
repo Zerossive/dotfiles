@@ -40,14 +40,16 @@ show_help() {
 	EOF
 }
 
-# dependency checks
-dependencies=(fuzzel wezterm qalc zsh jq bw)
-for cmd in "${dependencies[@]}"; do
-	if ! command -v "$cmd" >/dev/null 2>&1; then
-		printf "error: '%s' command does not exist\n" "$cmd" >&2
-		exit 1
-	fi
-done
+# dependency checks if in a terminal
+if [[ -t 1 ]]; then
+	dependencies=(fuzzel wezterm qalc zsh jq bw)
+	for cmd in "${dependencies[@]}"; do
+		if ! command -v "$cmd" >/dev/null 2>&1; then
+			printf "error: '%s' command does not exist\n" "$cmd" >&2
+			exit 1
+		fi
+	done
+fi
 
 pickers=(
 	apps
