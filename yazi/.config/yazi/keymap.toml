@@ -11,7 +11,7 @@ prepend_keymap = [
 	{ on = [ 'g', 'm' ], run = 'cd /mnt', desc = 'go to the mnt directory' },
 	{ on = [ 'g', 'M' ], run = 'cd /run/media/danny', desc = 'go to the media device directory' },
 	{ on = [ 'g', 'b' ], run = 'cd ~/.local/bin', desc = 'go to the local bin directory' },
-	{ on = [ 'g', 't' ], run = 'cd ~/.local/share/Trash/files', desc = 'go to the trash directory' },
+	# { on = [ 'g', 't' ], run = 'cd ~/.local/share/Trash/files', desc = 'go to the trash directory' },
 	{ on = [ 'g', 's' ], run = 'cd ~/Pictures/Screenshots', desc = 'go to the screenshots directory' },
 	{ on = [ 'g', 'S' ], run = 'cd ~/Syncthing', desc = 'go to the syncthing directory' },
 	{ on = [ 'g', 'D' ], run = 'cd ~/Documents/', desc = 'go to the documents directory' },
