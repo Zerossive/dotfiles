@@ -268,7 +268,7 @@ launch_power() {
 	local power_options=(
 		lock
 		logout
-		reboot
+		restart
 		shutdown
 		sleep
 	)
@@ -281,7 +281,7 @@ launch_power() {
 	shutdown) systemctl poweroff ;;
 	logout) qdbus org.kde.ksmserver /KSMServer logout 1 0 0 ;;
 	*)
-		printf 'error: unknown command\n' >&2
+		printf "error: unknown power command: %s\n" "$selection" >&2
 		exit 1
 		;;
 	esac
