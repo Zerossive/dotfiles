@@ -68,3 +68,4 @@ vim.opt.spelllang = 'en_us'
 vim.opt.cmdheight = 0
 vim.opt.winborder = 'rounded'
 vim.opt.termguicolors = true
+vim.opt.autoread = true

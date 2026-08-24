@@ -79,7 +79,7 @@ local servers = {
 	'cssls',
 	'docker_compose_language_service',
 	'lua_ls', -- handled by lazydev?
-	'tsgo', -- or `tsc`?
+	'tsc',
 	'marksman',
 	'rust_analyzer',
 	'stylua',
