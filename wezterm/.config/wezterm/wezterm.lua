@@ -12,6 +12,8 @@ local custom = wezterm.color.get_builtin_schemes()["Catppuccin Mocha"]
 
 custom.background = "#1e1e2e"
 custom.tab_bar.background = "#1e1e2e"
+config.window_background_opacity = 0.75
+config.wayland_window_background_blur = true
 custom.tab_bar.active_tab.bg_color = "#74c7ec"
 custom.tab_bar.active_tab.intensity = "Bold"
 custom.tab_bar.inactive_tab.bg_color = "#1e1e2e"
@@ -29,13 +31,13 @@ config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = true
 config.tab_max_width = 30
 
-config.background = {
-	{
-		source = { File = "/home/danny/Elysium/images/catppuccin/smoke-dark.png" },
-		height = "Cover",
-		horizontal_align = "Center",
-	},
-}
+-- config.background = {
+-- 	{
+-- 		source = { File = "/home/danny/Elysium/images/catppuccin/smoke-dark.png" },
+-- 		height = "Cover",
+-- 		horizontal_align = "Center",
+-- 	},
+-- }
 
 -- config.font = wezterm.font("JetBrainsMono Nerd Font Mono")
 
