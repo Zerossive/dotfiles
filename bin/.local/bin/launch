@@ -18,25 +18,25 @@ show_help() {
 		Usage: $cmd <picker>
 
 		Pickers:
-			apps
-			calc
-			colors
-			containers
-			downloads
-			emoji
-			git
-			kill
-			man
-			notes
-			password
-			power
-			remind
-			run
-			ssh
-			timezone
+		    apps
+		    calc
+		    colors
+		    containers
+		    downloads
+		    emoji
+		    git
+		    kill
+		    man
+		    notes
+		    password
+		    power
+		    remind
+		    run
+		    ssh
+		    timezone
 
 		Examples:
-		  $cmd password
+		    $cmd password
 	EOF
 }
 
@@ -176,7 +176,7 @@ launch_remind() {
 	[[ -z "$selected_reminder" ]] && return
 	if [[ "$selected_reminder" == "new reminder" || "$custom_exit_code" == 11 ]]; then
 		local new_reminder
-		new_reminder="$(fuzzel --dmenu --prompt-only='new reminder: ' --placeholder 'now+1h do this task')"
+		new_reminder="$(fuzzel --dmenu --prompt-only='new reminder: ' --placeholder 'now+1hour do this task')"
 		[[ -z "$new_reminder" ]] && return
 		remind $new_reminder
 		launch_remind
@@ -314,6 +314,14 @@ launch_password() {
 
 main() {
 	if (($# > 0)); then
+		# check for -h or --help
+		for arg in "$@"; do
+			if [[ "$arg" == '-h' || "$arg" == '--help' ]]; then
+				show_help
+				return
+			fi
+		done
+
 		pick_picker "$*"
 	elif [[ ! -t 0 ]] && read -r input; then
 		pick_picker "$input"

@@ -1,10 +1,10 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 # ==============================================================================
 # Script Name: color
 # Description: A script to display the Catppuccin color palette and
 #              copy the hex code to the clipboard.
 # Author: Danny Harris
-# Dependencies: fzf/fzfc
+# Dependencies: fzf, pastel
 # ==============================================================================
 
 # H1: Color Picker
@@ -40,33 +40,29 @@ catppuccin_colors=(
 
 # predefined fzf options
 fzf_opts=(
-    --prompt "Select a color: "
+    --prompt "Select a Color: "
     --header "Catppuccin Color Palette"
-    --no-preview
     -1
     -0
     --ansi
     --exact
+    --no-preview
 )
 
 # H2: Function to display the color palette with fzf and copy the hex code
 color() {
-	local search_term="$1"
+    local search_term="$1"
 
-    # use custom fzfc command if it exists
-    if command -v fzfc &> /dev/null; then
-        selected_color=$(printf "%s\n" "${catppuccin_colors[@]}" | fzfc "${fzf_opts[@]}" -q "$search_term")
-    else
-        selected_color=$(printf "%s\n" "${catppuccin_colors[@]}" | fzf "${fzf_opts[@]}" -q "$search_term")
-    fi
+    # pick color
+    selected_color=$(printf "%s\n" "${catppuccin_colors[@]}" | fzf "${fzf_opts[@]}" -q "$search_term")
 
     # print out terminal colors
     printf 'Terminal Colors:\n'
     count=0
     for i in {0..15}; do
-        print -Pn "%-10s" "%K{$i}  %k%F{$i} ${(l:3::0:)i}%f "
+        printf "\e[38;5;%sm ██\e[0m %03d " "$i" "$i"
         ((count++))
-        if (( count == 4 )); then
+        if ((count == 4)); then
             printf '\n'
             count=0
         fi
@@ -75,12 +71,12 @@ color() {
     printf '\nCatppuccin Color Palette:\n'
     count=0
     for color in "${catppuccin_colors[@]}"; do
-        color_name="${color#*- }" # remove everthing before color name
+        color_name="${color#*- }"      # remove everthing before color name
         color_name="${color_name% -*}" # remove everything after the color name
-        hex_code="${color##*- }" # remove the color name and everything before it
-        print -Pn "%-20s" "%K{$hex_code}  %k $color_name"
+        hex_code="${color##*- }"       # remove the color name and everything before it
+        printf "%s %s" " $(pastel --force-color paint "$hex_code" " ██")" "$color_name"
         ((count++))
-        if (( count == 4 )); then
+        if ((count == 4)); then
             printf '\n'
             count=0
         fi
@@ -88,10 +84,10 @@ color() {
 
     if [[ -n "$selected_color" ]]; then
         color_name="${selected_color#*- }" # remove everthing before color name
-        color_name="${color_name% -*}" # remove everything after the color name
+        color_name="${color_name% -*}"     # remove everything after the color name
         hex_code="${selected_color##*- }"
         wl-copy "$hex_code"
-        print -Pn "\n%K{$hex_code}  %k \033[1m$hex_code ($color_name)\033[0m copied to clipboard\n"
+        printf "\n%s %s (%s) copied to clipboard\n" "$(pastel --force-color paint "$hex_code" "██")" "$hex_code" "$color_name"
     fi
 }
 

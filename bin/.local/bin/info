@@ -9,7 +9,7 @@
 
 # ------------------------------- 80 chars max ------------------------------- #
 output=$(
-	cat <<"EOF"
+	cat <<'EOF' | fold -w 80
 ▁▁▁▁▁▁
 ▏INFO▕
 ▔▔▔▔▔▔
@@ -19,14 +19,11 @@ output=$(
 **IP:**        *ATLAS:* 192.168.1.89
                *OLYMPUS:* 192.168.1.231
                *BOYCE-PC:* 192.168.1.230
-               *HERMES:* 192.168.1.144
+               *HERMES:* 192.168.1.232
 
 # TERMINAL TOOLS
-`fzfc`          fuzzy search
 `lsblkc`        list block devices
-`fc`            open last command in editor, quitting with `:cq` will cancel
 `cdi`           runs zoxide interactive window to fuzzy search directories
-`e`             open yazi file explorer with automatic cd on quit
 `atool`         archiving tool (`-l` list, `-x` extract, `-a` add)
 `magick`        image conversion tool (filetypes, sizes, effects, etc.)
 `wtf`           print various error logs
@@ -38,21 +35,20 @@ output=$(
 	`--exclude`                exclude based on given pattern
 `entr`          run commands when files change e.g. `ls PATH | entr COMMAND`
 `remind`        set and list reminder notifications
-                e.g. `remind now+15m do task`
+                e.g. `remind now+15min do task`
 `fx`            json viewer and processor
 
 # OTHER NOTABLE COMMANDS
-`fkill`, `dysk`, `f`, `ff`, `fu`, `fa`, `dnfc`, `color`, `sshs`,
-`re/source ~/.zshrc`, `ip -4 -brief a`, `timew/tw`, `pt` (pomodoro timer),
-`ghc/ghcl`, `fm` (manpages), `pastel`, `cargo install-update -a`,
-`bacon`, `compgen -c`, `fpw`, `hermes/hermes-camera/scrcpy`, `launch`, `pv`
+`fkill`, `dysk`, `dnfc`, `color`, `sshs`, `re`, `ipc/ip -4 -brief a`, `ghc/ghcl`, `pastel`, `bacon`, `compgen -c`, `fpw`, `launch`, `pv`
 
 ## FUN COMMANDS
 `cmatrix/afk`, `cava`, `figlet`, `showfigfonts`
 
 # ALTERNATE PRORGRAMS
-`grep` -> `rg`, `find` -> `fd`, `ls` -> `eza`, `cd` -> `z (zoxide)`,
-`bc` -> `qalc/qc`, `curl` -> `xh`, `diff` -> `delta`
+`grep` -> `rg`, `find` -> `fd`, `ls` -> `eza`, `cd` -> `z (zoxide)`, `bc` -> `qalc/qc`, `curl` -> `xh`, `diff` -> `delta`
+
+## FISH SHELL
+`fish_key_reader`
 
 # OTHER
 **awesome-cli-apps**        https://github.com/agarrharr/awesome-cli-apps

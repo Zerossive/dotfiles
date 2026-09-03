@@ -1,10 +1,10 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 # ==============================================================================
 # Script Name: ref
 # Description: create or view reference notes in obsidian vault
 # Usage: ref [<note name>]
 # Author: Danny Harris
-# Dependencies: fzfc, neovim, fd, bat
+# Dependencies: fzf, neovim, fd, bat
 # ==============================================================================
 
 # -e: exit on error, -u: treat unset variables as errors, -o pipefail: pipe will fail if any command fails
@@ -17,7 +17,7 @@ notes_dir="$HOME/Elysium/Obsidian Vault/Notes/Reference/"
 fzf_opts=(
 	--prompt "Select a reference: "
 	--preview "printf \"%s\" \"$notes_dir{}.md\" | xargs -I _ bat --color always --style plain _"
-	--header 'Delete: ctrl-x    Add New: ctrl-a    Preview: alt-p, alt-u/d    Copy: ctrl-y'
+	--header 'Delete: ctrl-x    Add New: ctrl-a'
 	--height '100%'
 	--bind "ctrl-x:execute(printf \"%s\" \"$notes_dir{}.md\" | xargs -I _ rm _)+exclude"
 	--bind "ctrl-a:execute(
@@ -40,7 +40,7 @@ if [ $# -eq 0 ]; then
 	selected_note="$(
 		fd --absolute-path --extension md --type f . "$notes_dir" |
 			sed "s|^$notes_dir||; s|.md$||" |
-			fzfc "${fzf_opts[@]}" || printf ""
+			fzf "${fzf_opts[@]}" || printf ""
 	)"
 
 	# exit if no note is selected

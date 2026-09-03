@@ -24,6 +24,8 @@ usage() {
 
 		Usage: $cmd [options] <message>
 
+		At least one of <message> or -s SUMMARY is required
+
 		Options:
 		  -t TITLE          title of notification
 		  -s SUMMARY        summary of message
@@ -35,7 +37,7 @@ usage() {
 
 		Examples:
 		  $cmd -t 'Urgent Message:' -u 2 there was an error
-		  $cmd -t 'REMINDER' -i package -s 'this is a summary' do this thing
+		  $cmd -t 'REMINDER' -s 'this is a summary' do this thing
 	EOF
 }
 
@@ -65,8 +67,8 @@ while getopts s:u:t:h flag; do
 done
 shift $((OPTIND - 1))
 message="$*"
-if [[ -z "$message" ]]; then
-	error_out "no message provided"
+if [[ -z "$message" && -z "$summary" ]]; then
+	error_out "no message or summary provided"
 fi
 
 case "$urgency" in

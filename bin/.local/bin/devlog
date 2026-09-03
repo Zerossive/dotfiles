@@ -1,10 +1,10 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 # ==============================================================================
 # Script Name: devlog
 # Description: create or view manual device logs
 # Usage: devlog [<note name>]
 # Author: Danny Harris
-# Dependencies: fzfc, neovim, fd, bat
+# Dependencies: neovim, fd, bat
 # ==============================================================================
 
 # -e: exit on error, -u: treat unset variables as errors, -o pipefail: pipe will fail if any command fails
@@ -25,13 +25,12 @@ current_date="$(date +%Y-%m-%d)"
 fzf_opts=(
     --prompt "Select a log: "
     --preview "printf \"%s\" \"$log_dir{}.md\" | xargs -I _ bat --color always --style plain _"
-    --header 'Delete: ctrl-x    Add New: ctrl-a    Preview: alt-p, alt-u/d    Copy: ctrl-y'
-    --height '100%'
+    --header 'Delete: ctrl-x    Add New: ctrl-a'
     --bind "ctrl-x:execute(printf \"%s\" \"$log_dir{}.md\" | xargs -I _ rm _)+exclude"
     --bind "ctrl-a:execute(
         CLEANED=\$(sed \"s/^'//; s/'$//\" <<< {q});
-        device_list=(${device_list});
-        device=\"\$(printf \"%s\n\" \"\${device_list[@]}\" | fzfc --no-preview --prompt \"Select a device: \")\";
+        device_list=(${device_list[*]});
+        device=\"\$(printf \"%s\n\" \"\${device_list[@]}\" | fzf --no-preview --prompt \"Select a device: \")\";
         [[ -z \"\$device\" ]] && printf \"%s\n\" \"device selection cancelled\" >&2 && exit 1;
         FILE=\"$log_dir/$current_date [\$device] \$CLEANED.md\";
         nvim \"\$FILE\" -c \"norm i# $current_date \$device \$CLEANEDgogoG\"
@@ -46,7 +45,7 @@ if [[ ! -d "$log_dir" ]]; then
 fi
 
 select_device() {
-    printf "%s\n" "${device_list[@]}" | fzfc "${fzf_opts[@]}" --no-preview --prompt "Select a device: "
+    printf "%s\n" "${device_list[@]}" | fzf "${fzf_opts[@]}" --no-preview --prompt "Select a device: "
     exit 0
 }
 
@@ -56,7 +55,7 @@ if [ $# -eq 0 ]; then
     selected_log="$(
         fd --absolute-path --extension md --type f . "$log_dir" |
             sed "s|^$log_dir||; s|.md$||" |
-            fzfc --tac "${fzf_opts[@]}" || printf ""
+            fzf --tac "${fzf_opts[@]}" || printf ""
     )"
 
     # exit if no log is selected
