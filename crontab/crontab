@@ -1,0 +1,14 @@
+###############################################################################
+# minute | hour | day_of_the_month | month | day_of_the_week | command
+#     EXAMPLE: 30 18 * * 1,2 echo "hello world"
+#     runs `echo "hello world"` every MONDAY and TUESDAY at 6:30PM
+###############################################################################
+
+# NOTE: Run `crontab` on this file to replace your current user's crontab
+
+# add local bin to path
+PATH=/home/danny/.local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+
+#m	hr	dm	m	wd		command
+30	20	*	*	1,3,5	notify-all -t '🚿 REMIND' 'TAKE A SHOWER!'
+30	22	*	*	*		notify-all -t '🌘 GO TO BED!' 'It's getting late'
