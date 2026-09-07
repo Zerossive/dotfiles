@@ -3,7 +3,7 @@
 # Script Name: launch
 # Description: wrapper for launchers like fuzzel, rofi, etc.
 # Author: Danny Harris
-# Dependencies: fuzzel, wezterm, qalc, zsh, jq, bw
+# Dependencies: fuzzel, wezterm, qalc, jq, bw
 # ==============================================================================
 
 # TODO: finish this script
@@ -42,7 +42,7 @@ show_help() {
 
 # dependency checks if in a terminal
 if [[ -t 1 ]]; then
-	dependencies=(fuzzel wezterm qalc zsh jq bw)
+	dependencies=(fuzzel wezterm qalc jq bw)
 	for cmd in "${dependencies[@]}"; do
 		if ! command -v "$cmd" >/dev/null 2>&1; then
 			printf "error: '%s' command does not exist\n" "$cmd" >&2
@@ -125,7 +125,7 @@ launch_kill() {
 }
 
 launch_colors() {
-	wezterm start zsh -ic color
+	wezterm start fish -c color
 }
 
 launch_downloads() {
@@ -142,7 +142,7 @@ launch_containers() {
 	container_list=$(
 		cat <<-EOF
 			======== ATLAS ========
-			$(zsh -ic 'dockerl -a')
+			$(fish -c 'dockerl -a')
 
 			======== OLYMPUS ========
 			$(ssh olympus 'bash -ic "dockerl -a"')
@@ -161,9 +161,7 @@ launch_git() {
 
 launch_emoji() {
 	local emoji_list_file="$HOME/Documents/emoji-list"
-	wezterm start zsh -c "
-	fzf --layout=reverse <$emoji_list_file | cut -c1 | tr -d '\n' | wl-copy
-	"
+	wezterm start fish -c "fzf <$emoji_list_file | cut -c1 | wl-copy -n"
 }
 
 launch_remind() {
@@ -200,11 +198,11 @@ launch_notes() {
 	if [[ "$custom_exit_code" -eq 11 ]]; then
 		local new_note
 		new_note="$(fuzzel --dmenu --prompt-only='new note: ')"
-		[[ -n "$new_note" ]] && wezterm start zsh -ic "nvim \"$vault_path/Notes/$new_note\""
+		[[ -n "$new_note" ]] && wezterm start fish -ic "nvim \"$vault_path/Notes/$new_note\""
 		return
 	fi
 	if [[ -n "$selected_file" ]]; then
-		wezterm start zsh -ic "nvim \"$HOME/Elysium/Obsidian Vault/$selected_file\""
+		wezterm start fish -ic "nvim \"$HOME/Elysium/Obsidian Vault/$selected_file\""
 	fi
 }
 
@@ -213,7 +211,7 @@ launch_run() {
 	command="$(fuzzel --dmenu --prompt-only='run: ')"
 	[[ -z "$command" ]] && return
 	local result
-	result="$(zsh -c "$command" 2>&1)"
+	result="$(fish -c "$command" 2>&1)"
 	[[ -n "$result" ]] && fuzzel --dmenu --hide-prompt --minimal-lines --width 80 --lines 40 <<<"$result"
 	launch_run
 }
@@ -232,9 +230,9 @@ launch_ssh() {
 	selected_machine="$(printf '%s\n' "${options[@]}" | fuzzel --dmenu --minimal-lines --prompt 'ssh: ')"
 	[[ -z "$selected_machine" ]] && return
 	if [[ "$selected_machine" == "other" ]]; then
-		wezterm start zsh -ic "ssh $(fuzzel --dmenu --prompt-only='host: ')"
+		wezterm start fish -c "ssh $(fuzzel --dmenu --prompt-only='host: ')"
 	else
-		wezterm start zsh -ic "ssh $selected_machine"
+		wezterm start fish -c "ssh $selected_machine"
 	fi
 }
 
@@ -253,7 +251,7 @@ launch_man() {
 	mapfile manuals < <(apropos .)
 	local selected_man
 	selected_man=$(fuzzel --dmenu --width=80 --prompt 'man: ' <<<"${manuals[@]}" | awk '{print $1}')
-	[[ -n "$selected_man" ]] && wezterm start zsh -ic "man $selected_man"
+	[[ -n "$selected_man" ]] && wezterm start fish -c "man $selected_man"
 }
 
 launch_picker() {
@@ -295,7 +293,7 @@ launch_password() {
 	[[ "$query" == "all" ]] && query=""
 
 	local bw_status
-	bw_status="$(zsh -ic "bw status" | jq -r '.status')"
+	bw_status="$(fish -c "bw status" | jq -r '.status')"
 	if [[ "$bw_status" == "locked" ]]; then
 		printf 'vault is locked\n' >&2
 		bw unlock
@@ -303,7 +301,7 @@ launch_password() {
 		printf 'you are not authenticated in\n' >&2
 		bw login
 	elif [[ "$bw_status" == "unlocked" ]]; then
-		account_info="$(zsh -ic "bw list items --search '$query' --pretty" | jq -r '.[] | "\(.name)|\(.login.username)|\(.login.password)"' | column -ts "|" | fuzzel --dmenu --prompt 'account: ' --minimal-lines --width 80)"
+		account_info="$(fish -c "bw list items --search '$query' --pretty" | jq -r '.[] | "\(.name)|\(.login.username)|\(.login.password)"' | column -ts "|" | fuzzel --dmenu --prompt 'account: ' --minimal-lines --width 80)"
 		[[ -n "$account_info" ]] &&
 			wl-copy "$(printf "%s\n" "$account_info" | awk '{print $NF}')"
 	else
