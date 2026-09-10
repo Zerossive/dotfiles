@@ -8,6 +8,7 @@ image_delay = 200
 [opener]
 edit = [
 	{ run = 'nvim ""%s""', desc = 'Neovim', block = true },
+	{ run = 'sudoedit ""%s""', desc = 'Neovim (sudo)', block = true },
 ]
 play = [
 	{ run = 'xdg-open ""%s""', desc = 'Play', orphan = true },

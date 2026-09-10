@@ -1,0 +1,5 @@
+[sftp.olympus]
+host = "192.168.1.231"
+user = "danny"
+port = 22
+key_file = "~/.ssh/id_rsa"

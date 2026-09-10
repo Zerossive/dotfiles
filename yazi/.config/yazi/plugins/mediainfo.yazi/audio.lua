@@ -4,6 +4,42 @@ local M = {}
 local const = require(".const")
 local utils = require(".utils")
 
+local function get_cover_layers(job)
+	local cache = ya.file_cache({ file = job.file, skip = 0 })
+	if not cache then
+		return {}
+	end
+	local covers = utils.get_state("f" .. tostring(cache))
+	if covers and type(covers) == "table" then
+		return covers
+	end
+	local output, err = Command("ffprobe"):arg({
+		"-v",
+		"error",
+		"-select_streams",
+		"v",
+		"-show_entries",
+		"stream=index:stream_disposition=attached_pic",
+		"-of",
+		"json",
+		tostring(job.file.path or job.file.cache or job.file.url.path or job.file.url),
+	}):output()
+	if err or not output then
+		return {}
+	end
+	covers = {}
+	local data = ya.json_decode(output.stdout)
+	if type(data.streams) == "table" then
+		for _, stream in ipairs(data.streams) do
+			if stream.disposition and stream.disposition.attached_pic then
+				covers[#covers + 1] = stream.index
+			end
+		end
+	end
+	utils.set_state("f" .. tostring(cache), covers)
+	return covers
+end
+
 function M:peek(job)
 	local preload_status, preload_err = self:preload(job)
 	-- Stop if preload failed
@@ -11,17 +47,13 @@ function M:peek(job)
 		return
 	end
 
-	local cache_img_url = ya.file_cache({
-		skip = 0,
-		args = job.args,
-		file = job.file,
-		area = job.area,
-	})
+	local cache_img_url = ya.file_cache(job)
 
 	local cache_img_url_no_skip = ya.file_cache({ file = job.file, skip = 0 })
 
 	local no_metadata = job.args.no_metadata
 	local mediainfo_job_skip = job.skip
+	::recalc_mediainfo_job_skip::
 	local mediainfo_height = 0
 	local lines = {}
 	local limit = job.area.h
@@ -124,16 +156,42 @@ function M:peek(job)
 		mediainfo_height = math.min(limit, last_line)
 	end
 
-	if not no_metadata and EOF_mediainfo and #lines == 0 and job.skip > 0 then
-		ya.emit("peek", {
-			math.max(0, (job.skip - (utils.get_state(const.STATE_KEY.units) or 0))),
-			only_if = job.file.url,
-			upper_bound = true,
-		})
-		return
+	if not no_metadata then
+		if EOF_mediainfo and #lines == 0 and mediainfo_job_skip > 0 then
+			local covers = get_cover_layers(job)
+			local cover_index = math.floor(
+				math.max(
+					1,
+					utils.get_state(const.STATE_KEY.units)
+							and (math.abs(job.skip / utils.get_state(const.STATE_KEY.units)))
+						or 0
+				)
+			)
+
+			if not covers[cover_index] then
+				ya.emit("peek", {
+					math.max(0, (job.skip - (utils.get_state(const.STATE_KEY.units) or 0))),
+					only_if = job.file.url,
+					upper_bound = true,
+				})
+				return
+			else
+				-- NOTE: Recalculate mediainfo using cached latest valid skip value when reach the end of mediainfo output
+				local last_valid_mediainfo_skip = utils.get_state(const.STATE_KEY.last_valid_mediainfo_skip)
+				mediainfo_job_skip = last_valid_mediainfo_skip
+						and last_valid_mediainfo_skip[tostring(cache_img_url_no_skip)]
+					or math.max(0, mediainfo_job_skip - (utils.get_state(const.STATE_KEY.units) or 0))
+
+				goto recalc_mediainfo_job_skip
+			end
+		else
+			utils.set_state(
+				const.STATE_KEY.last_valid_mediainfo_skip,
+				{ [tostring(cache_img_url_no_skip)] = mediainfo_job_skip }
+			)
+		end
 	end
 
-	utils.force_render()
 	-- NOTE: Hacky way to prevent image overlap with old metadata area
 	if utils.get_state(const.STATE_KEY.prev_metadata_area) then
 		local old_metadata_area = utils.get_state(const.STATE_KEY.prev_metadata_area)
@@ -153,6 +211,7 @@ function M:peek(job)
 			})
 		end
 	end
+	utils.force_render()
 
 	local rendered_img_rect = cache_img_url
 			and fs.cha(cache_img_url)
@@ -204,53 +263,85 @@ function M:preload(job)
 
 	-- NOTE: Preload image
 
-	local mime = job.mime:match(".*/(.*)$")
-	local is_svg = mime == "svg+xml"
-	local is_magick = const.magick_image_mimes[mime]
-	local no_skip_job = { skip = 0, file = job.file, args = job.args, area = job.area }
-	local cache_img_url = ya.file_cache(no_skip_job)
+	local cache_img_url = ya.file_cache(job)
 	local cache_img_url_cha = cache_img_url and fs.cha(cache_img_url)
 
 	-- NOTE: Only generate preview image when cache image is not exist
-	if not cache_img_url_cha or cache_img_url_cha.len <= 0 then
-		local cache_img_status, image_preload_err
-		if not is_valid_utf8_path then
-			-- NOTE: Case not valid utf8 path, use trick to generate preview image
-			if is_svg then
-				local cache_img_url_tmp = Url(cache_img_url .. ".tmp")
-				if fs.cha(cache_img_url_tmp) then
-					fs.remove("file", cache_img_url_tmp)
-				end
-				local tmp_file_path, _ = type(fs.unique) == "function" and fs.unique("file", cache_img_url_tmp)
-					or fs.unique_name(cache_img_url_tmp)
-				-- svg under invalid utf8 path
-				cache_img_status, image_preload_err = require("magick")
-					.with_limit()
-					:arg({
-						"-background",
-						"none",
-						tostring(job.file.path or job.file.cache or job.file.url.path or job.file.url),
-						"-auto-orient",
-						"-strip",
-						string.format("%dx%d>", rt.preview.max_width, rt.preview.max_height),
-						"-quality",
-						rt.preview.image_quality,
-						string.format("PNG32:%s", tostring(tmp_file_path)),
-					})
-					:status()
-				if cache_img_status then
-					os.rename(tostring(tmp_file_path), tostring(cache_img_url))
-				end
+	if cache_img_url and (not cache_img_url_cha or cache_img_url_cha.len <= 0) then
+		local units = utils.get_state(const.STATE_KEY.units)
+		local covers = get_cover_layers(job)
+		local cover_index = covers[1] or 0
+		if units ~= nil then
+			cover_index = math.floor(math.max(1, math.abs(job.skip / units)))
+			if not covers[cover_index] then
+				cover_index = math.max(0, #covers - 1)
 			end
-		else
-			-- NOTE: Case valid utf8 path, use image, svg, or magick module
-			local image_module = is_svg and "svg" or (is_magick and "magick" or "image")
-			cache_img_status, image_preload_err = require(image_module):preload(no_skip_job)
 		end
-
-		if not cache_img_status and image_preload_err then
-			ya.dbg("mediainfo", image_preload_err)
-			err_msg = err_msg .. (image_preload_err and (tostring(image_preload_err)) or "")
+		local qv = 31 - math.floor(rt.preview.image_quality * 0.3)
+		local audio_preload_output, audio_preload_err = Command("ffmpeg"):arg({
+			"-v",
+			"error",
+			"-threads",
+			1,
+			"-i",
+			tostring(job.file.path or job.file.cache or job.file.url.path or job.file.url),
+			"-map",
+			string.format("0:v:%d?", cover_index),
+			"-an",
+			"-sn",
+			"-dn",
+			"-vframes",
+			1,
+			"-q:v",
+			qv,
+			"-vf",
+			string.format("scale=-1:'min(%d,ih)':flags=fast_bilinear", rt.preview.max_height / 2),
+			"-f",
+			"image2",
+			"-y",
+			tostring(cache_img_url),
+		}):output()
+		-- NOTE: Some audio types doesn't have cover image -> error ""
+		if audio_preload_err then
+			ya.dbg("mediainfo", audio_preload_err)
+			err_msg = err_msg
+				.. string.format(
+					"Failed to start `%s`.\n Error: %s\n",
+					"ffmpeg",
+					tostring(audio_preload_err or (audio_preload_output and audio_preload_output.stderr or ""))
+				)
+		elseif
+			audio_preload_output
+			and type(audio_preload_output.stderr) == "string"
+			and audio_preload_output.stderr:find("does not contain any stream")
+		then
+			ya.dbg("mediainfo", audio_preload_output and audio_preload_output.stderr)
+			cache_img_url_cha, _ = fs.cha(cache_img_url)
+			if cache_img_url_cha then
+				fs.remove("file", Url(cache_img_url))
+			end
+			-- NOTE: Workaround case audio has no cover image. Prevent regenerate preview image
+			audio_preload_output, audio_preload_err = require("magick")
+				.with_limit()
+				:arg({
+					"-size",
+					"1x1",
+					"canvas:none",
+					string.format("PNG32:%s", cache_img_url),
+				})
+				:output()
+			if
+				(audio_preload_output and audio_preload_output.stderr ~= nil and audio_preload_output.stderr ~= "")
+				or audio_preload_err
+			then
+				ya.dbg("mediainfo", audio_preload_err or (audio_preload_output and audio_preload_output.stderr))
+				err_msg = err_msg
+					.. string.format(
+						"Failed to start `%s`.\n Error: %s\n",
+						"magick",
+						tostring(audio_preload_err or (audio_preload_output and audio_preload_output.stderr or ""))
+					)
+			end
 		end
 	end
 
@@ -259,7 +350,7 @@ function M:preload(job)
 	local cache_mediainfo_cha = fs.cha(cache_mediainfo_url)
 	-- Case peek function called preload to refetch mediainfo
 	if cache_mediainfo_cha and not job.args.force_reload_mediainfo then
-		return true, err_msg ~= "" and ("Error: " .. err_msg) or nil
+		return true, err_msg ~= "" and Err("Error: " .. err_msg) or nil
 	end
 
 	local output, err
