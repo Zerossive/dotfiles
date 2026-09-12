@@ -2,13 +2,13 @@ vim.pack.add { 'https://github.com/stevearc/conform.nvim' }
 
 require('conform').setup {
 	notify_on_error = false,
+	-- sets up format on save autocmd
 	format_on_save = {
-		-- These options will be passed to conform.format()
 		timeout_ms = 500,
-		lsp_format = 'fallback',
+		-- lsp_format = 'first', -- not needed if default_format_opts.lsp_format is set
 	},
 	default_format_opts = {
-		lsp_format = 'fallback', -- Use external formatters if configured below, otherwise use LSP formatting. Set to `false` to disable LSP formatting entirely.
+		lsp_format = 'first',
 	},
 	-- You can also specify external formatters in here.
 	formatters_by_ft = {
@@ -22,15 +22,13 @@ require('conform').setup {
 		html = { 'prettierd', 'prettier', stop_after_first = true },
 		json = { 'prettierd', 'prettier', stop_after_first = true },
 		yaml = { 'prettierd', 'prettier', stop_after_first = true },
-		markdown = {},
 		graphql = { 'prettierd', 'prettier', stop_after_first = true },
 		-- other languages
 		lua = { 'stylua' },
 		sh = { 'shfmt' },
-		-- rust = { 'rustfmt' },
-		rust = { 'custom_rustfmt' }, -- use pre-installed rustfmt with rustup
-		-- ['*'] = { 'codespell' }, -- for all filetypes
-		['_'] = { 'trim_whitespace' }, -- for filetypes not listed
+		rust = { 'rustfmt' },
+		-- ['*'] = { 'codespell' }, -- for all filetypes (enabling this disables '_' case below)
+		['_'] = { 'trim_whitespace' }, -- for filetypes not listed (enabling this disables lsp fallback)
 	},
 	formatters = {
 		prettierd = {
@@ -57,9 +55,6 @@ require('conform').setup {
 		},
 		stylua = {
 			prepend_args = { '--indent-type=Tabs', '--indent-width=4' },
-		},
-		custom_rustfmt = {
-			command = 'rustfmt',
 		},
 	},
 }

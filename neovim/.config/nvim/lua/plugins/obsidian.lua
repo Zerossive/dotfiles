@@ -10,6 +10,7 @@ vim.api.nvim_create_autocmd('FileType', {
 	once = true,
 	callback = function()
 		require('obsidian').setup {
+			cache = { enabled = true },
 			legacy_commands = false, -- this will be removed in 4.0.0
 			picker = {
 				---@diagnostic disable-next-line: assign-type-mismatch

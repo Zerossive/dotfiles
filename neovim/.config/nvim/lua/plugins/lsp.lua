@@ -87,6 +87,7 @@ local servers = {
 	'tailwindcss',
 	'tinymist',
 	'yamlls',
+	'fish_lsp',
 }
 
 local ensure_installed = vim.deepcopy(servers)
@@ -96,7 +97,6 @@ vim.list_extend(ensure_installed, {
 	'prettierd',
 	'prettier',
 	'shfmt',
-	'shellcheck',
 })
 
 require('mason').setup()

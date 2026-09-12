@@ -5,25 +5,15 @@
 -- c() takes an index and table of nodes
 
 return {
-	-- Daily Note Template
 	s(
-		'todo',
+		'script-ts',
 		fmt(
 			[[
-			## To-Do
-			
-			### High Priority
-			
-			- [ ] {}
-			
-			### Low Priority
-			
-			- [ ] {}
+			<script lang="ts">
+				{}
+			</script>
 			]],
-			{
-				i(1),
-				i(2),
-			}
+			i(1)
 		)
 	),
 }

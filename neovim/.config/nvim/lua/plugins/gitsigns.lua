@@ -26,6 +26,7 @@ require('gitsigns').setup {
 		vim.keymap.set('n', '<leader>gD', function()
 			gitsigns.diffthis '@'
 		end, { desc = 'git diff against last commit' })
+		vim.keymap.set('n', '<leader>gs', gitsigns.diff, { desc = 'git diff sidebar' })
 
 		-- hunk actions
 		vim.keymap.set('n', '<leader>ghs', gitsigns.stage_hunk, { desc = 'git stage hunk' })
