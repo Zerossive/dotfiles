@@ -4,9 +4,10 @@ local wezterm = require("wezterm")
 -- This will hold the configuration.
 local config = wezterm.config_builder()
 
--- This is where you actually apply your config choices
+-- change default shell
+config.default_prog = { "/usr/bin/fish" }
 
--- For example, changing the color scheme:
+-- changing the color scheme
 -- config.color_scheme = "Catppuccin Mocha"
 local custom = wezterm.color.get_builtin_schemes()["Catppuccin Mocha"]
 
@@ -75,7 +76,7 @@ config.keys = {
 	-- splits
 	{ key = "v", mods = "ALT", action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
 	{ key = "s", mods = "ALT", action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }) },
-	{ key = "z", mods = "ALT", action = wezterm.action.TogglePaneZoomState },
+	{ key = "m", mods = "ALT", action = wezterm.action.TogglePaneZoomState },
 }
 
 -- and finally, return the configuration to wezterm
