@@ -2,7 +2,7 @@
 # ==============================================================================
 # Script Name: install-script.sh
 # Description: A script to install various applications and utilities.
-# Usage: install-script.sh [-h | -l | -i] <cateogry>
+# Usage: install-script.sh [-h | -d | -l | -i] <cateogry>
 # Author: Danny Harris
 # Dependencies: dnf, flatpak, brew, npm, cargo
 # ==============================================================================
@@ -11,14 +11,52 @@
 set -euo pipefail
 
 # set options
-testing=false
-steam_flatpak=true
+dev_only=false
 
-# application lists
+action=
+category=
+
+# parse options
+while getopts ":hdl:i:" option; do
+	case "$option" in
+	h) # first: check for help
+		action=help
+		;;
+	d) # dev essentials
+		dev_only=true
+		;;
+	l) # list apps by category
+		action=list
+		category="$OPTARG"
+		;;
+	i) # install apps by category
+		action=install
+		category="$OPTARG"
+		;;
+	\?) # second: check for invalid options
+		printf "Error: Invalid option: -%s\n" "$OPTARG" >&2
+		exit 1
+		;;
+	:)
+		printf "Error: Option -%s requires an argument\n" "$OPTARG" >&2
+		exit 1
+		;;
+	esac
+done
+
+# H1: category lists
+installable_categories=(
+	package
+	flatpak
+	brew
+	npm
+	cargo
+)
+listable_categories=("${installable_categories[@]}" "other")
+
+# H1: application lists
 package_list=(
-	# GENERAL
-	corectrl
-	firefox
+	# general
 	flatpak
 	mediainfo
 	nicotine+
@@ -27,39 +65,36 @@ package_list=(
 	piper
 	qbittorrent
 	syncthing
+	tailscale
 
-	# MEDIA
+	# terminal
+	starship
+	fish
+
+	# media
 	beets
 	beets-doc
 	beets-plugins
-	ImageMagick
-	mp3gain
+	mp3gain # for beets plugin
+	imagemagick
 
-	# TOOLS
+	# tools
 	btop
 	fastfetch
 	nvtop
 	qalc
 	speedtest-cli
 	stow
-	thefuck
-	timew
 	trash-cli
 	scrcpy # mirror android screen and camera
 	fuzzel # application launcher
-	pv     # pipe viewer
+	pv     # pipe viewer progress monitor
 
-	# OTHER
+	# other
 	cava
 	figlet
 )
-$steam_flatpak || package_list+=(
-	steam protontricks
-)
-$testing && package_list=("qalc" "figlet")
-
-# TODO: refactor to make dev_essentials a boolean that lists/installs a subset of all other lists
-dev_list=(
+package_list_dev=(
 	bat
 	docker-ce
 	distrobox
@@ -72,12 +107,12 @@ dev_list=(
 	git-delta
 	lazygit
 	neovim
-	npm
+	mise # version manager (used to install npm)
+	# npm # potentially not needed with mise?
 	ripgrep
 	tmux
 	zoxide
 )
-$testing && dev_list=("git" "fzf")
 
 flatpak_list=(
 	# GENERAL
@@ -91,18 +126,17 @@ flatpak_list=(
 	com.usebottles.bottles
 	org.gnome.Boxes
 	org.videolan.VLC
+	com.valvesoftware.Steam
 
 	# MEDIA TOOLS
 	fr.handbrake.ghb
 	io.gitlab.theevilskeleton.Upscaler
 	org.nickvision.tubeconverter # parabolic media downloader
 	org.kde.krita
-	org.inkscape.Inkscape
 	org.audacityteam.Audacity
 	org.musicbrainz.Picard    # music tagger
 	com.github.qarmin.czkawka # duplicate finder
 	io.github.seadve.Mousai   # music recognition
-	com.authormore.penpotdesktop
 
 	# TOOLS
 	com.github.tenderowl.frog # ocr
@@ -114,42 +148,44 @@ flatpak_list=(
 	it.mijorus.gearlever
 	com.github.tchx84.Flatseal
 	net.davidotek.pupgui2 # protonup-qt
-	me.iepure.devtoolbox  # dev tools
 )
-$steam_flatpak && flatpak_list+=(
-	com.valvesoftware.Steam
+flatpak_list_dev=(
+	org.inkscape.Inkscape
+	com.authormore.penpotdesktop
 	com.github.Matoking.protontricks
+	me.iepure.devtoolbox # dev tools
 )
-$testing && flatpak_list=("io.github.flattool.Warehouse" "io.github.flattool.Warehouse")
 
 brew_list=(
-	yazi
-	aichat
-	sshs     # ssh tui
-	exiftool # file metadata viewer
-	timer
-	tlrc   # tldr in rust
-	dysk   # disk usage analyzer
-	xh     # easier curl
 	pastel # color manipulation
-	fx     # json viewer
-	resvg  # svg renderer (for yazi)
+	typst
 )
-$testing && brew_list=("exiftool")
+brew_list_dev=(
+	yazi
+	resvg    # svg renderer (for yazi)
+	exiftool # file metadata viewer
+	tlrc     # tldr in rust
+	dysk     # disk usage analyzer
+	xh       # easier curl
+	fx       # json viewer
+)
 
-# TODO: add cargo list
 cargo_list=(
+	wiki-tui
+)
+cargo_list_dev=(
 	cargo-list
 	cargo-update
-	wiki-tui
 	bacon
 )
-$testing && cargo_list=("cargo-list")
 
 npm_list=(
-	typescript
+	@bitwarden/cli
 )
-$testing && npm_list=("typescript")
+npm_list_dev=(
+	typescript
+	@earendil-works/pi-coding-agent
+)
 
 # things like app images, docker containers, etc.
 other_list=(
@@ -159,103 +195,136 @@ other_list=(
 	feishin
 	krohnkite # (kwin script, fork)
 	portmaster
-	scc
+	scc # estimate code complexity/cost
 )
-$testing && other_list=("other item")
 
-listApps() {
+build_lists() {
+	local category
+
+	for category in "${installable_categories[@]}"; do
+		declare -n list="${category}_list"
+		declare -n dev_list="${category}_list_dev"
+
+		if $dev_only; then
+			list=("${dev_list[@]}")
+		else
+			list+=("${dev_list[@]}")
+		fi
+	done
+}
+
+# colorize output
+colorize() {
+	for line in "${@}"; do
+		if [[ -t 1 ]]; then
+			printf "\e[1;36m%s\e[0m\n" "$line"
+		else
+			printf "%s\n" "$line"
+		fi
+	done
+}
+
+list_apps() {
 	local category="${1:-all}"
-	case "$category" in
-	"package") printf "%s\n" "${package_list[@]}" ;;
-	"dev") printf "%s\n" "${dev_list[@]}" ;;
-	"flatpak") printf "%s\n" "${flatpak_list[@]}" ;;
-	"brew") printf "%s\n" "${brew_list[@]}" ;;
-	"npm") printf "%s\n" "${npm_list[@]}" ;;
-	"other") printf "%s\n" "${other_list[@]}" ;;
-	"all")
-		printf "[PACKAGE]\n"
-		printf "%s\n" "${package_list[@]}"
-		printf "\n[DEV]\n"
-		printf "%s\n" "${dev_list[@]}"
-		printf "\n[FLATPAK]\n"
-		printf "%s\n" "${flatpak_list[@]}"
-		printf "\n[BREW]\n"
-		printf "%s\n" "${brew_list[@]}"
-		printf "\n[NPM]\n"
-		printf "%s\n" "${npm_list[@]}"
-		printf "\n[OTHER]\n"
-		printf "%s\n" "${other_list[@]}"
-		;;
-	*) printf "Invalid argument (valid arguments: package, dev, flatpak, brew, npm, other, all)\n" ;;
-	esac
+
+	if [[ $category == all ]]; then
+		for category in "${listable_categories[@]}"; do
+			declare -n list="${category}_list"
+
+			printf "\n"
+			colorize "[${category^^}]"
+			printf "%s\n" "${list[@]}"
+		done
+		return
+	fi
+
+	for valid_category in "${listable_categories[@]}"; do
+		[[ $category == "$valid_category" ]] && {
+			declare -n list="${category}_list"
+			printf "%s\n" "${list[@]}"
+			return
+		}
+	done
+
+	printf "Invalid argument: %s (valid arguments: all %s)\n" "$category" "${listable_categories[*]}" >&2
+	exit 1
 }
 
-# Installers
-packageInstall() {
-	# TODO: add support for different package managers (dnf, pacman, apt, etc.)
-	printf "Installing packages...\n"
-	sudo dnf install "${package_list[@]}"
+# H1: Installers
+install_package() {
+	if command -v dnf &>/dev/null; then
+		colorize "Installing packages..."
+		sudo dnf install "${package_list[@]}"
+	# elif command -v OTHER_PACKAGE_MANAGER &>/dev/null; then
+	else
+		printf "Error: package manager not found\n" >&2
+	fi
 }
-devInstall() {
-	printf "Installing dev tools...\n"
-	sudo dnf install "${dev_list[@]}"
-}
-flatpakInstall() {
+install_flatpak() {
 	if command -v flatpak &>/dev/null; then
-		printf "Installing flatpak applications...\n"
+		colorize "Installing flatpak applications..."
 		flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-		sudo flatpak install "${flatpak_list[@]}"
+		flatpak install "${flatpak_list[@]}"
 	else
 		printf "Error: flatpak not found\n" >&2
 	fi
 }
-brewInstall() {
+install_brew() {
 	if command -v brew &>/dev/null; then
-		printf "Installing brew applications...\n"
+		colorize "Installing brew applications..."
 		brew install "${brew_list[@]}"
 	else
 		printf "Error: brew not found\n" >&2
 	fi
 }
-npmInstall() {
+install_npm() {
 	if command -v npm &>/dev/null; then
-		printf "Installing npm applications...\n"
-		sudo npm install -g "${npm_list[@]}"
+		colorize "Installing npm applications..."
+		npm install -g "${npm_list[@]}"
 	else
 		printf "Error: npm not found\n" >&2
+	fi
+}
+install_cargo() {
+	if command -v cargo &>/dev/null; then
+		colorize "Installing cargo applications..."
+		cargo install "${cargo_list[@]}"
+	else
+		printf "Error: cargo not found\n" >&2
 	fi
 }
 
 install_apps() {
 	local category="${1:-all}"
-	case "$category" in
-	"package") packageInstall ;;
-	"dev") devInstall ;;
-	"flatpak") flatpakInstall ;;
-	"brew") brewInstall ;;
-	"npm") npmInstall ;;
-	"all")
-		packageInstall
-		devInstall
-		flatpakInstall
-		brewInstall
-		npmInstall
-		packageInstall
-		;;
-	*) printf "Invalid argument (valid arguments: package, dev, flatpak, brew, npm, all)\n" ;;
-	esac
+
+	if [[ $category == all ]]; then
+		for category in "${installable_categories[@]}"; do
+			"install_$category"
+		done
+		return
+	fi
+
+	for valid_category in "${installable_categories[@]}"; do
+		[[ $category == "$valid_category" ]] && {
+			"install_$category"
+			return
+		}
+	done
+
+	printf "Invalid argument: %s (valid arguments: %s)\n" "$category" "${installable_categories[*]}" >&2
+	exit 1
 }
 
 help() {
-	cat <<"EOF"
+	cat <<EOF
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 ▏Install Script▕
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-Usage: install-script.sh [-h | -l | -i] <cateogry>
+Usage: install-script.sh [-h | -d | -l | -i] <category>
 
 -l	LIST applications by category
 	Requires one of the following arguments:
-		package, dev, flatpak, brew, other, all
+		all ${listable_categories[*]}
 	Example:
 		install-script.sh -l all
 	Example:
@@ -263,39 +332,28 @@ Usage: install-script.sh [-h | -l | -i] <cateogry>
 
 -i	INSTALL applications by category
 	Requires one of the following arguments:
-		package, dev, flatpak, brew, all
+		all ${installable_categories[*]}
 	Example:
 		install-script.sh -i package
+
+-d	Only list/install essential development applications
 
 -h	Print this help page
 EOF
 }
 
-while getopts ":hl:i:" option; do
-	case "$option" in
-	h) # First: check for help
-		help
-		exit
-		;;
-	\?) # Second: check for invalid options
-		printf "Error: Invalid option\n" >&2
-		exit
-		;;
-	l) # List apps by category
-		listApps "$OPTARG"
-		exit
-		;;
-	i) # Install apps by category
-		install_apps "$OPTARG"
-		exit
-		;;
-	*)
-		printf "Error: Invalid option, or missing arguments\n" >&2
-		exit
-		;;
-	esac
-done
-
-help
+case "$action" in
+list)
+	build_lists
+	list_apps "$category"
+	;;
+install)
+	build_lists
+	install_apps "$category"
+	;;
+*)
+	help
+	;;
+esac
 
 # vim: set ft=sh:
