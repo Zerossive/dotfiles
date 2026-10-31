@@ -40,7 +40,7 @@ if [ $# -eq 0 ]; then
 	selected_note="$(
 		fd --absolute-path --extension md --type f . "$notes_dir" |
 			sed "s|^$notes_dir||; s|.md$||" |
-			fzf "${fzf_opts[@]}" || printf ""
+			fzf --preview-window=nohidden "${fzf_opts[@]}" || printf ""
 	)"
 
 	# exit if no note is selected

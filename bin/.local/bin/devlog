@@ -55,7 +55,7 @@ if [ $# -eq 0 ]; then
     selected_log="$(
         fd --absolute-path --extension md --type f . "$log_dir" |
             sed "s|^$log_dir||; s|.md$||" |
-            fzf --tac "${fzf_opts[@]}" || printf ""
+            fzf --tac --preview-window=nohidden "${fzf_opts[@]}" || printf ""
     )"
 
     # exit if no log is selected
