@@ -45,7 +45,8 @@ main() {
 	if [ $# -gt 0 ]; then
 		printf -- "- %s\n\t* %s\n" "$current_time" "$*" >>"$file"
 	else
-		nvim "$file" -c "norm Go- $current_time" -c "startinsert!"
+		printf -- "- %s\n\t* " "$current_time" >>"$file"
+		nvim "$file" -c "norm GA" -c "startinsert!"
 	fi
 }
 
