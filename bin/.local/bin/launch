@@ -26,6 +26,7 @@ show_help() {
 		    emoji
 		    git
 		    kill
+			localhost
 		    man
 		    notes
 		    password
@@ -60,6 +61,7 @@ pickers=(
 	emoji
 	git
 	kill
+	localhost
 	man
 	notes
 	password
@@ -81,6 +83,7 @@ pick_picker() {
 	emoji) launch_emoji ;;
 	git) launch_git ;;
 	kill) launch_kill ;;
+	localhost) launch_localhost ;;
 	man) launch_man ;;
 	notes) launch_notes ;;
 	password) launch_password ;;
@@ -122,6 +125,24 @@ launch_kill() {
 	local pid
 	pid=$(awk '{print $1}' <<<"$selected_process")
 	[[ -n "$pid" ]] && kill -9 "$pid"
+}
+
+launch_localhost() {
+	declare -A local_applications=(
+		[Arcane]="http://olympus:3552"
+		[Audiobookshelf]="http://olympus:13378"
+		[Cockpit]="http://olympus:9090"
+		[FreshRSS]="http://olympus:49999"
+		[Immich]="http://olympus:2283"
+		[Jellyfin]="http://olympus:8096"
+		[Linkwarden]="http://olympus:3210"
+		[Navidrome]="http://olympus:4533"
+		[ntfy]="http://olympus:8234"
+	)
+	local selected
+	selected=$(printf '%s\n' "${!local_applications[@]}" | fuzzel --dmenu --minimal-lines --only-match --prompt 'localhost: ')
+	# [[ -n "$selected" ]] && xdg-open "${local_applications[$selected]}"
+	[[ -n "$selected" ]] && flatpak run app.zen_browser.zen --new-window "${local_applications[$selected]}"
 }
 
 launch_colors() {
