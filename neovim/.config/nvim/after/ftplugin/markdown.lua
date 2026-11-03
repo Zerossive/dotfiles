@@ -1,10 +1,15 @@
 -- [[ Markdown ]]
 
+-- only load this file for non-special windows
+if vim.bo.buftype ~= '' then
+	return
+end
+
 -- [[ Options ]]
 
 vim.o.wrap = true
 -- vim.o.spell = true
-vim.diagnostic.enable(false)
+-- vim.diagnostic.enable(false)
 
 -- [[ Keymaps]]
 -- obsidian
