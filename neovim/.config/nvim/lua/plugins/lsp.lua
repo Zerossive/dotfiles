@@ -88,6 +88,8 @@ local servers = {
 	'tinymist',
 	'yamlls',
 	'fish_lsp',
+	'arduino_language_server',
+	'clangd', -- arduino dependency
 }
 
 local ensure_installed = vim.deepcopy(servers)

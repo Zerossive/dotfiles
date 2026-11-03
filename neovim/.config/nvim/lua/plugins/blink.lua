@@ -35,8 +35,16 @@ require('blink.cmp').setup {
 			-- 	score_offset = 100, -- make lazydev completions top priority (see `:h blink.cmp`)
 			-- },
 		},
+		-- TODO: fix this?
+		-- disable lsp completions for arduino until it stops crashing
+		per_filetype = {
+			arduino = { 'git', 'path', 'snippets', 'buffer' },
+		},
 	},
 	snippets = { preset = 'luasnip' },
 	fuzzy = { implementation = 'prefer_rust_with_warning' },
 	signature = { enabled = true }, -- Shows a signature help window while you type arguments for a function
+	-- enabled = function()
+	-- 	return not vim.tbl_contains({ 'lua', 'markdown', 'arduino' }, vim.bo.filetype)
+	-- end,
 }
