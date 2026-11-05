@@ -1,7 +1,10 @@
-<configuration version="37">
-    <folder id="hc3yx-l7zxu" label="Elysium" path="~/Elysium" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
+<configuration version="52">
+    <folder id="hc3yx-l7zxu" label="Elysium" path="~/Elysium" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" fsWatcherTimeoutS="0" ignorePerms="false" autoNormalize="true">
         <filesystemType>basic</filesystemType>
         <device id="DSOHVA2-YD5E6PO-VYIDKER-ITEHDKH-NJZPX77-OH2VAL5-ZHA5STJ-QNXX3QB" introducedBy="">
+            <encryptionPassword></encryptionPassword>
+        </device>
+        <device id="GP45WUC-2VNF2EC-4N5TM4E-7YMFPP4-KYVAACO-HXYOI5N-7QXCOYU-ODDPLAI" introducedBy="">
             <encryptionPassword></encryptionPassword>
         </device>
         <device id="WT5BBJF-JLX7JXY-NDDNGOC-CCH7WAM-2GGGQXI-BYXUAAE-DDR262K-CDUJJQZ" introducedBy="">
@@ -23,15 +26,14 @@
         <ignoreDelete>false</ignoreDelete>
         <scanProgressIntervalS>0</scanProgressIntervalS>
         <pullerPauseS>0</pullerPauseS>
+        <pullerDelayS>1</pullerDelayS>
         <maxConflicts>10</maxConflicts>
         <disableSparseFiles>false</disableSparseFiles>
-        <disableTempIndexes>false</disableTempIndexes>
         <paused>false</paused>
-        <weakHashThresholdPct>25</weakHashThresholdPct>
         <markerName>.stfolder</markerName>
         <copyOwnershipFromParent>false</copyOwnershipFromParent>
         <modTimeWindowS>0</modTimeWindowS>
-        <maxConcurrentWrites>2</maxConcurrentWrites>
+        <maxConcurrentWrites>16</maxConcurrentWrites>
         <disableFsync>false</disableFsync>
         <blockPullOrder>standard</blockPullOrder>
         <copyRangeMethod>standard</copyRangeMethod>
@@ -41,61 +43,21 @@
         <sendOwnership>false</sendOwnership>
         <syncXattrs>false</syncXattrs>
         <sendXattrs>false</sendXattrs>
+        <blockIndexing>true</blockIndexing>
         <xattrFilter>
             <maxSingleEntrySize>1024</maxSingleEntrySize>
             <maxTotalSize>4096</maxTotalSize>
         </xattrFilter>
     </folder>
-    <folder id="sm-g975u_15sg-photos" label="HERMES Photos" path="~/Pictures/HERMES Photos" type="receiveonly" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
+    <folder id="uzahf-yk2s3" label="Syncthing" path="~/Syncthing" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" fsWatcherTimeoutS="0" ignorePerms="false" autoNormalize="true">
         <filesystemType>basic</filesystemType>
         <device id="DSOHVA2-YD5E6PO-VYIDKER-ITEHDKH-NJZPX77-OH2VAL5-ZHA5STJ-QNXX3QB" introducedBy="">
             <encryptionPassword></encryptionPassword>
         </device>
-        <device id="WT5BBJF-JLX7JXY-NDDNGOC-CCH7WAM-2GGGQXI-BYXUAAE-DDR262K-CDUJJQZ" introducedBy="">
+        <device id="GP45WUC-2VNF2EC-4N5TM4E-7YMFPP4-KYVAACO-HXYOI5N-7QXCOYU-ODDPLAI" introducedBy="">
             <encryptionPassword></encryptionPassword>
         </device>
-        <minDiskFree unit="%">1</minDiskFree>
-        <versioning>
-            <cleanupIntervalS>3600</cleanupIntervalS>
-            <fsPath></fsPath>
-            <fsType>basic</fsType>
-        </versioning>
-        <copiers>0</copiers>
-        <pullerMaxPendingKiB>0</pullerMaxPendingKiB>
-        <hashers>0</hashers>
-        <order>random</order>
-        <ignoreDelete>false</ignoreDelete>
-        <scanProgressIntervalS>0</scanProgressIntervalS>
-        <pullerPauseS>0</pullerPauseS>
-        <maxConflicts>10</maxConflicts>
-        <disableSparseFiles>false</disableSparseFiles>
-        <disableTempIndexes>false</disableTempIndexes>
-        <paused>false</paused>
-        <weakHashThresholdPct>25</weakHashThresholdPct>
-        <markerName>.stfolder</markerName>
-        <copyOwnershipFromParent>false</copyOwnershipFromParent>
-        <modTimeWindowS>0</modTimeWindowS>
-        <maxConcurrentWrites>2</maxConcurrentWrites>
-        <disableFsync>false</disableFsync>
-        <blockPullOrder>standard</blockPullOrder>
-        <copyRangeMethod>standard</copyRangeMethod>
-        <caseSensitiveFS>false</caseSensitiveFS>
-        <junctionsAsDirs>false</junctionsAsDirs>
-        <syncOwnership>false</syncOwnership>
-        <sendOwnership>false</sendOwnership>
-        <syncXattrs>false</syncXattrs>
-        <sendXattrs>false</sendXattrs>
-        <xattrFilter>
-            <maxSingleEntrySize>1024</maxSingleEntrySize>
-            <maxTotalSize>4096</maxTotalSize>
-        </xattrFilter>
-    </folder>
-    <folder id="uzahf-yk2s3" label="Syncthing" path="~/Syncthing" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
-        <filesystemType>basic</filesystemType>
-        <device id="DSOHVA2-YD5E6PO-VYIDKER-ITEHDKH-NJZPX77-OH2VAL5-ZHA5STJ-QNXX3QB" introducedBy="">
-            <encryptionPassword></encryptionPassword>
-        </device>
-        <device id="HJ36OCS-HCSPX35-TAR5HO5-NPACBHN-XDWFLD7-AYTVL4N-2QHB2RZ-XAPVMQ4" introducedBy="">
+        <device id="SG5TI2Y-JUFK5KK-5JKXKWC-X62ELLY-KJ4JRHL-QTPGUM7-IZGIV4T-NMI3NQT" introducedBy="">
             <encryptionPassword></encryptionPassword>
         </device>
         <device id="WT5BBJF-JLX7JXY-NDDNGOC-CCH7WAM-2GGGQXI-BYXUAAE-DDR262K-CDUJJQZ" introducedBy="">
@@ -117,15 +79,14 @@
         <ignoreDelete>false</ignoreDelete>
         <scanProgressIntervalS>0</scanProgressIntervalS>
         <pullerPauseS>0</pullerPauseS>
+        <pullerDelayS>1</pullerDelayS>
         <maxConflicts>10</maxConflicts>
         <disableSparseFiles>false</disableSparseFiles>
-        <disableTempIndexes>false</disableTempIndexes>
         <paused>false</paused>
-        <weakHashThresholdPct>25</weakHashThresholdPct>
         <markerName>.stfolder</markerName>
         <copyOwnershipFromParent>false</copyOwnershipFromParent>
         <modTimeWindowS>0</modTimeWindowS>
-        <maxConcurrentWrites>2</maxConcurrentWrites>
+        <maxConcurrentWrites>16</maxConcurrentWrites>
         <disableFsync>false</disableFsync>
         <blockPullOrder>standard</blockPullOrder>
         <copyRangeMethod>standard</copyRangeMethod>
@@ -135,6 +96,7 @@
         <sendOwnership>false</sendOwnership>
         <syncXattrs>false</syncXattrs>
         <sendXattrs>false</sendXattrs>
+        <blockIndexing>true</blockIndexing>
         <xattrFilter>
             <maxSingleEntrySize>1024</maxSingleEntrySize>
             <maxTotalSize>4096</maxTotalSize>
@@ -151,7 +113,7 @@
         <remoteGUIPort>0</remoteGUIPort>
         <numConnections>0</numConnections>
     </device>
-    <device id="HJ36OCS-HCSPX35-TAR5HO5-NPACBHN-XDWFLD7-AYTVL4N-2QHB2RZ-XAPVMQ4" name="ATLANTIS" compression="metadata" introducer="false" skipIntroductionRemovals="false" introducedBy="">
+    <device id="GP45WUC-2VNF2EC-4N5TM4E-7YMFPP4-KYVAACO-HXYOI5N-7QXCOYU-ODDPLAI" name="HERMES" compression="metadata" introducer="false" skipIntroductionRemovals="false" introducedBy="">
         <address>dynamic</address>
         <paused>false</paused>
         <autoAcceptFolders>false</autoAcceptFolders>
@@ -162,7 +124,18 @@
         <remoteGUIPort>0</remoteGUIPort>
         <numConnections>0</numConnections>
     </device>
-    <device id="WT5BBJF-JLX7JXY-NDDNGOC-CCH7WAM-2GGGQXI-BYXUAAE-DDR262K-CDUJJQZ" name="HERMES" compression="metadata" introducer="false" skipIntroductionRemovals="false" introducedBy="">
+    <device id="SG5TI2Y-JUFK5KK-5JKXKWC-X62ELLY-KJ4JRHL-QTPGUM7-IZGIV4T-NMI3NQT" name="BOYCE-PC" compression="metadata" introducer="false" skipIntroductionRemovals="false" introducedBy="">
+        <address>dynamic</address>
+        <paused>false</paused>
+        <autoAcceptFolders>false</autoAcceptFolders>
+        <maxSendKbps>0</maxSendKbps>
+        <maxRecvKbps>0</maxRecvKbps>
+        <maxRequestKiB>0</maxRequestKiB>
+        <untrusted>false</untrusted>
+        <remoteGUIPort>0</remoteGUIPort>
+        <numConnections>0</numConnections>
+    </device>
+    <device id="WT5BBJF-JLX7JXY-NDDNGOC-CCH7WAM-2GGGQXI-BYXUAAE-DDR262K-CDUJJQZ" name="HERMES_OLD" compression="metadata" introducer="false" skipIntroductionRemovals="false" introducedBy="">
         <address>dynamic</address>
         <paused>false</paused>
         <autoAcceptFolders>false</autoAcceptFolders>
@@ -184,12 +157,15 @@
         <remoteGUIPort>0</remoteGUIPort>
         <numConnections>0</numConnections>
     </device>
-    <gui enabled="true" tls="false" debugging="false">
+    <gui enabled="true" tls="false" sendBasicAuthPrompt="false">
         <address>127.0.0.1:8384</address>
         <user>danny</user>
         <password>$2a$10$WSTwU9GfD21E3betPMPfrurI9A4JdsgtFLlevUPK5vEv4RsxZq0By</password>
+        <metricsWithoutAuth>false</metricsWithoutAuth>
         <apikey>CjbionHRsxyVavZHgMAyfjYAVviNNWvA</apikey>
         <theme>dark</theme>
+        <sessionCookieDurationS>604800</sessionCookieDurationS>
+        <sessionCookiePath>/</sessionCookiePath>
     </gui>
     <ldap></ldap>
     <options>
@@ -201,7 +177,7 @@
         <localAnnounceMCAddr>[ff12::8384]:21027</localAnnounceMCAddr>
         <maxSendKbps>0</maxSendKbps>
         <maxRecvKbps>0</maxRecvKbps>
-        <reconnectionIntervalS>60</reconnectionIntervalS>
+        <reconnectionIntervalS>20</reconnectionIntervalS>
         <relaysEnabled>true</relaysEnabled>
         <relayReconnectIntervalM>10</relayReconnectIntervalM>
         <startBrowser>true</startBrowser>
@@ -233,13 +209,13 @@
         <stunKeepaliveStartS>180</stunKeepaliveStartS>
         <stunKeepaliveMinS>20</stunKeepaliveMinS>
         <stunServer>default</stunServer>
-        <databaseTuning>auto</databaseTuning>
         <maxConcurrentIncomingRequestKiB>0</maxConcurrentIncomingRequestKiB>
         <announceLANAddresses>true</announceLANAddresses>
         <sendFullIndexOnUpgrade>false</sendFullIndexOnUpgrade>
+        <auditEnabled>false</auditEnabled>
+        <auditFile></auditFile>
         <connectionLimitEnough>0</connectionLimitEnough>
         <connectionLimitMax>0</connectionLimitMax>
-        <insecureAllowOldTLSVersions>false</insecureAllowOldTLSVersions>
         <connectionPriorityTcpLan>10</connectionPriorityTcpLan>
         <connectionPriorityQuicLan>20</connectionPriorityQuicLan>
         <connectionPriorityTcpWan>30</connectionPriorityTcpWan>
@@ -248,7 +224,7 @@
         <connectionPriorityUpgradeThreshold>0</connectionPriorityUpgradeThreshold>
     </options>
     <defaults>
-        <folder id="" label="" path="~" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
+        <folder id="" label="" path="~" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" fsWatcherTimeoutS="0" ignorePerms="false" autoNormalize="true">
             <filesystemType>basic</filesystemType>
             <device id="DSOHVA2-YD5E6PO-VYIDKER-ITEHDKH-NJZPX77-OH2VAL5-ZHA5STJ-QNXX3QB" introducedBy="">
                 <encryptionPassword></encryptionPassword>
@@ -266,15 +242,14 @@
             <ignoreDelete>false</ignoreDelete>
             <scanProgressIntervalS>0</scanProgressIntervalS>
             <pullerPauseS>0</pullerPauseS>
+            <pullerDelayS>1</pullerDelayS>
             <maxConflicts>10</maxConflicts>
             <disableSparseFiles>false</disableSparseFiles>
-            <disableTempIndexes>false</disableTempIndexes>
             <paused>false</paused>
-            <weakHashThresholdPct>25</weakHashThresholdPct>
             <markerName>.stfolder</markerName>
             <copyOwnershipFromParent>false</copyOwnershipFromParent>
             <modTimeWindowS>0</modTimeWindowS>
-            <maxConcurrentWrites>2</maxConcurrentWrites>
+            <maxConcurrentWrites>16</maxConcurrentWrites>
             <disableFsync>false</disableFsync>
             <blockPullOrder>standard</blockPullOrder>
             <copyRangeMethod>standard</copyRangeMethod>
@@ -284,6 +259,7 @@
             <sendOwnership>false</sendOwnership>
             <syncXattrs>false</syncXattrs>
             <sendXattrs>false</sendXattrs>
+            <blockIndexing>true</blockIndexing>
             <xattrFilter>
                 <maxSingleEntrySize>1024</maxSingleEntrySize>
                 <maxTotalSize>4096</maxTotalSize>
