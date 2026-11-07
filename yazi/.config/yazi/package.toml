@@ -1,7 +1,7 @@
 [[plugin.deps]]
 use = "yazi-rs/plugins:mount"
-rev = "58c4f4e"
-hash = "b95f898e6dc60b52edbc415952e14395"
+rev = "c0529fc"
+hash = "dbfc342600993eefbb055bff145fa22a"
 
 [[plugin.deps]]
 use = "boydaihungst/mediainfo"
@@ -10,10 +10,10 @@ hash = "ba582ccda4ebc7c70bfe9a1496589b80"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:toggle-pane"
-rev = "58c4f4e"
+rev = "c0529fc"
 hash = "5b2fbef7d1513ce38ff72623a071a5e"
 
 [[flavor.deps]]
 use = "yazi-rs/flavors:catppuccin-mocha"
-rev = "20b47bf"
+rev = "1183892"
 hash = "ce320f877fe709b189433941aba747c4"
