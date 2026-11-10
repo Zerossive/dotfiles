@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# Script Name: rem
+# Description: At some specific time, sends out a notification.
+# Usage: rem [<minutes>]
+# Author: Danny Harris
+# Dependencies: remind fuzzel launch
+# ==============================================================================
+
+show_help() {
+	local cmd="${0##*/}"
+	cat <<-EOF
+		Sends out a notification at a specific time.
+
+		Usage: $cmd [<minutes>]
+
+		Examples:
+		  $cmd
+		  $cmd do this thing
+	EOF
+}
+
+# dependency checks
+dependencies=(remind fuzzel launch)
+for cmd in "${dependencies[@]}"; do
+	if ! command -v "$cmd" >/dev/null 2>&1; then
+		printf "error: '%s' command does not exist\n" "$cmd" >&2
+		exit 1
+	fi
+done
+
+# if -h exists in arguments:
+if [[ " ${*} " == *" -h "* ]]; then
+	show_help
+	exit 0
+fi
+
+message="${*:-Quick Reminder}"
+
+selected_time=$(fuzzel --dmenu --prompt-only 'remind: ' --placeholder '# of minutes' --width 20)
+
+if [[ -n "$selected_time" ]]; then
+	remind now+${selected_time}min $message && launch remind || notify-send "Reminder error" "$status"
+fi
+
+# vim: set ft=sh:
