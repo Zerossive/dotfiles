@@ -12,3 +12,4 @@ bin/.local/bin/numba
 bin/.local/bin/beet
 bin/.local/bin/unidecode
 bin/.local/bin/filetype
+/bin/.local/bin/appimageupdatetool
