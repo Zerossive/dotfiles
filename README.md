@@ -36,3 +36,7 @@ After installation, individual plugins may have additional dependencies. Run `:c
 ```bash
 sudo dnf install -y neovim gcc make git ripgrep fd-find tree-sitter-cli unzip neovim
 ```
+
+```bash
+npm install -g typescript
+```
