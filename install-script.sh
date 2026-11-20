@@ -185,7 +185,12 @@ npm_list=(
 npm_list_dev=(
 	typescript
 	@earendil-works/pi-coding-agent
+	@aliou/pi-guardrails               # pi addon
+	@juicesharp/rpiv-ask-user-question # pi addon
+	context-mode                       # pi addon
 )
+
+# TODO: add mise list (for stuff like npm and maybe neovim at some point) (maybe switch all npm packages to mise using npm: backend?)
 
 # things like app images, docker containers, etc.
 other_list=(
