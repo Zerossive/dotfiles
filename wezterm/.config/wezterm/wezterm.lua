@@ -68,6 +68,8 @@ config.keys = {
 	-- scrolling
 	{ key = "j", mods = "ALT|SHIFT", action = wezterm.action.ScrollByPage(0.5) },
 	{ key = "k", mods = "ALT|SHIFT", action = wezterm.action.ScrollByPage(-0.5) },
+	{ key = "<", mods = "ALT|SHIFT", action = wezterm.action.ScrollToPrompt(-1) },
+	{ key = ">", mods = "ALT|SHIFT", action = wezterm.action.ScrollToPrompt(1) },
 	-- tab navigation
 	{ key = "h", mods = "ALT|SHIFT", action = wezterm.action.ActivateTabRelative(-1) },
 	{ key = "l", mods = "ALT|SHIFT", action = wezterm.action.ActivateTabRelative(1) },
