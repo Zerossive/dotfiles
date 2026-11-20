@@ -1,75 +1,49 @@
-# H1: Renamed Commands
+# H1: RENAMED_COMMANDS
 
-alias ai='aichat'
-alias n='nvim'
 alias c='clear'
+alias n='nvim'
 alias lg='lazygit'
-alias tw='timew'
-alias z='zellij'
-alias t='tmux'
-alias open='xdg-open'
+alias se="sudo --preserve-env=YAZI_CONFIG_HOME /home/linuxbrew/.linuxbrew/bin/yazi"
 
-# H1: Preset Flags
+# H1: PRESET_FLAGS
 
-# software management
-alias install='sudo dnf install'
-alias remove='sudo dnf remove'
-alias search='sudo dnf search'
-# ai
-alias ail='aichat -r linux'
-alias aig='aichat -r grammar --no-stream'
-alias aigc='wl-paste | aichat -r grammar --no-stream | wl-copy'
-alias aie='aichat -e'
-alias aic='aichat -c'
-alias ain='aichat --rag notes'
-alias ainr='ain --rebuild-rag'
 # other
-if command -v eza &>/dev/null; then
-    alias ll='eza -hlF --icons --no-permissions --no-user --group-directories-first --time-style relative'
-    alias lla='eza -halF --icons --no-user --group-directories-first --time-style relative'
-    alias lt='eza -T --icons --group-directories-first'
-else
-    alias ll='ls -gohF --group-directories-first'
-    alias lla='ls -gohFA --group-directories-first --no-group'
-    alias lt='tree --dirsfirst --gitignore --noreport -F'
-fi
+alias ll='eza -hlF --icons --no-permissions --no-user --group-directories-first --time-style relative'
+alias lla='eza -halF --icons --no-user --group-directories-first --time-style relative'
+alias lt='eza -T --icons --group-directories-first'
 alias rsyncc='rsync -haviP'
-alias tws='timew summary :id :annotation'
-alias qc='qalc --terse'
-alias browser="flatpak run com.vivaldi.Vivaldi 1>/dev/null 2>&1"
-alias slowcat='pv -l -L 5 -q'
-alias hl='rg --passthru'
 
-# H1: Preset Commands w/ Parameters
+# H1: PRESET_FLAGS_WITH_PARAMETERS
 
-# editing shortcuts
-alias ea='nvim $HOME/.config/.aliases'
-alias ei='nvim $HOME/dotfiles/install-script.sh'
-alias einfo='nvim $HOME/.local/bin/info'
-alias ep='nvim /mnt/autofs/OLYMPUS/dotfiles-olympus/containers/caddy/conf/Caddyfile' # edit Caddyfile reverse proxy
 # software management
-alias update-other='brew update && brew upgrade && npm update -g && rustup update && cargo install-update -a'
-alias fl="flatpak list --app --columns=size,application,version,name | tr -d ' ' | sort -hr | column -t | bat --style plain" # list flatpaks installed sorted by size
-alias dnfl='dnf list --installed | fzfc --no-preview'
+alias update-other='brew update && brew upgrade && ya pkg upgrade && npm update -g && rustup update && cargo install-update -a'
+alias fl="flatpak list --app --columns=size,application,version,name | tr -d ' ' | sort -hr | column -t | fzf | awk '{print \$2}' | tee /dev/tty | wl-copy -n && echo 'copied to clipboard'" # list flatpaks installed sorted by size
+alias dnfl="dnf list --installed | fzf --no-preview --prompt 'Package: ' | awk '{print \$1}' | tee /dev/tty | wl-copy -n && echo 'copied to clipboard'"
+alias bl="brew list --installed-on-request"
+
 # datetime
-alias now="date '+%-I:%M %p' | tee >(wl-copy -n)"
-alias today="date '+%Y-%m-%d' | tee >(wl-copy -n)"
-alias datetime="date '+%Y-%m-%d %-I:%M %p' | tee >(wl-copy -n)"
+alias now="date '+%-I:%M %p' | tee /dev/tty | wl-copy -n"
+alias today="date '+%Y-%m-%d' | tee /dev/tty | wl-copy -n"
+alias datetime="date '+%Y-%m-%d %-I:%M %p' | tee /dev/tty | wl-copy -n"
+
 # system control
 alias lock='loginctl lock-session'
 alias unlock='loginctl unlock-session'
 alias playpause='playerctl play-pause'
+
 # notes
-alias dn='nvim -c "DailyNote"'
 alias q="nvim -c 'e \$HOME/Elysium/Obsidian\\ Vault/Quick\\ Note.md'"
 alias oo='cd $HOME/Elysium/Obsidian\ Vault && nvim && cd -'
 alias todo='n $HOME/Elysium/Obsidian\ Vault/To-Do.md'
+alias shop='n $HOME/Elysium/Obsidian\ Vault/Shopping\ List.md'
+
 # containers
 alias dockerl='docker ps --format "table {{.Names}}\t{{.ID}}\t{{.Status}}"'
 alias dockerlo='ssh olympus -t bash -ic dockerl'
 alias docker-prune="ssh olympus 'docker image prune -fa'"
 alias sandbox='distrobox create --name sandbox --image archlinux:latest --yes --home ~/sandbox --additional-packages "gcc make git ripgrep fd unzip neovim fzf tldr eza zellij zoxide bat entr" --init-hooks "git clone https://github.com/Zerossive/dotfiles.git ~/dotfiles  && mkdir -p ~/.config/nvim && cp --recursive ~/dotfiles/neovim/.config/nvim ~/.config && printf \". ~/dotfiles/aliases/.config/.aliases\" > ~/.zshrc" && distrobox enter sandbox'
 alias sandbox-delete='distrobox rm sandbox --rm-home --force; sudo rm -rf ~/sandbox; podman image prune -af'
+
 # GitHub CLI
 alias ghs='gh status'
 alias ghila='gh search issues --assignee=@me'
@@ -86,202 +60,19 @@ alias ghcl='gh search commits --committer Zerossive --sort committer-date'
 alias ghrc='gh repo create'
 alias ghrv='gh repo view'
 alias ghb="xdg-open 'https://github.com/zerossive'"
+alias ghbl="gh repo list | awk '{print \$1}' | fzf | xargs -I _ gh browse --repo _"
+
 # backup
 alias backup-elysium-pause='mega-sync /home/danny/Elysium -p'
 alias backup-elysium-enable='mega-sync /home/danny/Elysium -e'
 alias backup-music='rsyncc --update danny@olympus:/home/danny/media/music/ /mnt/1TB\ SSD/Backup/Music'
 alias backup-immich='rsyncc --update danny@olympus:/home/danny/media/photos danny@olympus:/home/danny/media/videos danny@olympus:/home/danny/media/immich/library /mnt/1TB\ SSD/Backup/Immich'
 alias backup-documents="ssh olympus -t 'sudo rsync -haviP --update /var/lib/docker/volumes/paperless-ngx_media/_data/documents/originals/ danny@atlas:/mnt/1TB\ SSD/Backup/Documents'"
+alias backup-bitwarden='bw export --format encrypted_json --password --output "/mnt/1TB SSD/Backup/misc/bitwarden/$(date '+%Y-%m-%d')_bitwarden-encrypted-export.json"'
+
 # other
-alias re='source $HOME/.zshrc'
-alias lsblkc='lsblk -Mpo LABEL,NAME,FSTYPE,SIZE,FSAVAIL,FSUSE%,MOUNTPOINT -e7'
-alias weather="curl -s -m 10 'https://wttr.in/mesquite?Q'"
-alias temp='curl -sm 3 wttr.in/mesquite\?format="%c%20%t%20(%f)\n" | sed "s/ \?+//g"'
 alias daily='flatpak run com.vivaldi.Vivaldi --new-window https://monkeytype.com https://timeguessr.com https://vim-racer.com/game-mode/randomized/ https://www.geoguessr.com/vgp/3224 https://www.geoguessr.com/vgp/3003 https://www.geoguessr.com/vgp/3007 https://www.mathmammoth.com/practice/multiplication'
-alias afk='cmatrix -s -C blue'
-alias hermes='scrcpy --window-title=HERMES --tcpip="192.168.1.144:5555" --disable-screensaver'
-alias hermes-camera='scrcpy --window-title=HERMES-CAMERA --tcpip="192.168.1.144:5555" --disable-screensaver --video-source=camera'
-
-# H1: Functions
-
-# Print various error logs
-wtf() {
-    printf '\njournalctl:\n'
-    journalctl -p 3 -xb
-    printf '\ndmesg:\n'
-    sudo dmesg | grep -i 'error\|fail\|segault'
-}
-
-# Yazi shortcut to allow for the changing of directories after quitting
-e() {
-    local tmp
-    tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
-    yazi "$@" --cwd-file="$tmp"
-    if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-        cd -- "$cwd" || return
-    fi
-    rm -f -- "$tmp"
-}
-alias se="sudo --preserve-env=YAZI_CONFIG_HOME /home/linuxbrew/.linuxbrew/bin/yazi"
-
-# Custom FZF
-alias fzfc=" \
-	fzf -m --prompt='⬗ ' --pointer='🞛 ' --marker='◈ ' \
-    --header='Edit: ctrl-e    Open: ctrl-o    Preview: alt-p, alt-u/d    Copy: ctrl-y' --header-first \
-	--color=border:#74c7ec,gutter:-1,label:#74c7ec,bg:-1,pointer:#74c7ec,hl:#74c7ec,hl+:#74c7ec,info:#CBA6F7 \
-    --layout=reverse --height=~95% --border=rounded --info=inline-right \
-    --preview='
-      if [[ -d {} ]]; then
-        eza -alF --tree --icons --level=2 --no-permissions --no-user --group-directories-first --no-time --no-filesize --color=always {};
-      else
-        case {} in
-          *.tar) tar -tf {} ;;
-          *.tar.gz|*.tgz) tar -tzf {} ;;
-          *.tar.bz2) tar -tjf {} ;;
-          *.tar.xz) tar -tJf {} ;;
-          *.zip) unzip -l {} ;;
-          *.rar) unrar l {} ;;
-          *) bat --color=always --style=numbers --line-range=:500 {} ;;
-        esac;
-      fi' \
-	--preview-border=left \
-	--bind='ctrl-y:execute-silent(printf {} | cut -f 2- | wl-copy --trim-newline)' \
-	--bind='ctrl-e:execute(nvim -O {} > /dev/tty)+abort' \
-	--bind='alt-p:toggle-preview' \
-	--bind='alt-u:preview-half-page-up' \
-	--bind='alt-d:preview-half-page-down' \
-	--bind='ctrl-u:half-page-up' \
-	--bind='ctrl-d:half-page-down' \
-	"
-
-# Fuzzy search for a directory to enter
-f() {
-    local dir
-    dir=$(fd . -d 3 -t d -H "$@" | fzfc)
-    if [ -n "$dir" ]; then
-        cd "$dir" || exit
-    fi
-}
-
-# Fuzzy search for files copy path
-ff() {
-    local selected_path
-    selected_path=$(fd . -d 3 -t f -H "$@" | fzfc)
-    if [ -n "$selected_path" ]; then
-        echo -n "$selected_path" | wl-copy
-        echo "$selected_path"
-    fi
-}
-
-# Fuzzy search for parent directories to enter
-fu() {
-    # Construct list of parent directories
-    local dir_list
-    local parent_dir
-    parent_dir=$(dirname "$(realpath "${1:-.}")")
-    if [[ "$parent_dir" == "$HOME"* ]]; then   # if parent resides in $HOME
-        while [ "$parent_dir" != "$HOME" ]; do # add to dir_list until parent IS $HOME
-            dir_list+="$parent_dir\n"
-            parent_dir=$(dirname "$parent_dir")
-        done
-    fi
-    dir_list+="$HOME"
-    # Select directory to enter
-    local selected_path
-    selected_path=$(echo "$dir_list" | sed 's/\/home\/danny/~/' | fzfc)
-    [ -n "$selected_path" ] && cd "$(eval echo "$selected_path")" || return 1
-}
-
-# Fuzzy search all directories and files
-fa() {
-    local pathname
-    pathname="$(locate "${1:-/}" | fzfc)"
-    if [ -n "$pathname" ]; then
-        if [ -d "$pathname" ]; then
-            cd "$pathname" || exit
-        elif [ -f "$pathname" ]; then
-            echo -n "$pathname" | wl-copy
-            echo "$pathname"
-        fi
-    fi
-}
-
-# Fuzzy search for processes to kill
-fkill() {
-    local process_list
-    if [[ $UID -ne 0 ]]; then
-        process_list=$(ps -u "$UID" -o pid,fname,cmd --no-headers)
-    else
-        process_list=$(ps -eo pid,fname,cmd --no-headers)
-    fi
-    local selected_process
-    selected_process="$(printf '%s\n' "$process_list" | fzfc --no-preview)"
-    [[ -z "$selected_process" ]] && return
-    local pid
-    pid=$(awk '{print $1}' <<<"$selected_process")
-    [[ -n "$pid" ]] && kill -9 "$pid"
-}
-
-# Fuzzy find a password & copy to clipboard
-fpw() {
-    local query="$*"
-    local bw_status
-    bw_status="$(bw status | jq -r '.status')"
-    if [[ "$bw_status" == "locked" ]]; then
-        printf 'vault is locked\n'
-        bw unlock
-    elif [[ "$bw_status" == "unauthenticated" ]]; then
-        printf 'you are not authenticated in\n'
-        bw login
-    elif [[ "$bw_status" == "unlocked" ]]; then
-        account_info="$(bw list items --search "$query" --pretty | jq -r '.[] | "\(.name)|\(.login.username)|\(.login.password)"' | column -ts "|" | fzfc --no-preview)"
-        [[ -n "$account_info" ]] &&
-            wl-copy "$(printf "%s\n" "$account_info" | awk '{print $NF}')" && printf "%s\n" "copied password to clipboard"
-    else
-        printf 'error: unkown bitwarden status\n'
-        return 1
-    fi
-}
-
-# Fuzzy search for a package to install
-dnfc() {
-    local result
-    result="$(dnf -qC repoquery "$@" --qf '%{name} - %{summary}\n' | fzfc --bind 'alt-u:half-page-up' --bind 'alt-d:half-page-down' --no-preview | sed 's/ - .*//')"
-    [ -n "$result" ] && sudo dnf install "$result"
-}
-
-# Fuzzy search manpages
-fm() {
-    man $(apropos --long . | fzfc --no-preview | awk '{print $2,$1}' | tr -d '()')
-}
-
-# Pomodoro Timer
-pt() {
-    local duration="$1"
-    local name="$2"
-    #if no duration, set default
-    [ -z "$duration" ] && duration="20m"
-    [ -z "$name" ] && name="Task"
-    timer "${duration}" -n "${name}" -f &&
-        spd-say "${name} complete" -r +30 -p -100 -i -20 &&
-        notify-send "${name} complete" &&
-        paplay /usr/share/sounds/freedesktop/stereo/complete.oga
-}
-
-# List trashed files from the current directory
-ft() {
-    list-trash() {
-        local current_dir
-        current_dir=$(realpath .) &&
-            rg -o "Path=$current_dir/.*" --no-filename "$HOME"/.local/share/Trash/info/* | sed 's/^Path=//' | python3 -c "import sys, urllib.parse; print(urllib.parse.unquote(sys.stdin.read()))"
-    }
-
-    local trashed_file
-    trashed_file=$(list-trash | fzfc | sed 's|.*/||')
-    if [ -n "$trashed_file" ]; then
-        wl-copy "$HOME/.local/share/Trash/files/$trashed_file" &&
-            printf '%s/.local/share/Trash/files/%s\n' "$HOME" "$trashed_file"
-    fi
-}
+alias hermes='scrcpy --window-title=HERMES --tcpip --select-tcpip --disable-screensaver'
+alias hermes-camera='scrcpy --window-title=HERMES-CAMERA --tcpip --select-tcpip --video-source=camera --capture-orientation=90'
 
 # vim:ft=sh
